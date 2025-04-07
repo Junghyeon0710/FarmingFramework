@@ -11,7 +11,30 @@ UProgressionManagerComponent::UProgressionManagerComponent()
 
 float UProgressionManagerComponent::Interact()
 {
-	return 0;
+	float Delay;
+	int32 Stage;
+	FarmingProgress(Delay,Stage);
+	return Delay;
+
+	// AActor* Actor = GetOwner();
+	// UStaticMeshComponent* ab=  Actor->FindComponentByClass<UStaticMeshComponent>();
+	// ab->SetStaticMesh(as);
+}
+
+void UProgressionManagerComponent::SetProgressionState(float Progression)
+{
+}
+
+void UProgressionManagerComponent::FarmingProgress(float& OutDelay, int32& Stage)
+{
+}
+
+void UProgressionManagerComponent::SwitchStage()
+{
+}
+
+void UProgressionManagerComponent::SetReady()
+{
 }
 
 
