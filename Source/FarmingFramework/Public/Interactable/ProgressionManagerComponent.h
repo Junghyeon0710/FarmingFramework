@@ -3,10 +3,27 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Components/ActorComponent.h"
 #include "ProgressionManagerComponent.generated.h"
 
 class UStaticMesh;
+
+USTRUCT(BlueprintType)
+struct FMeshList
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UStaticMesh> Mesh;
+
+	UPROPERTY(EditAnywhere)
+	float TransitionTime;
+
+	UPROPERTY(EditAnywhere)
+	FGameplayTag ProgressionState;
+	
+};
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class FARMINGFRAMEWORK_API UProgressionManagerComponent : public UActorComponent
@@ -16,20 +33,22 @@ class FARMINGFRAMEWORK_API UProgressionManagerComponent : public UActorComponent
 public:
 	UProgressionManagerComponent();
 
+	UFUNCTION(BlueprintCallable)
 	virtual float Interact();
 	virtual void SetProgressionState(float Progression);
 	void FarmingProgress(float& OutDelay, int32& Stage);
 	void SwitchStage();
 	void SetReady();
 
+	FTimerHandle ProgressTimer;
+
 protected:
 
 	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = List)
-	TArray<TObjectPtr<UStaticMesh>> MeshList;
+	TArray<FMeshList> MeshList;
 
-	UPROPERTY(EditAnywhere,BlueprintReadOnly)
-	float ProgressionState = 0;
+	int32 ProgressState =0;
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	float CollectionTime = 3.f;
+	UPROPERTY()
+	UStaticMeshComponent* NewStaticMeshComp = nullptr;
 };
