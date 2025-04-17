@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "UObject/Interface.h"
 #include "ProgressionStateInterface.generated.h"
 
@@ -22,4 +22,7 @@ class FARMINGFRAMEWORK_API IProgressionStateInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
+
+	/** 원하는 상태로 도달할 수 있는지 체크  */
+	virtual bool CanChangeInitState( FGameplayTag CurrentState, FGameplayTag DesiredState) const {return true;}
 };

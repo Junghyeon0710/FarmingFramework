@@ -5,9 +5,11 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "Components/ActorComponent.h"
-#include "ProgressionManagerComponent.generated.h"
+#include "ProgressionComponent.generated.h"
 
 class UStaticMesh;
+class USkeletalMeshComponent;
+
 
 USTRUCT(BlueprintType)
 struct FMeshList
@@ -15,7 +17,7 @@ struct FMeshList
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere)
-	TObjectPtr<UStaticMesh> Mesh;
+	TObjectPtr<USkeletalMesh> Mesh;
 
 	UPROPERTY(EditAnywhere)
 	float TransitionTime;
@@ -26,20 +28,16 @@ struct FMeshList
 };
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class FARMINGFRAMEWORK_API UProgressionManagerComponent : public UActorComponent
+class FARMINGFRAMEWORK_API UProgressionComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:
-	UProgressionManagerComponent();
+	UProgressionComponent();
 
 	UFUNCTION(BlueprintCallable)
-	virtual float Interact();
-	virtual void SetProgressionState(float Progression);
-	void FarmingProgress(float& OutDelay, int32& Stage);
-	void SwitchStage();
-	void SetReady();
-
+	virtual void Interact();
+	
 	FTimerHandle ProgressTimer;
 
 protected:
@@ -50,5 +48,5 @@ protected:
 	int32 ProgressState =0;
 
 	UPROPERTY()
-	UStaticMeshComponent* NewStaticMeshComp = nullptr;
+	USkeletalMeshComponent* NewStaticMeshComp = nullptr;
 };
