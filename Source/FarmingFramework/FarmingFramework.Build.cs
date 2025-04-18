@@ -26,6 +26,7 @@ public class FarmingFramework : ModuleRules
 			new string[]
 			{
 				"Core",
+				"GameplayTags"
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -38,8 +39,7 @@ public class FarmingFramework : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				"GameplayTasks",
-				"GameplayTags"
+			
 			}
 			);
 		

@@ -3,6 +3,8 @@
 
 #include "..\..\Public\Interactable\ProgressionComponent.h"
 
+#include "Interface/ProgressionStateInterface.h"
+
 UProgressionComponent::UProgressionComponent()
 {
 
@@ -11,17 +13,39 @@ UProgressionComponent::UProgressionComponent()
 	
 }
 
+void UProgressionComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if(IProgressionStateInterface* Interface = Cast<IProgressionStateInterface>(this); Interface && !MeshList.IsEmpty())
+	{
+		TArray<FGameplayTag> Tags;
+		for(const auto& List : MeshList)
+		{
+			Tags.Add(List.ProgressionState);
+		}
+		Interface->RegisterInitTags(Tags);
+	}
+	
+}
+
+
 void UProgressionComponent::Interact()
 {
-
 	if(MeshList.IsEmpty())
 	{
 		return;
 	}
 
-	AActor* Actor = GetOwner();
-	check(Actor);
-	USkeletalMeshComponent* SkeletalMeshComponent = Actor->FindComponentByClass<USkeletalMeshComponent>();
+	if(!MeshList.IsValidIndex(ProgressState))
+	{
+		return;
+	}
+	
+
+	AActor* Owner = GetOwner();
+	check(Owner);
+	USkeletalMeshComponent* SkeletalMeshComponent = Owner->FindComponentByClass<USkeletalMeshComponent>();
 	
 	if(SkeletalMeshComponent)
 	{
@@ -30,33 +54,37 @@ void UProgressionComponent::Interact()
 	else
 	{
 		NewStaticMeshComp = NewObject<USkeletalMeshComponent>(GetOwner(),USkeletalMeshComponent::StaticClass());
-	//	NewStaticMeshComp->SetupAttachment(Actor->GetRootComponent());
-		NewStaticMeshComp->AttachToComponent(Actor->GetRootComponent(),FAttachmentTransformRules::KeepRelativeTransform);
+		NewStaticMeshComp->AttachToComponent(Owner->GetRootComponent(),FAttachmentTransformRules::KeepRelativeTransform);
 		NewStaticMeshComp->CreationMethod = EComponentCreationMethod::Instance;
-		//GetOwner()->AddInstanceComponent(NewStaticMeshComp);
 		NewStaticMeshComp->RegisterComponent();
-	
 	}
 
 	
-	GetWorld()->GetTimerManager().SetTimer(ProgressTimer,FTimerDelegate::CreateWeakLambda(this,[this]()
+	if(ProgressState != 0)
 	{
-		if(!MeshList.IsValidIndex(ProgressState))
+		if(IProgressionStateInterface* Interface = Cast<IProgressionStateInterface>(this))
 		{
-			GetWorld()->GetTimerManager().PauseTimer(ProgressTimer);
-			GetWorld()->GetTimerManager().ClearTimer(ProgressTimer);
-			//return 0;
-			
+			if(!Interface->ContinueInitStateChain())
+			{
+				return;
+			}
 		}
-		else
-		{
-			NewStaticMeshComp->SetSkeletalMesh(MeshList[ProgressState].Mesh);
-			ProgressState++;
-		}
+	}
 
-	}),MeshList[ProgressState].TransitionTime,true);
 	
+	NewStaticMeshComp->SetSkeletalMesh(MeshList[ProgressState].Mesh);
+	
+	
+	GetWorld()->GetTimerManager().SetTimer(
+	ProgressTimer,
+	this,
+	&ThisClass::Interact,
+	MeshList[ProgressState].TransitionTime,
+	false
+	);
+	ProgressState++;
 }
+
 
 
 

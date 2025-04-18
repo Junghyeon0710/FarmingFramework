@@ -41,11 +41,14 @@ public:
 	FTimerHandle ProgressTimer;
 
 protected:
+	virtual void BeginPlay() override;
+
+protected:
 
 	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = List)
 	TArray<FMeshList> MeshList;
 
-	int32 ProgressState =0;
+	int32 ProgressState = 0;
 
 	UPROPERTY()
 	USkeletalMeshComponent* NewStaticMeshComp = nullptr;
