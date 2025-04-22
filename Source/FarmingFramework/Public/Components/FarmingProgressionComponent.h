@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Interactable/ProgressionComponent.h"
+#include "Components/ProgressionComponent.h"
 #include "Interface/ProgressionStateInterface.h"
 #include "FarmingProgressionComponent.generated.h"
 

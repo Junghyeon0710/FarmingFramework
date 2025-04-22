@@ -27,12 +27,18 @@ bool UFarmingProgressionComponent::CanChangeInitState(UProgressionComponentManag
 		return bTest2;
 	}
 
+	if(CurrentState == FarmingGameplayTags::Test_3 && DesiredState == FarmingGameplayTags::Test_4)
+	{
+		UE_LOG(LogTemp,Warning, TEXT("FarmingGameplayTags::Test_3 && DesiredState == FarmingGameplayTags::Test_4"));
+		return bTest3;
+	}
+
 	return false;
 }
 
 void UFarmingProgressionComponent::HandleChangeInitState(UProgressionComponentManager* Manager,FGameplayTag CurrentState, FGameplayTag DesiredState) const
 {
-
+	
 }
 
 void UFarmingProgressionComponent::HandleFailedInitStateChange(UProgressionComponentManager* Manager,FGameplayTag CurrentState, FGameplayTag DesiredState) const

@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "..\..\Public\Interactable\ProgressionComponent.h"
+#include "..\..\Public\Components/ProgressionComponent.h"
 
 #include "Interface/ProgressionStateInterface.h"
 
