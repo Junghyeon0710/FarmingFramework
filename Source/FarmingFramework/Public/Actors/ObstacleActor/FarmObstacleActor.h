@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Actors/TileItemBase.h"
+#include "..\FarmTaggedActor.h"
 #include "GameFramework/Actor.h"
 #include "FarmObstacleActor.generated.h"
 
 class USphereComponent;
 
 UCLASS()
-class FARMINGFRAMEWORK_API AFarmObstacleActor : public ATileItemBase
+class FARMINGFRAMEWORK_API AFarmObstacleActor : public AFarmTaggedActor
 {
 	GENERATED_BODY()
 

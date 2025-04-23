@@ -13,3 +13,32 @@ void UItemFragment_RemoveBase::OnInteract()
 		UE_LOG(LogTemp,Warning,TEXT("%s"),*GetFunctionTag().ToString());
 	}
 }
+
+void UItemFragment_RemoveBase::OnInteractWithTag(FGameplayTag InFunctionTag)
+{
+	if(InFunctionTag.MatchesTagExact(FunctionTag))
+	{
+		UE_LOG(LogTemp,Warning,TEXT("%s"),*GetFunctionTag().ToString());
+		
+	}
+	else
+	{
+		
+	}
+}
+
+void UItemFragment_RemoveBase::OnInteractWithActor(FGameplayTag InFunctionTag, AActor* DetectedActor)
+{
+	if(InFunctionTag.MatchesTagExact(GetFunctionTag()))
+	{
+		if(IsValid(DetectedActor))
+		{
+			DetectedActor->Destroy();
+		}
+		UE_LOG(LogTemp,Warning,TEXT("%s"),*GetFunctionTag().ToString());
+	}
+	else
+	{
+		
+	}
+}

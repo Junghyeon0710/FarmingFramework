@@ -5,16 +5,16 @@
 #include "CoreMinimal.h"
 #include "GameplayTagAssetInterface.h"
 #include "GameFramework/Actor.h"
-#include "TileItemBase.generated.h"
+#include "FarmTaggedActor.generated.h"
 
 UCLASS()
-class FARMINGFRAMEWORK_API ATileItemBase : public AActor , public IGameplayTagAssetInterface
+class FARMINGFRAMEWORK_API AFarmTaggedActor : public AActor , public IGameplayTagAssetInterface
 {
 	GENERATED_BODY()
 
 public:
 
-	ATileItemBase();
+	AFarmTaggedActor();
 
 	/** IGameplayTagAssetInterface*/
 	virtual void GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const override;

@@ -21,6 +21,11 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual void OnInteract() {};
+	UFUNCTION(BlueprintCallable)
+	virtual void OnInteractWithTag(FGameplayTag InFunctionTag) {}; // 태그 기반
+	UFUNCTION(BlueprintCallable)
+	virtual void OnInteractWithActor(FGameplayTag InFunctionTag, AActor* DetectedActor) {}; // 태그 + 대상 액터
+
 
 	/** 멤버변수로 태그설정 안했으면 재정의해서 태그 설정을 해주세요. */
 	virtual FGameplayTag GetFunctionTag() const {return FunctionTag;}
@@ -75,4 +80,8 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	static FGameplayTag TraceForwardForActorFirstTag(AActor* SourceActor,float TraceDistance, ECollisionChannel Channel = ECC_Visibility);
+
+	UFUNCTION(BlueprintPure)
+	static FGameplayTag TraceForwardForActorFirstTagWithActor(AActor*& DetectActor,AActor* SourceActor,float TraceDistance, ECollisionChannel Channel = ECC_Visibility);
+	
 };

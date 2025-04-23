@@ -1,14 +1,14 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Actors/TileItemBase.h"
+#include "..\..\Public\Actors\FarmTaggedActor.h"
 
-ATileItemBase::ATileItemBase()
+AFarmTaggedActor::AFarmTaggedActor()
 {
 	PrimaryActorTick.bCanEverTick = false;
 }
 
-void ATileItemBase::GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const
+void AFarmTaggedActor::GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const
 {
 	TagContainer.AppendTags(StaticGameplayTags);
 }
