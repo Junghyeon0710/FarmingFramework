@@ -66,6 +66,9 @@ protected:
 	
 	UPROPERTY(EditAnywhere)
 	FGameplayTag FunctionTag;
+	
+	UPROPERTY(EditAnywhere)
+    TObjectPtr<UAnimMontage> FuncTObjectionTag;
 };
 
 UCLASS()
