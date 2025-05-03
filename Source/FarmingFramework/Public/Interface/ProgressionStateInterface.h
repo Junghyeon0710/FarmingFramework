@@ -27,20 +27,20 @@ public:
 	/** Returns the Actor this object is bound to, might be this object */
 	virtual AActor* GetOwningActor() const;
 
-	virtual void RegisterInitTags(const TArray<FGameplayTag>& Tags);
+	//virtual void RegisterInitTags(const TArray<FGameplayTag>& Tags);
 
-	virtual bool ContinueInitStateChain();
+	virtual bool ContinueInitStateChain(FGameplayTag CurrentState,FGameplayTag DesiredState);
 	
 	/** */
 	virtual void BindOnActorInitStateChanged();
 	
 	/** 원하는 상태로 도달할 수 있는지 체크  */
-	virtual bool CanChangeInitState(UProgressionComponentManager* Manager ,FGameplayTag CurrentState, FGameplayTag DesiredState) const {return true;}
+	virtual bool CanChangeInitState(FGameplayTag CurrentState, FGameplayTag DesiredState) const {return true;}
 
 	/** 성공시 호출 함수(추가 기능 구현)  */
-	virtual void HandleChangeInitState(UProgressionComponentManager* Manager ,FGameplayTag CurrentState, FGameplayTag DesiredState) const {};
+	virtual void HandleChangeInitState(FGameplayTag CurrentState, FGameplayTag DesiredState) const {};
 	
 	/** 실패시 호출 함수(추가 기능 구현)  */
-	virtual void HandleFailedInitStateChange(UProgressionComponentManager* Manager ,FGameplayTag CurrentState, FGameplayTag DesiredState) const {};
+	virtual void HandleFailedInitStateChange(FGameplayTag CurrentState, FGameplayTag DesiredState) const {};
 	
 };

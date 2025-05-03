@@ -40,6 +40,13 @@ public:
 	
 	FTimerHandle ProgressTimer;
 
+public:
+	FGameplayTag GetCurrentState();
+	FGameplayTag GetDesiredState();
+	
+	void RegisterInitTags(const TArray<FGameplayTag>& InInitTags);
+	void UnRegisterInitTags();
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -48,8 +55,16 @@ protected:
 	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = List)
 	TArray<FMeshList> MeshList;
 
+	/** 진행 상태*/
 	int32 ProgressState = 0;
 
 	UPROPERTY()
 	USkeletalMeshComponent* NewStaticMeshComp = nullptr;
+	
+	UPROPERTY()
+	TArray<FGameplayTag> InitTags;
+
+	/** Tag 상태*/
+	int32 InitState = 0;
+
 };

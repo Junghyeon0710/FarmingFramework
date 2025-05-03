@@ -15,6 +15,8 @@ void UItemFragment_Till::OnInteractWithActor(FGameplayTag InFunctionTag, AActor*
 		//개간 기능
 		UE_LOG(LogTemp,Warning,TEXT("%s"),*GetFunctionTag().ToString());
 
+		// 빌드매니저 기능 호출;
+		//BC->BuildMode;
 	}
 }
 

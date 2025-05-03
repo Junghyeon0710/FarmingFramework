@@ -2,7 +2,6 @@
 
 
 #include "Interface/ProgressionStateInterface.h"
-#include "Components/ProgressionComponentManager.h"
 
 AActor* IProgressionStateInterface::GetOwningActor() const
 {
@@ -27,30 +26,26 @@ AActor* IProgressionStateInterface::GetOwningActor() const
 	return nullptr;
 }
 
-void IProgressionStateInterface::RegisterInitTags(const TArray<FGameplayTag>& Tags)
-{
-	AActor* MyActor = GetOwningActor();
-	UProgressionComponentManager* Manager = UProgressionComponentManager::GetForActor(MyActor);
+// void IProgressionStateInterface::RegisterInitTags(const TArray<FGameplayTag>& Tags)
+// {
+// 	AActor* MyActor = GetOwningActor();
+// 	UProgressionComponentManager* Manager = UProgressionComponentManager::GetForActor(MyActor);
+//
+// 	if(ensure(Manager && MyActor))
+// 	{
+// 		Manager->RegisterInitTags(Tags);
+// 	}
+// }
 
-	if(ensure(Manager && MyActor))
-	{
-		Manager->RegisterInitTags(Tags);
-	}
-}
-
-bool IProgressionStateInterface::ContinueInitStateChain()
+bool IProgressionStateInterface::ContinueInitStateChain(FGameplayTag CurrentState,FGameplayTag DesiredState)
 {
 	const AActor* MyActor = GetOwningActor();
-	UProgressionComponentManager* Manager = UProgressionComponentManager::GetForActor(MyActor);
-
-	if(!Manager || !MyActor)
+	
+	if(!MyActor)
 	{
 		return false;
 	}
-
-	const FGameplayTag CurrentState = Manager->GetCurrentState();
-	const FGameplayTag DesiredState = Manager->GetDesiredState();
-
+	
 	if (!CurrentState.IsValid() || !DesiredState.IsValid())
 	{
 		return false;
@@ -62,15 +57,14 @@ bool IProgressionStateInterface::ContinueInitStateChain()
 	}
 
 	
-	if(CanChangeInitState(Manager,CurrentState,DesiredState))
+	if(CanChangeInitState(CurrentState,DesiredState))
 	{
-		HandleChangeInitState(Manager,CurrentState,DesiredState);
-		Manager->NextInitState();
+		HandleChangeInitState(CurrentState,DesiredState);
 		return true;
 	}
 	
 
-	HandleFailedInitStateChange(Manager,CurrentState,DesiredState);
+	HandleFailedInitStateChange(CurrentState,DesiredState);
 	return false;
 	
 }
@@ -78,11 +72,5 @@ bool IProgressionStateInterface::ContinueInitStateChain()
 // Add default functionality here for any IProgressionStateInterface functions that are not pure virtual.
 void IProgressionStateInterface::BindOnActorInitStateChanged()
 {
-	AActor* MyActor = GetOwningActor();
-	UProgressionComponentManager* Manager = UProgressionComponentManager::GetForActor(MyActor);
-
-	if(ensure(Manager && MyActor))
-	{
-		
-	}
+	
 }

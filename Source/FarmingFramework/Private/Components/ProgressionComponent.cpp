@@ -24,9 +24,8 @@ void UProgressionComponent::BeginPlay()
 		{
 			Tags.Add(List.ProgressionState);
 		}
-		Interface->RegisterInitTags(Tags);
+		RegisterInitTags(Tags);
 	}
-	
 }
 
 
@@ -64,8 +63,9 @@ void UProgressionComponent::Interact()
 	{
 		if(IProgressionStateInterface* Interface = Cast<IProgressionStateInterface>(this))
 		{
-			if(!Interface->ContinueInitStateChain())
+			if(!Interface->ContinueInitStateChain(GetCurrentState(),GetDesiredState()))
 			{
+				InitState++;
 				return;
 			}
 		}
@@ -83,6 +83,39 @@ void UProgressionComponent::Interact()
 	false
 	);
 	ProgressState++;
+}
+
+FGameplayTag UProgressionComponent::GetCurrentState()
+{
+	if(!InitTags.IsValidIndex(InitState))
+	{
+		return FGameplayTag();
+	}
+	return InitTags[InitState];
+}
+
+FGameplayTag UProgressionComponent::GetDesiredState()
+{
+	if(!InitTags.IsValidIndex(InitState+1))
+	{
+		return FGameplayTag();
+	}
+	return InitTags[InitState+1];
+}
+
+void UProgressionComponent::RegisterInitTags(const TArray<FGameplayTag>& InInitTags)
+{
+	if(!InitTags.IsEmpty())
+	{
+		UnRegisterInitTags();
+	}
+					
+	InitTags = InInitTags;
+}
+
+void UProgressionComponent::UnRegisterInitTags()
+{
+	InitTags.Empty();
 }
 
 

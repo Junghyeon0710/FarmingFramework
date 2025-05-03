@@ -7,8 +7,17 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "ProgressionComponentManager.generated.h"
 
+USTRUCT()
+struct FProgressionState
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	TArray<FGameplayTag> InitTags;
+};
+
 /**
- * 
+ * 만약에 2개가 동시에 등록하면 어떻게 되는지 체킈
  */
 UCLASS()
 class FARMINGFRAMEWORK_API UProgressionComponentManager : public UGameInstanceSubsystem
@@ -20,18 +29,8 @@ public:
 	
 	/** Utility to get this manager from an actor, will return null if actor is null or not in a world */
 	static UProgressionComponentManager* GetForActor(const AActor* Actor, bool bOnlyGameWorlds = true);
-
-	void RegisterInitTags(const TArray<FGameplayTag>& InInitTags);
-	void UnRegisterInitTags();
-
-	FGameplayTag GetCurrentState();
-	FGameplayTag GetDesiredState();
-	void NextInitState();
+	
 
 private:
 	
-	UPROPERTY()
-	TArray<FGameplayTag> InitTags;
-
-	int32 InitState = 0;
 };

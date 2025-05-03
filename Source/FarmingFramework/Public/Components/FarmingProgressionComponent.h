@@ -18,10 +18,15 @@ public:
 
 	/** IProgressionStateInterface*/
 
-	virtual bool CanChangeInitState(UProgressionComponentManager* Manager, FGameplayTag CurrentState, FGameplayTag DesiredState) const override;
-	virtual void HandleChangeInitState(UProgressionComponentManager* Manager, FGameplayTag CurrentState, FGameplayTag DesiredState) const override;
-	virtual void HandleFailedInitStateChange(UProgressionComponentManager* Manager, FGameplayTag CurrentState, FGameplayTag DesiredState) const override;
+	virtual bool CanChangeInitState(FGameplayTag CurrentState, FGameplayTag DesiredState) const override;
+	virtual void HandleChangeInitState(FGameplayTag CurrentState, FGameplayTag DesiredState) const override;
+	virtual void HandleFailedInitStateChange(FGameplayTag CurrentState, FGameplayTag DesiredState) const override;
 	/** ~IProgressionStateInterface */
+
+
+
+public:
+	
 
 	UPROPERTY(EditAnywhere, Category = Test)
 	bool bTest1;
@@ -31,4 +36,30 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = Test)
 	bool bTest3;
+
+	//Field 레벨 관리
+	UPROPERTY(EditAnywhere, Category = Filed)
+	int32 FieldLevel;
+
+	//Field 등급 관리
+	UPROPERTY(EditAnywhere, Category = Filed)
+	int32 FieldGrade;
+
+	//물뿌리개 사용 여부 관리
+	UPROPERTY(EditAnywhere, Category = "Field")
+	bool bIsWatered;
+
+	//시들어가는 식물 단계 관리
+	UPROPERTY(EditAnywhere, Category = "Field")
+	int32 WitheredStage;
+
+	// Plane액터의 텍스처 관리
+	UPROPERTY(EditAnywhere, Category = "Field")
+	UTexture2D* FieldPlaneTexture;;
+
+	//seed/ 심은 작물 관리
+
+	// 파종 여부 관리
+	UPROPERTY(EditAnywhere, Category = "Field")
+	bool bIsSown;
 };

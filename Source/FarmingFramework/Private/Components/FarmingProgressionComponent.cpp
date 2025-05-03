@@ -11,10 +11,9 @@ UFarmingProgressionComponent::UFarmingProgressionComponent()
 	
 }
 
-bool UFarmingProgressionComponent::CanChangeInitState(UProgressionComponentManager* Manager, FGameplayTag CurrentState,FGameplayTag DesiredState) const
+bool UFarmingProgressionComponent::CanChangeInitState(FGameplayTag CurrentState,FGameplayTag DesiredState) const
 {
-	if(!Manager) return false;
-
+	
 	if(CurrentState == FarmingGameplayTags::Test_1 && DesiredState == FarmingGameplayTags::Test_2)
 	{
 		UE_LOG(LogTemp,Warning, TEXT("FarmingGameplayTags::Test_1 && DesiredState == FarmingGameplayTags::Test_2"));
@@ -36,12 +35,12 @@ bool UFarmingProgressionComponent::CanChangeInitState(UProgressionComponentManag
 	return false;
 }
 
-void UFarmingProgressionComponent::HandleChangeInitState(UProgressionComponentManager* Manager,FGameplayTag CurrentState, FGameplayTag DesiredState) const
+void UFarmingProgressionComponent::HandleChangeInitState(FGameplayTag CurrentState, FGameplayTag DesiredState) const
 {
 	
 }
 
-void UFarmingProgressionComponent::HandleFailedInitStateChange(UProgressionComponentManager* Manager,FGameplayTag CurrentState, FGameplayTag DesiredState) const
+void UFarmingProgressionComponent::HandleFailedInitStateChange(FGameplayTag CurrentState, FGameplayTag DesiredState) const
 {
 	UE_LOG(LogTemp,Log, TEXT("HandleFailedInitStateChange"));
 }
