@@ -18,21 +18,36 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void BuildStart(const TSubclassOf<AActor>& TargetClass);
-	FVector GridPosition(const FVector& InParam,int32 GridValue) const;
-protected:
-
-	virtual void BeginPlay() override;
-
+	void StartBuildTimer();
+	bool GetTraceHitResult(FHitResult& Result,ECollisionChannel TraceChannel = ECC_Visibility);
+	bool GetTraceHitResult(FHitResult& Result,const TArray<AActor*>& IgnoreActors ,ECollisionChannel TraceChannel = ECC_Visibility);
+	bool IsCornersCheck();
+	bool PerformLineTrace(	const FVector& StartPoint, const TArray<AActor*>& IgnoreActors, FHitResult& OutHit,ECollisionChannel TraceChannel = ECC_Visibility );
 public:
+	
+	FVector GridPosition(const FVector& InParam) const;
 
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType,FActorComponentTickFunction* ThisTickFunction) override;
+protected:
+	virtual void UpdateBuildAsset();
 
+	UPROPERTY(EditAnywhere,Category = Gird)
+	int32 GridValue = 100;
+	UPROPERTY(EditAnywhere,Category = Gird)
+	float ExtraRange = 100.f;
+
+	UPROPERTY(EditAnywhere,Category = Gird)
+	TObjectPtr<UMaterialInterface> CanBuildMaterial;
+	UPROPERTY(EditAnywhere,Category = Gird)
+	TObjectPtr<UMaterialInterface> CanNotBuildMaterial;
+
+	UPROPERTY(EditAnywhere,Category = Gird)
+	TSubclassOf<AActor> HitClassType;
 private:
-
+	bool bCanDrop;
 
 	UPROPERTY(VisibleAnywhere,Category = Spanw)
 	TObjectPtr<AActor> SpawnActor;
 
-	bool bIsSpawn = false;
+	FTimerHandle BuildTimer;
 	
 };
