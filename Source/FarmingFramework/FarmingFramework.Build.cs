@@ -26,7 +26,8 @@ public class FarmingFramework : ModuleRules
 			new string[]
 			{
 				"Core",
-				"GameplayTags"
+				"GameplayTags",
+				"Landscape"
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);

@@ -3,6 +3,8 @@
 
 #include "Components/Building/BuildingManagerComponent.h"
 
+#include "Landscape.h"
+#include "Engine/StaticMeshActor.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Math/UnrealMathUtility.h"
@@ -10,6 +12,13 @@
 UBuildingManagerComponent::UBuildingManagerComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
+	
+}
+
+void UBuildingManagerComponent::PostInitProperties()
+{
+	Super::PostInitProperties();
+
 	
 }
 
@@ -25,8 +34,61 @@ void UBuildingManagerComponent::BuildStart(const TSubclassOf<AActor>& TargetClas
 
 void UBuildingManagerComponent::StartBuildTimer()
 {
-	GetWorld()->GetTimerManager().SetTimer(BuildTimer,this,&ThisClass::UpdateBuildAsset,0.01,true,0);
+	GetWorld()->GetTimerManager().SetTimer(BuildTimer,this,&ThisClass::UpdateBuildAsset,0.05,true,0);
 }
+
+void UBuildingManagerComponent::UpdateBuildAsset()
+{
+	check(SpawnActor);
+	FHitResult HitResult;
+	bCanDrop = true;
+	if (GetTraceHitResult(HitResult))
+	{
+		// 마우스가 가리키는 실제 지점
+		FVector HitLocation = HitResult.Location;
+
+		// 100cm (1m) 간격으로 스냅
+		FVector SnappedLocation = HitLocation.GridSnap(GridValue);
+		// FVector SpawnOrigin;
+		// FVector SpawnBoxExtent;
+		//SpawnActor->GetActorBounds(false,SpawnOrigin,SpawnBoxExtent);
+		FVector Origin, BoxExtent;
+		SpawnActor->GetActorBounds(true, Origin, BoxExtent); // 충돌 기준
+		
+
+		SnappedLocation.Z = HitLocation.Z + BoxExtent.Z;
+
+		const FVector InterpVector = FMath::VInterpTo(SpawnActor->GetActorLocation(),SnappedLocation,GetWorld()->GetDeltaSeconds(),12.f);
+		SpawnActor->SetActorLocation(SnappedLocation);
+		
+		if(CheckMode == ECheckMode::LineTrace)
+		{
+			bCanDrop = !CheckLineTrace();
+		}
+		else if(CheckMode == ECheckMode::Overlap)
+		{
+			bCanDrop = !CheckOverlap();
+		}
+		else if(CheckMode == ECheckMode::MultiLineTrace)
+		{
+			bCanDrop = !CheckMultiLineTrace();
+		}
+	}
+
+	//코너 반경 확인
+	if(bCanDrop)
+	{
+		bCanDrop =  IsCornersCheck(); 
+	}
+	
+	//머티리얼 설정
+	UStaticMeshComponent* MeshComponent = SpawnActor->FindComponentByClass<UStaticMeshComponent>();
+	check(MeshComponent);
+
+	check(CanBuildMaterial && CanNotBuildMaterial);
+	MeshComponent->SetMaterial(0, bCanDrop ? CanBuildMaterial : CanNotBuildMaterial);
+}
+
 
 bool UBuildingManagerComponent::GetTraceHitResult(FHitResult& Result,ECollisionChannel TraceChannel)
 {
@@ -101,49 +163,48 @@ bool UBuildingManagerComponent::IsCornersCheck()
 	FVector BottomRight = Origin + FVector(HalfWidth, -HalfHeight, 0);
 	FVector BottomLeft = Origin + FVector(-HalfWidth, -HalfHeight, 0);
 	
-	FHitResult OutHit;
+	TArray<FHitResult> OutHits;
 	TArray<AActor*> IgnoreActors;
 	IgnoreActors.Add(SpawnActor);
 
 	// 각 코너에 대해 트레이스 실행
-	return PerformLineTrace(TopRight, IgnoreActors, OutHit)
-		&& PerformLineTrace(TopLeft, IgnoreActors, OutHit)
-		&& PerformLineTrace(BottomRight, IgnoreActors, OutHit)
-		&& PerformLineTrace(BottomLeft, IgnoreActors, OutHit);
+	return PerformLineTrace(TopRight, IgnoreActors, OutHits)
+		&& PerformLineTrace(TopLeft, IgnoreActors, OutHits)
+		&& PerformLineTrace(BottomRight, IgnoreActors, OutHits)
+		&& PerformLineTrace(BottomLeft, IgnoreActors, OutHits);
 }
 
-bool UBuildingManagerComponent::PerformLineTrace(const FVector& StartPoint, const TArray<AActor*>& IgnoreActors, FHitResult& OutHit,ECollisionChannel TraceChannel /* = ECC_Visibility */)
+bool UBuildingManagerComponent::PerformLineTrace(const FVector& StartPoint, const TArray<AActor*>& IgnoreActors, TArray<FHitResult>& OutHits,ECollisionChannel TraceChannel /* = ECC_Visibility */)
 {
-	FVector TraceStart = StartPoint + FVector(0.f, 0.f, 100.f); 
-	FVector TraceEnd = StartPoint + FVector(0.f, 0.f, -1.f);    
-	
-	FCollisionQueryParams QueryParams;
-	QueryParams.AddIgnoredActors(IgnoreActors); 
-	QueryParams.bTraceComplex = true; 
-	
-	bool bHit = GetWorld()->LineTraceSingleByChannel(
-		OutHit,         
-		TraceStart,     
-		TraceEnd,       
-		TraceChannel,   
-		QueryParams     
+	// LineTrace를 실행하여 주어진 점에서 아래로 충돌을 확인
+	bool bHit =  UKismetSystemLibrary::LineTraceMultiByProfile(
+		this,
+		FVector(StartPoint.X, StartPoint.Y, 100),  // Z 값은 100으로 고정하여 위에서 아래로 트레이스
+		FVector(StartPoint.X, StartPoint.Y, -1.f),  // -1로 Z 값을 낮추어 트레이스 진행
+		"Visibility",  // 프로파일 이름은 "Visibility"로 설정
+		false,          // 트레이스에서 충돌이 발생한 오브젝트는 무시하지 않음
+		IgnoreActors,   // 트레이스에서 무시할 액터 리스트
+		EDrawDebugTrace::ForOneFrame,  // 디버그 표시: 1 프레임 동안만 표시
+		OutHits,        // 충돌 결과가 저장될 배열
+		true            // 히트 결과를 캐스팅하여 처리
 	);
 
-#if WITH_EDITOR
-	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, bHit ? FColor::Green : FColor::Red, false, 1.f, 0, 1.f);
+#if 0
+	DrawDebugLine(GetWorld(), FVector(StartPoint.X, StartPoint.Y, 100), FVector(StartPoint.X, StartPoint.Y, -1.f), bHit ? FColor::Green : FColor::Red, false, 1.f, 0, 1.f);
 #endif
 	if(bHit)
 	{
-		if(HitClassType)
+		for (const FHitResult& Hit : OutHits)
 		{
-			bHit = !OutHit.GetActor()->IsA(HitClassType); 
+			if (IsClassInHitList(Hit.GetActor()))
+			{
+				return false;
+			}
 		}
-		else
-		{
-			bHit = !OutHit.GetActor()->IsA(AActor::StaticClass()); // 히트한게 액터 클래스인지?
-		}
+		return true;
 	}
-	return bHit; 
+	//아무것도 없으면 배치되면 안됨,
+	return false; 
 }
 
 FVector UBuildingManagerComponent::GridPosition(const FVector& InParam) const
@@ -153,46 +214,70 @@ FVector UBuildingManagerComponent::GridPosition(const FVector& InParam) const
 	return FVector(UKismetMathLibrary::Round(DivideVector.X) * GridValue,UKismetMathLibrary::Round(DivideVector.Y) * GridValue, 40.f );
 }
 
-void UBuildingManagerComponent::UpdateBuildAsset()
+bool UBuildingManagerComponent::IsClassInHitList(AActor* Actor) const
 {
-	FHitResult HitResult;
-	if (GetTraceHitResult(HitResult))
+	if (!Actor) return false;
+
+	for (const TSubclassOf<AActor>& ClassType : HitClassTypes)
 	{
-		// 마우스가 가리키는 실제 지점
-		FVector HitLocation = HitResult.Location;
-
-		// 100cm (1m) 간격으로 스냅
-		FVector SnappedLocation = HitLocation.GridSnap(GridValue);
-		// FVector SpawnOrigin;
-		// FVector SpawnBoxExtent;
-		//SpawnActor->GetActorBounds(false,SpawnOrigin,SpawnBoxExtent);
-		FVector Origin, BoxExtent;
-		SpawnActor->GetActorBounds(true, Origin, BoxExtent); // 충돌 기준
-
-		// Z축 보정: 액터의 반높이만큼 위로 올리기
-
-		SnappedLocation.Z = HitLocation.Z + BoxExtent.Z;
-		// 액터 위치 설정
-		if (SpawnActor)
+		if (ClassType && Actor->IsA(ClassType))
 		{
-			SpawnActor->SetActorLocation(SnappedLocation);
+			return true;
 		}
-
-		// 디버그 메시지
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Cyan,FString::Printf(TEXT("Hit: %s"), *HitLocation.ToString()));
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green,FString::Printf(TEXT("Snapped: %s"), *SpawnActor->GetActorLocation().ToString()));
-
-		bCanDrop = false;
 	}
-
-	//코너 반경 확인
-	bCanDrop =  IsCornersCheck; 
-	
-	
-	//머티리얼 설정
-	UStaticMeshComponent* MeshComponent = SpawnActor->FindComponentByClass<UStaticMeshComponent>();
-	check(MeshComponent);
-	
-	MeshComponent->SetMaterial(0, bCanDrop ? CanBuildMaterial : CanNotBuildMaterial);
+	return false;
 }
+
+bool UBuildingManagerComponent::CheckLineTrace()
+{
+	FHitResult Result;
+	FVector Start = SpawnActor->GetActorLocation() + FVector(0, 0, 100);
+	FVector End = SpawnActor->GetActorLocation() + FVector(0, 0, -1000);
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(SpawnActor);
+
+	if (GetWorld()->LineTraceSingleByChannel(Result, Start, End, ECC_Visibility, Params))
+	{
+		return IsClassInHitList(Result.GetActor());
+	}
+	return false;
+}
+
+bool UBuildingManagerComponent::CheckOverlap()
+{
+	TArray<AActor*> OverlappingActors;
+	SpawnActor->GetOverlappingActors(OverlappingActors);
+
+	for (AActor* Actor : OverlappingActors)
+	{
+		if (IsClassInHitList(Actor))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool UBuildingManagerComponent::CheckMultiLineTrace()
+{
+	TArray<FHitResult> HitResults;
+	FVector Start = SpawnActor->GetActorLocation() + FVector(0, 0, 100);
+	FVector End = SpawnActor->GetActorLocation() + FVector(0, 0, -1000);
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(SpawnActor);
+
+	if (GetWorld()->LineTraceMultiByChannel(HitResults, Start, End, ECC_Visibility, Params))
+	{
+		for (const FHitResult& Hit : HitResults)
+		{
+			if (IsClassInHitList(Hit.GetActor()))
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+
 
