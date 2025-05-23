@@ -29,7 +29,7 @@ public:
 
 	/** 멤버변수로 태그설정 안했으면 재정의해서 태그 설정을 해주세요. */
 	virtual FGameplayTag GetFunctionTag() const {return FunctionTag;}
-
+	
 public:
 
 	AActor* GetOwner() const;
@@ -40,7 +40,7 @@ public:
 	{
 		return Cast<T>(GetOwnerCharacter());
 	}
-
+	
 public:
 	
 	/**

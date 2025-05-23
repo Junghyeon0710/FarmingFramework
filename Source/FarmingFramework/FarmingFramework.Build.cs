@@ -27,7 +27,7 @@ public class FarmingFramework : ModuleRules
 			{
 				"Core",
 				"GameplayTags",
-				"Landscape"
+				"Landscape", "StructUtils"
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);

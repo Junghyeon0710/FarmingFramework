@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "InstancedStruct.h"
 #include "Components/ActorComponent.h"
 #include "ProgressionComponent.generated.h"
 
@@ -39,7 +40,7 @@ public:
 	virtual void Interact();
 	
 	FTimerHandle ProgressTimer;
-
+	TArray<TInstancedStruct<FMeshList>> as;
 public:
 	FGameplayTag GetCurrentState();
 	FGameplayTag GetDesiredState();
