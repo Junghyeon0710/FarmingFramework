@@ -86,5 +86,7 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	static FGameplayTag TraceForwardForActorFirstTagWithActor(AActor*& DetectActor,AActor* SourceActor,float TraceDistance, ECollisionChannel Channel = ECC_Visibility);
-	
+
+	UFUNCTION(BlueprintCallable, meta=(DeterminesOutputType=FragmentClass))
+	static const UFarmItemFragment* FindItemActorFragment(TSubclassOf<AActor> ItemActor, TSubclassOf<UFarmItemFragment> FragmentClass);
 };

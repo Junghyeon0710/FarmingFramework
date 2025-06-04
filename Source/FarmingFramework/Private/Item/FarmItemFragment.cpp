@@ -5,6 +5,7 @@
 
 #include "GameplayTagAssetInterface.h"
 #include "GameFramework/Character.h"
+#include "Interface/FarmItemFragmentInterface.h"
 
 void UFarmItemFragment::PostInitProperties()
 {
@@ -216,4 +217,26 @@ FGameplayTag UFarmItemStatics::TraceForwardForActorFirstTagWithActor(AActor*& De
 	
 		
 	return FGameplayTag();
+}
+
+const UFarmItemFragment* UFarmItemStatics::FindItemActorFragment(TSubclassOf<AActor> ItemActor, TSubclassOf<UFarmItemFragment> FragmentClass)
+{
+	if (!ItemActor || !FragmentClass)
+	{
+		return nullptr;
+	}
+
+	// Get CDO (Class Default Object) to access default properties
+	const AActor* CDO = ItemActor->GetDefaultObject<AActor>();
+	if (!CDO)
+	{
+		return nullptr;
+	}
+
+	if(const IFarmItemFragmentInterface* FarmItemFragmentInterface = Cast<IFarmItemFragmentInterface>(CDO))
+	{
+		return FarmItemFragmentInterface->GetFarmItemFragment(FragmentClass);
+	}
+
+	return nullptr;
 }
