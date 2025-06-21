@@ -6,6 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "BuildingManagerComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FFinishPlacement,AActor*, SpawnedActor);
+
 UENUM(BlueprintType)
 enum class ECheckMode : uint8
 {
@@ -28,11 +30,18 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void BuildStart(const TSubclassOf<AActor>& TargetClass);
+	UFUNCTION(BlueprintCallable)
+    void FinishPlacement();
+    
 	void StartBuildTimer();
 	bool GetTraceHitResult(FHitResult& Result,ECollisionChannel TraceChannel = ECC_Visibility);
 	bool GetTraceHitResult(FHitResult& Result,const TArray<AActor*>& IgnoreActors ,ECollisionChannel TraceChannel = ECC_Visibility);
 	bool IsCornersCheck();
 	bool PerformLineTrace(	const FVector& StartPoint, const TArray<AActor*>& IgnoreActors, TArray<FHitResult>& OutHits,ECollisionChannel TraceChannel = ECC_Visibility );
+
+
+	UPROPERTY(BlueprintAssignable)
+	FFinishPlacement OnFinishPlacement;
 public:
 	
 	FVector GridPosition(const FVector& InParam) const;
@@ -70,5 +79,8 @@ private:
 	TObjectPtr<AActor> SpawnActor;
 
 	FTimerHandle BuildTimer;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UMaterialInterface> ActorMaterial;
 	
 };

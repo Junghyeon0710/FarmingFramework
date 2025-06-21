@@ -19,8 +19,13 @@ public:
 
 	virtual void PostInitProperties() override;
 
+	/** 프레그먼트 생성될 때 호출 되는 함수*/
+	virtual void OnFragmentCreated() {};
+
 	UFUNCTION(BlueprintCallable)
 	virtual void OnInteract() {};
+	// UFUNCTION(BlueprintCallable)
+	// virtual void OnInteract(APlayerController* PC) {};
 	UFUNCTION(BlueprintCallable)
 	virtual void OnInteractWithTag(FGameplayTag InFunctionTag) {}; // 태그 기반
 	UFUNCTION(BlueprintCallable)
@@ -67,8 +72,8 @@ protected:
 	UPROPERTY(EditAnywhere)
 	FGameplayTag FunctionTag;
 	
-	UPROPERTY(EditAnywhere)
-    TObjectPtr<UAnimMontage> FuncTObjectionTag;
+	// UPROPERTY(EditAnywhere)
+ //    TObjectPtr<UAnimMontage> FuncTObjectionTag;
 };
 
 UCLASS()

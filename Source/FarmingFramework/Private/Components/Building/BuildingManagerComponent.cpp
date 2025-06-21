@@ -18,7 +18,6 @@ UBuildingManagerComponent::UBuildingManagerComponent()
 void UBuildingManagerComponent::PostInitProperties()
 {
 	Super::PostInitProperties();
-
 	
 }
 
@@ -26,6 +25,15 @@ void UBuildingManagerComponent::BuildStart(const TSubclassOf<AActor>& TargetClas
 {
 	check(TargetClass);
 	SpawnActor = GetWorld()->SpawnActor(TargetClass);
+	
+	if (UStaticMeshComponent* StaticMeshComp = SpawnActor->FindComponentByClass<UStaticMeshComponent>())
+	{
+		 ActorMaterial = StaticMeshComp->GetMaterial(0); // 원래 머티리얼로 복구하고 싶다면 따로 저장해뒀다 복원
+	}
+	else if (USkeletalMeshComponent* SkeletalMeshComp = SpawnActor->FindComponentByClass<USkeletalMeshComponent>())
+	{
+		 ActorMaterial = SkeletalMeshComp->GetMaterial(0);
+	}
 	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(),0);
 	PC->SetShowMouseCursor(true);
 	StartBuildTimer();
@@ -82,11 +90,20 @@ void UBuildingManagerComponent::UpdateBuildAsset()
 	}
 	
 	//머티리얼 설정
-	UStaticMeshComponent* MeshComponent = SpawnActor->FindComponentByClass<UStaticMeshComponent>();
-	check(MeshComponent);
-
+	
 	check(CanBuildMaterial && CanNotBuildMaterial);
-	MeshComponent->SetMaterial(0, bCanDrop ? CanBuildMaterial : CanNotBuildMaterial);
+	
+	UStaticMeshComponent* MeshComponent = SpawnActor->FindComponentByClass<UStaticMeshComponent>();
+	if (MeshComponent)
+	{
+		MeshComponent->SetMaterial(0, bCanDrop ? CanBuildMaterial : CanNotBuildMaterial);
+		return;
+	}
+	USkeletalMeshComponent* SkeletalMeshComponent = SpawnActor->FindComponentByClass<USkeletalMeshComponent>();
+	if (SkeletalMeshComponent)
+	{
+		SkeletalMeshComponent->SetMaterial(0, bCanDrop ? CanBuildMaterial : CanNotBuildMaterial);
+	}
 }
 
 
@@ -184,7 +201,7 @@ bool UBuildingManagerComponent::PerformLineTrace(const FVector& StartPoint, cons
 		"Visibility",  // 프로파일 이름은 "Visibility"로 설정
 		false,          // 트레이스에서 충돌이 발생한 오브젝트는 무시하지 않음
 		IgnoreActors,   // 트레이스에서 무시할 액터 리스트
-		EDrawDebugTrace::ForOneFrame,  // 디버그 표시: 1 프레임 동안만 표시
+		EDrawDebugTrace::None,  // 디버그 표시: 1 프레임 동안만 표시
 		OutHits,        // 충돌 결과가 저장될 배열
 		true            // 히트 결과를 캐스팅하여 처리
 	);
@@ -205,6 +222,44 @@ bool UBuildingManagerComponent::PerformLineTrace(const FVector& StartPoint, cons
 	}
 	//아무것도 없으면 배치되면 안됨,
 	return false; 
+}
+
+void UBuildingManagerComponent::FinishPlacement()
+{
+	if (!SpawnActor || !bCanDrop)
+	{
+		// 배치 불가
+		return;
+	}
+
+	// 빌드 타이머 정지
+	GetWorld()->GetTimerManager().ClearTimer(BuildTimer);
+
+	// 머티리얼 원상복구
+	if (UStaticMeshComponent* StaticMeshComp = SpawnActor->FindComponentByClass<UStaticMeshComponent>())
+	{
+		StaticMeshComp->SetMaterial(0,ActorMaterial); // 원래 머티리얼로 복구하고 싶다면 따로 저장해뒀다 복원
+	}
+	else if (USkeletalMeshComponent* SkeletalMeshComp = SpawnActor->FindComponentByClass<USkeletalMeshComponent>())
+	{
+		SkeletalMeshComp->SetMaterial(0, ActorMaterial);
+	}
+
+	// SpawnActor 고정화 처리 (필요하면)
+	SpawnActor->SetActorEnableCollision(true);
+	
+
+
+	// 마우스 커서 끄고 싶다면
+	// APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	// if (PC)
+	// {
+	// 	PC->SetShowMouseCursor(false);
+	// }
+	OnFinishPlacement.Broadcast(SpawnActor);
+
+	// 다음 빌드를 위해 null로 초기화
+	SpawnActor = nullptr;
 }
 
 FVector UBuildingManagerComponent::GridPosition(const FVector& InParam) const

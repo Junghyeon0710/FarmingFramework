@@ -40,6 +40,7 @@ public class FarmingFramework : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+				"UMG"
 			
 			}
 			);

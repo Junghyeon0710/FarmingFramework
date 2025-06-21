@@ -16,7 +16,8 @@ void UFarmItemFragment::PostInitProperties()
 
 AActor* UFarmItemFragment::GetOwner() const
 {
-	return Cast<AActor>(GetOuter());
+	// 컴포넌트 -> 액터 
+	return Cast<AActor>(GetOuter()->GetOuter());
 }
 
 ACharacter* UFarmItemFragment::GetOwnerCharacter() const

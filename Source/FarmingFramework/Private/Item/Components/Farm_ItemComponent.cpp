@@ -1,0 +1,51 @@
+﻿// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "Item/Components/Farm_ItemComponent.h"
+
+#include "Item/FarmItemFragment.h"
+
+
+UFarm_ItemComponent::UFarm_ItemComponent()
+{
+	PrimaryComponentTick.bCanEverTick = true;
+}
+
+UFarmItemFragment* UFarm_ItemComponent::GetFarmItemFragment(TSubclassOf<UFarmItemFragment> FragmentClass) const
+{
+	if (FragmentClass != nullptr)
+	{
+		for (UFarmItemFragment* Fragment : Fragments)
+		{
+			if (Fragment && Fragment->IsA(FragmentClass))
+			{
+				return Fragment;
+			}
+		}
+	}
+
+	return nullptr;
+}
+
+void UFarm_ItemComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	for (UFarmItemFragment* Fragment : Fragments)
+	{
+		if (Fragment != nullptr)
+		{
+			Fragment->OnFragmentCreated();
+		}
+	}
+}
+
+void UFarm_ItemComponent::TryUseItem()
+{
+	for (UFarmItemFragment* Fragment : Fragments)
+	{
+		Fragment->OnInteract();
+	}
+}
+
+
