@@ -22,11 +22,11 @@ AActor* UFarmItemFragment::GetOwner() const
 
 ACharacter* UFarmItemFragment::GetOwnerCharacter() const
 {
-	return Cast<ACharacter>(GetOuter());
+	return Cast<ACharacter>(GetOwner()->GetOuter());
 	
 }
 
-bool UFarmItemFragment::DetectFrontActor(float TileDistance,AActor*& DetectedActor)
+bool UFarmItemFragment::DetectFrontActor(float TileDistance, AActor*& DetectedActor, const FGameplayTag& Tag)
 {
 	AActor* Owner = GetOwner();
 
@@ -40,12 +40,12 @@ bool UFarmItemFragment::DetectFrontActor(float TileDistance,AActor*& DetectedAct
 	FVector Forward = Owner->GetActorForwardVector();
 	FVector End = Start + Forward * TileDistance;
 
-	FHitResult HitResult;
+	TArray<FHitResult> HitResults;
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(Owner);
 	
-	bool bHit = GetWorld()->LineTraceSingleByChannel(
-		HitResult,
+	bool bHit = GetWorld()->LineTraceMultiByChannel(
+		HitResults,
 		Start,
 		End,
 		ECC_Visibility,
@@ -55,23 +55,41 @@ bool UFarmItemFragment::DetectFrontActor(float TileDistance,AActor*& DetectedAct
 #if 1
 	DrawDebugLine(GetWorld(),Start,End,FColor::Red);
 #endif
-	
-	DetectedActor = HitResult.GetActor();
+
+	for (auto& Hit : HitResults)
+	{
+		// 태그 인터페이스가 있는지 확인 (IGameplayTagAssetInterface를 구현한 경우)
+		if (IGameplayTagAssetInterface* Interface = Cast<IGameplayTagAssetInterface>(Hit.GetActor()))
+		{
+			FGameplayTagContainer TagContainer;
+			Interface->GetOwnedGameplayTags(TagContainer);
+			for (auto& HitActorTag : TagContainer)
+			{
+				if (HitActorTag.MatchesTagExact(Tag))
+				{
+					DetectedActor = Hit.GetActor();
+				}
+			}
+		}
+	}
+
 	return bHit;
 }
 
-bool UFarmItemFragment::CheckFrontActorTagMatch(float TileDistance,FGameplayTag InFunctionTag)
+bool UFarmItemFragment::CheckFrontActorTagMatch(float TileDistance, AActor*& DetectedActor, FGameplayTag InFunctionTag)
 {
 	AActor* Actor;
 	if(!DetectFrontActor(TileDistance,Actor))
 	{
 		return false;
 	}
-
+	
 	if(Actor == nullptr)
 	{
 		return false;
 	}
+
+	DetectedActor = Actor;
 
 	//받은 인자가 없을 시 변수로 가지고 있는 태그로 설정해줍니다.
 	if(!InFunctionTag.IsValid())

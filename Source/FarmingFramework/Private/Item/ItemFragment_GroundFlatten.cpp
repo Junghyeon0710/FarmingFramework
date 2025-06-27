@@ -4,7 +4,7 @@
 #include "Item/ItemFragment_GroundFlatten.h"
 #include "NativeGameplayTags.h"
 
-UE_DEFINE_GAMEPLAY_TAG_STATIC(Intreact_Ground_Flatten, "Intreact.Ground.Flatten");
+UE_DEFINE_GAMEPLAY_TAG_STATIC(Interact_Ground_Flatten, "Interact.Ground.Flatten");
 
 void UItemFragment_GroundFlatten::OnInteractWithActor(FGameplayTag InFunctionTag, AActor* DetectedActor)
 {
@@ -20,7 +20,7 @@ void UItemFragment_GroundFlatten::OnInteractWithActor(FGameplayTag InFunctionTag
 
 FGameplayTag UItemFragment_GroundFlatten::GetFunctionTag() const
 {
-	return Intreact_Ground_Flatten;
+	return Interact_Ground_Flatten;
 }
 
 

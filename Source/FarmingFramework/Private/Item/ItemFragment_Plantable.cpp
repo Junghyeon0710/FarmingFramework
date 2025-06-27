@@ -31,8 +31,26 @@ void UItemFragment_Plantable::OnInteract()
 		return;
 	}
 
+	const TWeakObjectPtr<UFarm_ItemComponent> ItemComponent = GetOwner()->FindComponentByClass<UFarm_ItemComponent>();
+	if (!ItemComponent.IsValid())
+	{
+		return;
+	}
+	
+	if (UItemFragment_ItemCount* ItemCount_Fragment = ItemComponent->GetFragmentOfTypeMutable<UItemFragment_ItemCount>())
+	{
+		if (ItemCount_Fragment->GetCount() <= 0)
+		{
+			return;
+		}
+	}
+
 	BCM->BuildStart(SeedActorClass);
-	BCM->OnFinishPlacement.AddDynamic(this, &ThisClass::StartProgression);
+	
+	if (!BCM->OnFinishPlacement.IsAlreadyBound(this, &ThisClass::StartProgression))
+	{
+		BCM->OnFinishPlacement.AddDynamic(this, &ThisClass::StartProgression);
+	}
 }
 
 void UItemFragment_Plantable::StartProgression(AActor* Actor)
@@ -51,6 +69,7 @@ void UItemFragment_Plantable::StartProgression(AActor* Actor)
 	{
 		return;
 	}
+	
 	const TWeakObjectPtr<UFarm_ItemComponent> ItemComponent = GetOwner()->FindComponentByClass<UFarm_ItemComponent>();
 	if (!ItemComponent.IsValid())
 	{
@@ -70,7 +89,10 @@ void UItemFragment_Plantable::StartProgression(AActor* Actor)
 		ItemCount_Fragment->SetCount(NewCount);
 
 		MouserHoverWidgetFragment->GetMouseHoverWidget()->SetCount(NewCount);
-	}
 
-	
+		if(NewCount > 0)
+		{
+			OnInteract();
+		}
+	}
 }

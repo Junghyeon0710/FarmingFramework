@@ -54,15 +54,16 @@ public:
 	 * @param DetectedActor   감지된 액터
 	 * @return 
 	 */
-	bool DetectFrontActor(float TileDistance,AActor*& DetectedActor);
+	bool DetectFrontActor(float TileDistance,AActor*& DetectedActor, const FGameplayTag& Tag);
 
 	/**
 	 * Owner 기준 앞에 액터의 태그가 일치하는지 체크 함수
 	 * @param TileDistance 캐릭터 앞 방향 기준 거리
+	 * @param DetectedActor 감지된 액터
 	 * @param InFunctionTag 찾고싶은 태그 (없을시 변수로 설정한 태그 가져옵니다)
 	 * @return 
 	 */
-	bool CheckFrontActorTagMatch(float TileDistance ,FGameplayTag InFunctionTag = FGameplayTag());
+	bool CheckFrontActorTagMatch(float TileDistance , AActor*& DetectedActor, FGameplayTag InFunctionTag = FGameplayTag());
 
 
 	bool operator==(const FGameplayTag& Other) const {return  this->FunctionTag.MatchesTagExact(Other);}

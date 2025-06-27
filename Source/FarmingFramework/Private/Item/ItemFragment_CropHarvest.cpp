@@ -4,7 +4,7 @@
 #include "..\..\Public\Item\ItemFragment_CropHarvest.h"
 #include "NativeGameplayTags.h"
 
-UE_DEFINE_GAMEPLAY_TAG_STATIC(Intreact_Crop_Harvest, "Intreact.Crop.Harvest");
+UE_DEFINE_GAMEPLAY_TAG_STATIC(Interact_Crop_Harvest, "Interact.Crop.Harvest");
 
 
 void UItemFragment_CropHarvest::OnInteractWithActor(FGameplayTag InFunctionTag, AActor* DetectedActor)
@@ -21,5 +21,5 @@ void UItemFragment_CropHarvest::OnInteractWithActor(FGameplayTag InFunctionTag, 
 
 FGameplayTag UItemFragment_CropHarvest::GetFunctionTag() const
 {
-	return Intreact_Crop_Harvest;
+	return Interact_Crop_Harvest;
 }

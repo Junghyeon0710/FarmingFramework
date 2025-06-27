@@ -4,9 +4,9 @@
 #include "Item/Remove/ItemFragment_RockRemove.h"
 #include "NativeGameplayTags.h"
 
-UE_DEFINE_GAMEPLAY_TAG_STATIC(Intreact_Remove_Rock, "Intreact.Remove.Rock");
+UE_DEFINE_GAMEPLAY_TAG_STATIC(Interact_Remove_Rock, "Interact.Remove.Rock");
 
 FGameplayTag UItemFragment_RockRemove::GetFunctionTag() const
 {
-	return Intreact_Remove_Rock;
+	return Interact_Remove_Rock;
 }

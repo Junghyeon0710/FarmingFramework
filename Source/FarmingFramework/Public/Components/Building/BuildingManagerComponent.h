@@ -72,11 +72,15 @@ protected:
 	UPROPERTY(EditAnywhere,Category = Gird)
 	TArray<TSubclassOf<AActor>> HitClassTypes;
 
+	UPROPERTY(EditAnywhere,Category = Gird)
+	TEnumAsByte<ECollisionChannel> CollisionChannel;
 private:
 	bool bCanDrop = true;
 
 	UPROPERTY(VisibleAnywhere,Category = Spanw)
 	TObjectPtr<AActor> SpawnActor;
+
+	TWeakObjectPtr<AActor> LastSpawnedActor;
 
 	FTimerHandle BuildTimer;
 

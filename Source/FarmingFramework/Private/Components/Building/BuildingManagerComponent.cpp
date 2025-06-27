@@ -24,7 +24,9 @@ void UBuildingManagerComponent::PostInitProperties()
 void UBuildingManagerComponent::BuildStart(const TSubclassOf<AActor>& TargetClass)
 {
 	check(TargetClass);
-	SpawnActor = GetWorld()->SpawnActor(TargetClass);
+	FActorSpawnParameters Params;
+	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnActor = GetWorld()->SpawnActor<AActor>(TargetClass,Params);
 	
 	if (UStaticMeshComponent* StaticMeshComp = SpawnActor->FindComponentByClass<UStaticMeshComponent>())
 	{
@@ -36,6 +38,7 @@ void UBuildingManagerComponent::BuildStart(const TSubclassOf<AActor>& TargetClas
 	}
 	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(),0);
 	PC->SetShowMouseCursor(true);
+	
 	StartBuildTimer();
 	
 }
@@ -194,11 +197,12 @@ bool UBuildingManagerComponent::IsCornersCheck()
 bool UBuildingManagerComponent::PerformLineTrace(const FVector& StartPoint, const TArray<AActor*>& IgnoreActors, TArray<FHitResult>& OutHits,ECollisionChannel TraceChannel /* = ECC_Visibility */)
 {
 	// LineTrace를 실행하여 주어진 점에서 아래로 충돌을 확인
+	FName ProfileName = UCollisionProfile::Get()->ReturnChannelNameFromContainerIndex(CollisionChannel);
 	bool bHit =  UKismetSystemLibrary::LineTraceMultiByProfile(
 		this,
 		FVector(StartPoint.X, StartPoint.Y, 100),  // Z 값은 100으로 고정하여 위에서 아래로 트레이스
 		FVector(StartPoint.X, StartPoint.Y, -1.f),  // -1로 Z 값을 낮추어 트레이스 진행
-		"Visibility",  // 프로파일 이름은 "Visibility"로 설정
+		ProfileName,  // 프로파일 이름은 "Visibility"로 설정
 		false,          // 트레이스에서 충돌이 발생한 오브젝트는 무시하지 않음
 		IgnoreActors,   // 트레이스에서 무시할 액터 리스트
 		EDrawDebugTrace::None,  // 디버그 표시: 1 프레임 동안만 표시
@@ -256,10 +260,14 @@ void UBuildingManagerComponent::FinishPlacement()
 	// {
 	// 	PC->SetShowMouseCursor(false);
 	// }
+	LastSpawnedActor = SpawnActor;
 	OnFinishPlacement.Broadcast(SpawnActor);
 
-	// 다음 빌드를 위해 null로 초기화
-	SpawnActor = nullptr;
+	if (LastSpawnedActor == SpawnActor)
+	{
+		SpawnActor = nullptr;
+		LastSpawnedActor = nullptr;
+	}
 }
 
 FVector UBuildingManagerComponent::GridPosition(const FVector& InParam) const
@@ -286,12 +294,22 @@ bool UBuildingManagerComponent::IsClassInHitList(AActor* Actor) const
 bool UBuildingManagerComponent::CheckLineTrace()
 {
 	FHitResult Result;
-	FVector Start = SpawnActor->GetActorLocation() + FVector(0, 0, 100);
-	FVector End = SpawnActor->GetActorLocation() + FVector(0, 0, -1000);
+	FVector Start = SpawnActor->GetActorLocation() + FVector(0, 0, 1000);
+	FVector End = SpawnActor->GetActorLocation() + FVector(0, 0, -2000);
+	// DrawDebugLine(
+	// 	GetWorld(),
+	// 	Start,
+	// 	End,
+	// 	FColor::Green, // 선 색상
+	// 	false, // 영구 표시할지 (false면 일정 시간 후 사라짐)
+	// 	5.0f, // 지속 시간 (초)
+	// 	0, // 뎁스 프라이어리티
+	// 	2.0f // 선 두께
+	// );
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(SpawnActor);
 
-	if (GetWorld()->LineTraceSingleByChannel(Result, Start, End, ECC_Visibility, Params))
+	if (GetWorld()->LineTraceSingleByChannel(Result, Start, End, CollisionChannel, Params))
 	{
 		return IsClassInHitList(Result.GetActor());
 	}
@@ -321,7 +339,7 @@ bool UBuildingManagerComponent::CheckMultiLineTrace()
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(SpawnActor);
 
-	if (GetWorld()->LineTraceMultiByChannel(HitResults, Start, End, ECC_Visibility, Params))
+	if (GetWorld()->LineTraceMultiByChannel(HitResults, Start, End, CollisionChannel, Params))
 	{
 		for (const FHitResult& Hit : HitResults)
 		{

@@ -4,10 +4,10 @@
 #include "Item/Remove/ItemFragment_TreeRemove.h"
 #include "NativeGameplayTags.h"
 
-UE_DEFINE_GAMEPLAY_TAG_STATIC(Intreact_Remove_Tree, "Intreact.Remove.Tree");
+UE_DEFINE_GAMEPLAY_TAG_STATIC(Interact_Remove_Tree, "Interact.Remove.Tree");
 
 
 FGameplayTag UItemFragment_TreeRemove::GetFunctionTag() const
 {
-	return Intreact_Remove_Tree;
+	return Interact_Remove_Tree;
 }
