@@ -4,6 +4,7 @@
 #include "Components/Building/BuildingManagerComponent.h"
 
 #include "Landscape.h"
+#include "Components/Building/BuildTargetInterface.h"
 #include "Engine/StaticMeshActor.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -21,12 +22,13 @@ void UBuildingManagerComponent::PostInitProperties()
 	
 }
 
-void UBuildingManagerComponent::BuildStart(const TSubclassOf<AActor>& TargetClass)
+void UBuildingManagerComponent::BuildStart(const TSubclassOf<AActor>& SpawnClass, const TSubclassOf<AActor>& TargetClass)
 {
-	check(TargetClass);
+	check(SpawnClass);
 	FActorSpawnParameters Params;
 	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	SpawnActor = GetWorld()->SpawnActor<AActor>(TargetClass,Params);
+	SpawnActor = GetWorld()->SpawnActor<AActor>(SpawnClass,Params);
+	HitClassTypes.Add(TargetClass);
 	
 	if (UStaticMeshComponent* StaticMeshComp = SpawnActor->FindComponentByClass<UStaticMeshComponent>())
 	{
@@ -53,43 +55,84 @@ void UBuildingManagerComponent::UpdateBuildAsset()
 	check(SpawnActor);
 	FHitResult HitResult;
 	bCanDrop = true;
+	FVector HitLocation;
+
+	TargetActor = nullptr;
+	
 	if (GetTraceHitResult(HitResult))
 	{
-		// 마우스가 가리키는 실제 지점
-		FVector HitLocation = HitResult.Location;
+		if (AActor* HitActor = HitResult.GetActor())
+		{
+			if (IsClassInHitList(HitActor))
+			{
+				EPivotPosition PivotPosition = GetActorPivotPosition(HitActor);
 
+				UStaticMeshComponent* MeshComp = HitActor->FindComponentByClass<UStaticMeshComponent>();
+				if (MeshComp && MeshComp->GetStaticMesh())
+				{
+					const FVector ActorLocation = HitActor->GetActorLocation();
+					const FBox LocalBounds = MeshComp->GetStaticMesh()->GetBoundingBox();
+					const FVector BoxExtent = LocalBounds.GetExtent();
+
+					// Z 오프셋 계산
+					float ZOffset = 0.f;
+					switch (PivotPosition)
+					{
+					case EPivotPosition::Center:
+						ZOffset = BoxExtent.Z * MeshComp->GetComponentScale().Z;
+						break;
+
+					case EPivotPosition::Bottom:
+						ZOffset = BoxExtent.Z * 2.f * MeshComp->GetComponentScale().Z;
+						break;
+
+					default:
+						break;
+					}
+
+					HitLocation = ActorLocation + FVector(0.f, 0.f, ZOffset);
+				}
+			}
+			else
+			{
+				HitLocation = HitResult.Location;
+			}
+		}
+		
 		// 100cm (1m) 간격으로 스냅
 		FVector SnappedLocation = HitLocation.GridSnap(GridValue);
-		// FVector SpawnOrigin;
-		// FVector SpawnBoxExtent;
-		//SpawnActor->GetActorBounds(false,SpawnOrigin,SpawnBoxExtent);
-		FVector Origin, BoxExtent;
-		SpawnActor->GetActorBounds(true, Origin, BoxExtent); // 충돌 기준
+		SnappedLocation.Z = HitLocation.Z;
 		
-
-		SnappedLocation.Z = HitLocation.Z + BoxExtent.Z;
-
-		const FVector InterpVector = FMath::VInterpTo(SpawnActor->GetActorLocation(),SnappedLocation,GetWorld()->GetDeltaSeconds(),12.f);
 		SpawnActor->SetActorLocation(SnappedLocation);
+		
 		
 		if(CheckMode == ECheckMode::LineTrace)
 		{
-			bCanDrop = !CheckLineTrace();
+			bCanDrop = CheckLineTrace();
 		}
 		else if(CheckMode == ECheckMode::Overlap)
 		{
-			bCanDrop = !CheckOverlap();
+			bCanDrop = CheckOverlap();
 		}
 		else if(CheckMode == ECheckMode::MultiLineTrace)
 		{
-			bCanDrop = !CheckMultiLineTrace();
+			bCanDrop = CheckMultiLineTrace();
 		}
 	}
 
 	//코너 반경 확인
 	if(bCanDrop)
 	{
-		bCanDrop =  IsCornersCheck(); 
+	//	bCanDrop =  IsCornersCheck(); 
+	}
+
+	// 타겟 위에 지워도 되는지 체크
+	if (TargetActor.IsValid())
+	{
+		if (TargetActor->Implements<UBuildTargetInterface>())
+		{
+			bCanDrop = IBuildTargetInterface::Execute_CanBeBuiltOn(TargetActor.Get());
+		}
 	}
 	
 	//머티리얼 설정
@@ -109,7 +152,6 @@ void UBuildingManagerComponent::UpdateBuildAsset()
 	}
 }
 
-
 bool UBuildingManagerComponent::GetTraceHitResult(FHitResult& Result,ECollisionChannel TraceChannel)
 {
 	bool bHit = false;
@@ -124,7 +166,7 @@ bool UBuildingManagerComponent::GetTraceHitResult(FHitResult& Result,ECollisionC
 		FVector TraceEnd = MouseWorldLocation + (MouseWorldDirection * 100000.f);
 		
 		FCollisionQueryParams Params;
-		Params.bTraceComplex = true;
+		//Params.bTraceComplex = true;
 		Params.AddIgnoredActor(SpawnActor);
 		bHit = GetWorld()->LineTraceSingleByChannel(
 			Result,
@@ -187,7 +229,7 @@ bool UBuildingManagerComponent::IsCornersCheck()
 	TArray<AActor*> IgnoreActors;
 	IgnoreActors.Add(SpawnActor);
 
-	// 각 코너에 대해 트레이스 실행
+	// 각 코너에 대해 트레이스 실행 
 	return PerformLineTrace(TopRight, IgnoreActors, OutHits)
 		&& PerformLineTrace(TopLeft, IgnoreActors, OutHits)
 		&& PerformLineTrace(BottomRight, IgnoreActors, OutHits)
@@ -251,18 +293,20 @@ void UBuildingManagerComponent::FinishPlacement()
 
 	// SpawnActor 고정화 처리 (필요하면)
 	SpawnActor->SetActorEnableCollision(true);
+
+	//히트 액터한테 액터가 배치 됐다고 알려줌
+	if (TargetActor.IsValid())
+	{
+		if (TargetActor->Implements<UBuildTargetInterface>())
+		{
+			IBuildTargetInterface::Execute_OnBuildingPlaced(TargetActor.Get(),TargetActor.Get());
+		}
+	}
 	
-
-
-	// 마우스 커서 끄고 싶다면
-	// APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	// if (PC)
-	// {
-	// 	PC->SetShowMouseCursor(false);
-	// }
 	LastSpawnedActor = SpawnActor;
 	OnFinishPlacement.Broadcast(SpawnActor);
 
+	// Broadcast후 바로 SpawnActor 스폰, SpawnActor 삭제 방지
 	if (LastSpawnedActor == SpawnActor)
 	{
 		SpawnActor = nullptr;
@@ -277,7 +321,74 @@ FVector UBuildingManagerComponent::GridPosition(const FVector& InParam) const
 	return FVector(UKismetMathLibrary::Round(DivideVector.X) * GridValue,UKismetMathLibrary::Round(DivideVector.Y) * GridValue, 40.f );
 }
 
-bool UBuildingManagerComponent::IsClassInHitList(AActor* Actor) const
+EPivotPosition UBuildingManagerComponent::GetActorPivotPosition(const AActor* Actor)
+{
+	if (UStaticMeshComponent* StaticMeshComponent = Actor->FindComponentByClass<UStaticMeshComponent>())
+	{
+		return GetStaticMeshPivotPosition(StaticMeshComponent);
+	}
+
+	if (USkeletalMeshComponent* SkeletalMeshComponent = Actor->FindComponentByClass<USkeletalMeshComponent>())
+	{
+		return GetSkeletalMeshPivotPosition(SkeletalMeshComponent);
+	}
+
+	return EPivotPosition::Bottom;
+}
+
+EPivotPosition UBuildingManagerComponent::GetStaticMeshPivotPosition(const UStaticMeshComponent* MeshComp)
+{
+	if (MeshComp && MeshComp->GetStaticMesh())
+	{
+		// 메쉬의 로컬 공간에서 AABB 중심 위치
+		const FBox LocalBounds = MeshComp->GetStaticMesh()->GetBoundingBox();
+		const FVector Center = LocalBounds.GetCenter();
+		const FVector Min = LocalBounds.Min;
+
+		// 피벗 위치는 (0,0,0) 이므로 Center.Z 와 Min.Z 비교
+		float CenterZ = Center.Z;
+		float PivotZ = 0.f; // 피벗은 로컬 공간 기준 (0,0,0)
+		float MinZ = Min.Z;
+
+		// 어느 쪽에 가까운지 판단
+		float DistToCenter = FMath::Abs(PivotZ - CenterZ);
+		float DistToBottom = FMath::Abs(PivotZ - MinZ);
+
+		if (DistToCenter < DistToBottom)
+		{
+			return EPivotPosition::Center;
+		}
+	}
+	return EPivotPosition::Bottom;
+}
+
+EPivotPosition UBuildingManagerComponent::GetSkeletalMeshPivotPosition(const USkeletalMeshComponent* MeshComp)
+{
+	if (MeshComp && MeshComp->GetSkeletalMeshAsset())
+	{
+		// 메쉬의 로컬 공간에서 AABB 중심 위치
+		const FBox LocalBounds = MeshComp->GetSkeletalMeshAsset()->GetImportedBounds().GetBox();
+		const FVector Center = LocalBounds.GetCenter();
+		const FVector Min = LocalBounds.Min;
+
+		// 피벗 위치는 (0,0,0) 이므로 Center.Z 와 Min.Z 비교
+		float CenterZ = Center.Z;
+		float PivotZ = 0.f; // 피벗은 로컬 공간 기준 (0,0,0)
+		float MinZ = Min.Z;
+
+		// 어느 쪽에 가까운지 판단
+		float DistToCenter = FMath::Abs(PivotZ - CenterZ);
+		float DistToBottom = FMath::Abs(PivotZ - MinZ);
+
+		if (DistToCenter < DistToBottom)
+		{
+			return EPivotPosition::Center;
+		}
+	}
+	return EPivotPosition::Bottom;
+}
+
+bool UBuildingManagerComponent::IsClassInHitList(AActor* Actor)
 {
 	if (!Actor) return false;
 
@@ -285,6 +396,7 @@ bool UBuildingManagerComponent::IsClassInHitList(AActor* Actor) const
 	{
 		if (ClassType && Actor->IsA(ClassType))
 		{
+			TargetActor = Actor;
 			return true;
 		}
 	}

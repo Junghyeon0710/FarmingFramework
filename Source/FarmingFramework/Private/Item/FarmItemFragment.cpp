@@ -26,7 +26,7 @@ ACharacter* UFarmItemFragment::GetOwnerCharacter() const
 	
 }
 
-bool UFarmItemFragment::DetectFrontActor(float TileDistance, AActor*& DetectedActor, const FGameplayTag& Tag)
+bool UFarmItemFragment::DetectFrontActor(float TileDistance, AActor*& DetectedActor, const FGameplayTag& Tag, const TArray<AActor*>& InIgnoreActors)
 {
 	AActor* Owner = GetOwner();
 
@@ -40,12 +40,13 @@ bool UFarmItemFragment::DetectFrontActor(float TileDistance, AActor*& DetectedAc
 	FVector Forward = Owner->GetActorForwardVector();
 	FVector End = Start + Forward * TileDistance;
 
-	TArray<FHitResult> HitResults;
+	FHitResult HitResult;
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(Owner);
+	Params.AddIgnoredActors(InIgnoreActors);
 	
-	bool bHit = GetWorld()->LineTraceMultiByChannel(
-		HitResults,
+	bool bHit = GetWorld()->LineTraceSingleByChannel(
+		HitResult,
 		Start,
 		End,
 		ECC_Visibility,
@@ -56,35 +57,30 @@ bool UFarmItemFragment::DetectFrontActor(float TileDistance, AActor*& DetectedAc
 	DrawDebugLine(GetWorld(),Start,End,FColor::Red);
 #endif
 
-	for (auto& Hit : HitResults)
+
+	if (IGameplayTagAssetInterface* Interface = Cast<IGameplayTagAssetInterface>(HitResult.GetActor()))
 	{
-		// 태그 인터페이스가 있는지 확인 (IGameplayTagAssetInterface를 구현한 경우)
-		if (IGameplayTagAssetInterface* Interface = Cast<IGameplayTagAssetInterface>(Hit.GetActor()))
+		FGameplayTagContainer TagContainer;
+		Interface->GetOwnedGameplayTags(TagContainer);
+
+		if (TagContainer.HasTagExact(Tag))
 		{
-			FGameplayTagContainer TagContainer;
-			Interface->GetOwnedGameplayTags(TagContainer);
-			for (auto& HitActorTag : TagContainer)
-			{
-				if (HitActorTag.MatchesTagExact(Tag))
-				{
-					DetectedActor = Hit.GetActor();
-				}
-			}
+			DetectedActor = HitResult.GetActor();
 		}
 	}
-
+	
 	return bHit;
 }
 
-bool UFarmItemFragment::CheckFrontActorTagMatch(float TileDistance, AActor*& DetectedActor, FGameplayTag InFunctionTag)
+bool UFarmItemFragment::CheckFrontActorTagMatch(float TileDistance, AActor*& DetectedActor, FGameplayTag InFunctionTag, const TArray<AActor*>& InIgnoreActors)
 {
-	AActor* Actor;
-	if(!DetectFrontActor(TileDistance,Actor))
+	AActor* Actor = nullptr;
+	if(!DetectFrontActor(TileDistance,Actor, InFunctionTag, InIgnoreActors))
 	{
 		return false;
 	}
 	
-	if(Actor == nullptr)
+	if(!IsValid(Actor))
 	{
 		return false;
 	}
@@ -100,7 +96,7 @@ bool UFarmItemFragment::CheckFrontActorTagMatch(float TileDistance, AActor*& Det
 	// 받은 인자 X 변수로 설정된 태그 X
 	if(!InFunctionTag.IsValid())
 	{
-		UE_LOG(LogTemp, Error, TEXT("CheckFrontActorTagMatch failed: InFunctionTag is not valid."));
+		//UE_LOG(LogTemp, Error, TEXT("CheckFrontActorTagMatch failed: InFunctionTag is not valid."));
 		return false;
 	}
 	

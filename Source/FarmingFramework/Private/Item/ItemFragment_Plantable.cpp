@@ -3,6 +3,7 @@
 
 #include "Item/ItemFragment_Plantable.h"
 
+#include "Actors/InteractableActors/Tiles/Farm_TileActor.h"
 #include "Components/ProgressionComponent.h"
 #include "Components/Building/BuildingManagerComponent.h"
 #include "FarmingFramework/Widgets/Farm_MouseHoverItem.h"
@@ -45,7 +46,7 @@ void UItemFragment_Plantable::OnInteract()
 		}
 	}
 
-	BCM->BuildStart(SeedActorClass);
+	BCM->BuildStart(SeedActorClass,AFarm_TileActor::StaticClass());
 	
 	if (!BCM->OnFinishPlacement.IsAlreadyBound(this, &ThisClass::StartProgression))
 	{
@@ -59,7 +60,7 @@ void UItemFragment_Plantable::StartProgression(AActor* Actor)
 	{
 		return;
 	}
-
+	
 	if (UProgressionComponent* ProgressionComponent = Actor->FindComponentByClass<UProgressionComponent>())
 	{
 		ProgressionComponent->Interact();

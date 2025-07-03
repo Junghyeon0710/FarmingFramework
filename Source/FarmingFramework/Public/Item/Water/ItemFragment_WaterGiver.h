@@ -17,8 +17,15 @@ class FARMINGFRAMEWORK_API UItemFragment_WaterGiver : public UFarmItemFragment
 public:
 	virtual void OnInteract() override;
 	virtual FGameplayTag GetFunctionTag() const override;
+
+	bool HasIgnoreTag(AActor* InActor);
 private:
 
 	UPROPERTY(EditAnywhere)
 	float TileDistance;
+
+	UPROPERTY(EditAnywhere)
+	FGameplayTag IgnoreTag;
+
+	TArray<TWeakObjectPtr<AActor>> IgnoreActors;
 };

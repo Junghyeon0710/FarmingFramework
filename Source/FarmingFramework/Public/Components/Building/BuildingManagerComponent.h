@@ -16,6 +16,13 @@ enum class ECheckMode : uint8
 	MultiLineTrace  UMETA(DisplayName = "Multi Line Trace") 	/** 마우스 기준으로 오버랩,히트 체크합니다.*/
 };
 
+UENUM(BlueprintType)
+enum class EPivotPosition : uint8
+{
+	Center UMETA(DisplayName = "Center"),
+	Bottom UMETA(DisplayName = "Bottom")
+};
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class FARMINGFRAMEWORK_API UBuildingManagerComponent : public UActorComponent
 {
@@ -29,7 +36,7 @@ public:
 #endif
 	
 	UFUNCTION(BlueprintCallable)
-	void BuildStart(const TSubclassOf<AActor>& TargetClass);
+	void BuildStart(const TSubclassOf<AActor>& SpawnClass, const TSubclassOf<AActor>& TargetClass = nullptr);
 	UFUNCTION(BlueprintCallable)
     void FinishPlacement();
     
@@ -45,9 +52,11 @@ public:
 public:
 	
 	FVector GridPosition(const FVector& InParam) const;
-
+	EPivotPosition GetActorPivotPosition(const AActor* Actor);
+	EPivotPosition GetStaticMeshPivotPosition(const UStaticMeshComponent* MeshComp);
+	EPivotPosition GetSkeletalMeshPivotPosition(const USkeletalMeshComponent* MeshComp);
 public:
-	bool IsClassInHitList(AActor* Actor) const;
+	bool IsClassInHitList(AActor* Actor);
 	bool CheckLineTrace();
 	bool CheckOverlap();
 	bool CheckMultiLineTrace();
@@ -56,6 +65,9 @@ protected:
 
 	UPROPERTY(EditAnywhere,Category = Check)
 	ECheckMode CheckMode = ECheckMode::Overlap;
+	
+	//UPROPERTY(EditAnywhere,Category = Check)
+	EPivotPosition PivotPivotPosition = EPivotPosition::Bottom;
 protected:
 	virtual void UpdateBuildAsset();
 
@@ -81,6 +93,8 @@ private:
 	TObjectPtr<AActor> SpawnActor;
 
 	TWeakObjectPtr<AActor> LastSpawnedActor;
+	TWeakObjectPtr<AActor> TargetActor;
+	TWeakObjectPtr<AActor> LastTargetActor;
 
 	FTimerHandle BuildTimer;
 

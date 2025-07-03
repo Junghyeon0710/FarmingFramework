@@ -27,7 +27,9 @@ public class FarmingFramework : ModuleRules
 			{
 				"Core",
 				"GameplayTags",
-				"Landscape", "StructUtils"
+				"Landscape", 
+				"StructUtils", 
+				"DynamicWeather"
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -40,8 +42,7 @@ public class FarmingFramework : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				"UMG"
-			
+				"UMG",
 			}
 			);
 		

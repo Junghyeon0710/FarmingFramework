@@ -20,6 +20,8 @@ public:
 	virtual void GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const override;
 	/** ~IGameplayTagAssetInterface*/
 
+	void AddStaticGameplayTag(const FGameplayTag& NewTag);
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Actor)
 	FGameplayTagContainer StaticGameplayTags;
