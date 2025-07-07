@@ -6,6 +6,7 @@
 #include "GameplayTagAssetInterface.h"
 #include "GameFramework/Character.h"
 #include "Interface/FarmItemFragmentInterface.h"
+#include "Kismet/GameplayStatics.h"
 
 void UFarmItemFragment::PostInitProperties()
 {
@@ -22,7 +23,8 @@ AActor* UFarmItemFragment::GetOwner() const
 
 ACharacter* UFarmItemFragment::GetOwnerCharacter() const
 {
-	return Cast<ACharacter>(GetOwner()->GetOuter());
+	//임시
+	return UGameplayStatics::GetPlayerCharacter(this,0);
 }
 
 bool UFarmItemFragment::DetectFrontActor(float TileDistance, AActor*& DetectedActor, const FGameplayTag& Tag, const TArray<AActor*>& InIgnoreActors)
