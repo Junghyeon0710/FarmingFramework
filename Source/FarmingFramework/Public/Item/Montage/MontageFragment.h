@@ -9,8 +9,16 @@
 /**
  * 
  */
+class UAnimMontage;
+
 UCLASS()
 class FARMINGFRAMEWORK_API UMontageFragment : public UFarmItemFragment
 {
     GENERATED_BODY()
+public:
+    virtual void PlayMontage();
+    
+protected:
+    UPROPERTY(EditDefaultsOnly, Category = "Montage")
+    TObjectPtr<UAnimMontage> AnimMontage;
 };
