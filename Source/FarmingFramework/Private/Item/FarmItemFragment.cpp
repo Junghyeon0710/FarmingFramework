@@ -23,7 +23,6 @@ AActor* UFarmItemFragment::GetOwner() const
 ACharacter* UFarmItemFragment::GetOwnerCharacter() const
 {
 	return Cast<ACharacter>(GetOwner()->GetOuter());
-	
 }
 
 bool UFarmItemFragment::DetectFrontActor(float TileDistance, AActor*& DetectedActor, const FGameplayTag& Tag, const TArray<AActor*>& InIgnoreActors)

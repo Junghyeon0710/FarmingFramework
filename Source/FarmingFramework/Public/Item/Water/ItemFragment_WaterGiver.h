@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Item/FarmItemFragment.h"
+#include "Item/Montage/MontageFragment.h"
 #include "ItemFragment_WaterGiver.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class FARMINGFRAMEWORK_API UItemFragment_WaterGiver : public UFarmItemFragment
+class FARMINGFRAMEWORK_API UItemFragment_WaterGiver : public UMontageFragment
 {
 	GENERATED_BODY()
 
