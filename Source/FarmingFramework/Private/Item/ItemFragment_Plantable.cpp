@@ -18,7 +18,7 @@ void UItemFragment_Plantable::OnInteract()
 	{
 		return;
 	}
-	
+
 	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(),0);
 
 	if (!IsValid(PC))
@@ -37,7 +37,7 @@ void UItemFragment_Plantable::OnInteract()
 	{
 		return;
 	}
-	
+
 	if (UItemFragment_ItemCount* ItemCount_Fragment = ItemComponent->GetFragmentOfTypeMutable<UItemFragment_ItemCount>())
 	{
 		if (ItemCount_Fragment->GetCount() <= 0)
@@ -47,7 +47,7 @@ void UItemFragment_Plantable::OnInteract()
 	}
 
 	BCM->BuildStart(SeedActorClass,AFarm_TileActor::StaticClass());
-	
+
 	if (!BCM->OnFinishPlacement.IsAlreadyBound(this, &ThisClass::StartProgression))
 	{
 		BCM->OnFinishPlacement.AddDynamic(this, &ThisClass::StartProgression);
@@ -60,7 +60,7 @@ void UItemFragment_Plantable::StartProgression(AActor* Actor)
 	{
 		return;
 	}
-	
+
 	if (UProgressionComponent* ProgressionComponent = Actor->FindComponentByClass<UProgressionComponent>())
 	{
 		ProgressionComponent->Interact();
@@ -70,7 +70,7 @@ void UItemFragment_Plantable::StartProgression(AActor* Actor)
 	{
 		return;
 	}
-	
+
 	const TWeakObjectPtr<UFarm_ItemComponent> ItemComponent = GetOwner()->FindComponentByClass<UFarm_ItemComponent>();
 	if (!ItemComponent.IsValid())
 	{
@@ -86,6 +86,7 @@ void UItemFragment_Plantable::StartProgression(AActor* Actor)
 
 	if (UItemFragment_ItemCount* ItemCount_Fragment = ItemComponent->GetFragmentOfTypeMutable<UItemFragment_ItemCount>())
 	{
+	    PlayMontage();
 		int32 NewCount = ItemCount_Fragment->GetCount() - 1;
 		ItemCount_Fragment->SetCount(NewCount);
 

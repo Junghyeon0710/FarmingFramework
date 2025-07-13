@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "FarmItemFragment.h"
+#include "Montage/MontageFragment.h"
 #include "ItemFragment_Plantable.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
-class FARMINGFRAMEWORK_API UItemFragment_Plantable : public UFarmItemFragment
+class FARMINGFRAMEWORK_API UItemFragment_Plantable : public UMontageFragment
 {
 	GENERATED_BODY()
 
@@ -21,7 +21,7 @@ private:
 
 	UFUNCTION()
 	void StartProgression(AActor* Actor);
-	
+
 	UPROPERTY(EditAnywhere, Category="FarmingProgression")
 	TSubclassOf<AActor> SeedActorClass;
 
