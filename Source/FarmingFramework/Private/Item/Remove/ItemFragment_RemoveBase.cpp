@@ -5,13 +5,14 @@
 
 void UItemFragment_RemoveBase::OnInteract()
 {
-	// if(CheckFrontActorTagMatch(500.f,GetFunctionTag()))
-	// {
-	// 	//애니메이션 재생
-	//
-	// 	// 나무 제거
-	// 	UE_LOG(LogTemp,Warning,TEXT("%s"),*GetFunctionTag().ToString());
-	// }
+    AActor* DetectedActor;
+	if(CheckFrontActorTagMatch(500.f,DetectedActor, GetFunctionTag()))
+	{
+		//애니메이션 재생
+        PlayMontage();
+		// 나무 제거
+	    DetectedActor->SetLifeSpan(MontageLength);
+	}
 }
 
 void UItemFragment_RemoveBase::OnInteractWithTag(FGameplayTag InFunctionTag)
@@ -19,11 +20,11 @@ void UItemFragment_RemoveBase::OnInteractWithTag(FGameplayTag InFunctionTag)
 	if(InFunctionTag.MatchesTagExact(FunctionTag))
 	{
 		UE_LOG(LogTemp,Warning,TEXT("%s"),*GetFunctionTag().ToString());
-		
+
 	}
 	else
 	{
-		
+
 	}
 }
 
@@ -39,6 +40,6 @@ void UItemFragment_RemoveBase::OnInteractWithActor(FGameplayTag InFunctionTag, A
 	}
 	else
 	{
-		
+
 	}
 }

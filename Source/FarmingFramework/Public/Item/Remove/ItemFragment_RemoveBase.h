@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Item/FarmItemFragment.h"
+#include "Item/Montage/MontageFragment.h"
 #include "ItemFragment_RemoveBase.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS(Abstract)
-class FARMINGFRAMEWORK_API UItemFragment_RemoveBase : public UFarmItemFragment
+class FARMINGFRAMEWORK_API UItemFragment_RemoveBase : public UMontageFragment
 {
 	GENERATED_BODY()
 
