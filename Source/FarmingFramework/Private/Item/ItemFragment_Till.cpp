@@ -4,7 +4,7 @@
 #include "..\..\Public\Item\ItemFragment_Till.h"
 #include "NativeGameplayTags.h"
 
-UE_DEFINE_GAMEPLAY_TAG_STATIC(Intreact_Till, "Intreact.till");
+UE_DEFINE_GAMEPLAY_TAG_STATIC(Interact_Till, "Interact.till");
 
 void UItemFragment_Till::OnInteractWithActor(FGameplayTag InFunctionTag, AActor* DetectedActor)
 {
@@ -22,6 +22,6 @@ void UItemFragment_Till::OnInteractWithActor(FGameplayTag InFunctionTag, AActor*
 
 FGameplayTag UItemFragment_Till::GetFunctionTag() const
 {
-	return Intreact_Till;
+	return Interact_Till;
 }
 

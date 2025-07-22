@@ -6,8 +6,8 @@
 #include "DynamicWeatherSubsystem.h"
 #include "Components/BoxComponent.h"
 
-UE_DEFINE_GAMEPLAY_TAG_STATIC(Ignore_River_Water, "State.River.Water");
-UE_DEFINE_GAMEPLAY_TAG_STATIC(Ignore_Placed_Seed, "State.Placed.Seed");
+UE_DEFINE_GAMEPLAY_TAG_STATIC(Ignore_River_Water, "Ignore.River.Water");
+UE_DEFINE_GAMEPLAY_TAG_STATIC(Ignore_Placed_Seed, "Ignore.Placed.Seed");
 
 AFarm_TileActor::AFarm_TileActor(const FObjectInitializer& ObjectInitializer)
 {
