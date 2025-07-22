@@ -104,8 +104,9 @@ void UItemFragment_Plantable::OnInteractSuccess(AActor*& DetectedActor)
         return;
     }
 
-	FVector SpawnLocation;
+    PlayMontage();
 
+	FVector SpawnLocation;
     EActorPivotPosition PivotPosition = GetActorPivotPosition(DetectedActor);
 
     UStaticMeshComponent* MeshComp = DetectedActor->FindComponentByClass<UStaticMeshComponent>();
@@ -150,9 +151,10 @@ void UItemFragment_Plantable::OnInteractSuccess(AActor*& DetectedActor)
         ProgressionComponent->Interact();
     }
 
-    if (Seed->Implements<UBuildTargetInterface>())
+    //감지 액터에 배치 알림
+    if (DetectedActor->Implements<UBuildTargetInterface>())
     {
-        IBuildTargetInterface::Execute_OnBuildingPlaced(Seed, Seed);
+        IBuildTargetInterface::Execute_OnBuildingPlaced(DetectedActor, Seed);
     }
 
 }
