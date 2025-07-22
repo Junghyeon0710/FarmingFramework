@@ -4,7 +4,7 @@
 #include "Item/ItemFragment_SeedPlanting.h"
 #include "NativeGameplayTags.h"
 
-UE_DEFINE_GAMEPLAY_TAG_STATIC(Intreact_Planting_Seed, "Intreact.Planting.Seed");
+UE_DEFINE_GAMEPLAY_TAG_STATIC(Interact_Planting_Seed, "Interact.Planting.Seed");
 
 
 void UItemFragment_SeedPlanting::OnInteractWithActor(FGameplayTag InFunctionTag, AActor* DetectedActor)
@@ -17,10 +17,10 @@ void UItemFragment_SeedPlanting::OnInteractWithActor(FGameplayTag InFunctionTag,
 
 		UE_LOG(LogTemp, Warning, TEXT("%s"), *GetFunctionTag().ToString());
 	}
-	
+
 }
 
 FGameplayTag UItemFragment_SeedPlanting::GetFunctionTag() const
 {
-	return Intreact_Planting_Seed;
+	return Interact_Planting_Seed;
 }
