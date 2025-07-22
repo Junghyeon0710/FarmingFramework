@@ -17,7 +17,7 @@ void UFarmItemFragment::PostInitProperties()
 
 AActor* UFarmItemFragment::GetOwner() const
 {
-	// 컴포넌트 -> 액터 
+	// 컴포넌트 -> 액터
 	return Cast<AActor>(GetOuter()->GetOuter());
 }
 
@@ -29,23 +29,23 @@ ACharacter* UFarmItemFragment::GetOwnerCharacter() const
 
 bool UFarmItemFragment::DetectFrontActor(float TileDistance, AActor*& DetectedActor, const FGameplayTag& Tag, const TArray<AActor*>& InIgnoreActors)
 {
-	AActor* Owner = GetOwner();
+	AActor* OwnerCharacter = GetOwnerCharacter();
 
-	if (!Owner)
+	if (!OwnerCharacter)
 	{
 		UE_LOG(LogTemp, Error , TEXT("No OwenrActor"));
 		return false;
 	}
 
-	FVector Start = Owner->GetActorLocation();
-	FVector Forward = Owner->GetActorForwardVector();
+	FVector Start = OwnerCharacter->GetActorLocation();
+	FVector Forward = OwnerCharacter->GetActorForwardVector();
 	FVector End = Start + Forward * TileDistance;
 
 	FHitResult HitResult;
 	FCollisionQueryParams Params;
-	Params.AddIgnoredActor(Owner);
+	Params.AddIgnoredActor(OwnerCharacter);
 	Params.AddIgnoredActors(InIgnoreActors);
-	
+
 	bool bHit = GetWorld()->LineTraceSingleByChannel(
 		HitResult,
 		Start,
@@ -53,7 +53,7 @@ bool UFarmItemFragment::DetectFrontActor(float TileDistance, AActor*& DetectedAc
 		ECC_Visibility,
 		Params
 	);
-	
+
 #if 1
 	DrawDebugLine(GetWorld(),Start,End,FColor::Red);
 #endif
@@ -69,7 +69,7 @@ bool UFarmItemFragment::DetectFrontActor(float TileDistance, AActor*& DetectedAc
 			DetectedActor = HitResult.GetActor();
 		}
 	}
-	
+
 	return bHit;
 }
 
@@ -80,7 +80,7 @@ bool UFarmItemFragment::CheckFrontActorTagMatch(float TileDistance, AActor*& Det
 	{
 		return false;
 	}
-	
+
 	if(!IsValid(Actor))
 	{
 		return false;
@@ -93,14 +93,14 @@ bool UFarmItemFragment::CheckFrontActorTagMatch(float TileDistance, AActor*& Det
 	{
 		InFunctionTag = FunctionTag;
 	}
-	
+
 	// 받은 인자 X 변수로 설정된 태그 X
 	if(!InFunctionTag.IsValid())
 	{
 		//UE_LOG(LogTemp, Error, TEXT("CheckFrontActorTagMatch failed: InFunctionTag is not valid."));
 		return false;
 	}
-	
+
 	if(IGameplayTagAssetInterface* TagInterface = Cast<IGameplayTagAssetInterface>(Actor))
 	{
 		FGameplayTagContainer ActorTag;
@@ -126,7 +126,7 @@ FGameplayTagContainer UFarmItemStatics::TraceForwardForActorTagContainer(AActor*
 	}
 
 	FGameplayTagContainer Result ;
-	
+
 	FVector Start = SourceActor->GetActorLocation();
 	FVector Forward = SourceActor->GetActorForwardVector();
 	FVector End = Start + Forward * TraceDistance;
@@ -134,7 +134,7 @@ FGameplayTagContainer UFarmItemStatics::TraceForwardForActorTagContainer(AActor*
 	FHitResult HitResult;
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(SourceActor);
-	
+
 	bool bHit = SourceActor->GetWorld()->LineTraceSingleByChannel(
 		HitResult,
 		Start,
@@ -158,9 +158,9 @@ FGameplayTagContainer UFarmItemStatics::TraceForwardForActorTagContainer(AActor*
 		TagInterface->GetOwnedGameplayTags(Result);
 		return Result;
 	}
-	
+
 	UE_LOG(LogTemp, Warning, TEXT("Actor does not implement IGameplayTagAssetInterface."));
-	
+
 	return Result;
 }
 
@@ -177,7 +177,7 @@ FGameplayTag UFarmItemStatics::TraceForwardForActorFirstTagWithActor(AActor*& De
 	}
 
 	FGameplayTagContainer Result ;
-	
+
 	FVector Start = SourceActor->GetActorLocation();
 	FVector Forward = SourceActor->GetActorForwardVector();
 	FVector End = Start + Forward * TraceDistance;
@@ -185,7 +185,7 @@ FGameplayTag UFarmItemStatics::TraceForwardForActorFirstTagWithActor(AActor*& De
 	FHitResult HitResult;
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(SourceActor);
-	
+
 	bool bHit = SourceActor->GetWorld()->LineTraceSingleByChannel(
 		HitResult,
 		Start,
@@ -197,7 +197,7 @@ FGameplayTag UFarmItemStatics::TraceForwardForActorFirstTagWithActor(AActor*& De
 #if 1
 	DrawDebugLine(SourceActor->GetWorld(),Start,End,FColor::Red,false,5.f);
 #endif
-	
+
 	if(!HitResult.GetActor() || !bHit)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("No actor detected in front."));
@@ -205,20 +205,20 @@ FGameplayTag UFarmItemStatics::TraceForwardForActorFirstTagWithActor(AActor*& De
 	}
 
 	DetectActor = HitResult.GetActor();
-	
+
 	if(IGameplayTagAssetInterface* TagInterface =  Cast<IGameplayTagAssetInterface>(HitResult.GetActor()))
 	{
 		TagInterface->GetOwnedGameplayTags(Result);
 		return Result.First();
 	}
-	
+
 	UE_LOG(LogTemp, Warning, TEXT("Actor does not implement IGameplayTagAssetInterface."));
 
 	// 2) 앞에 아무것도 없으면 → 지면 확인
 	FVector GroundCheckStart = End + FVector(0,0,50);
 	FVector GroundCheckEnd   = End - FVector(0,0,500);
 	FHitResult GroundHit;
-    
+
 	bHit = SourceActor->GetWorld()->LineTraceSingleByChannel(
 			GroundHit,
 			GroundCheckStart,
@@ -230,8 +230,8 @@ FGameplayTag UFarmItemStatics::TraceForwardForActorFirstTagWithActor(AActor*& De
 #if 1
 	DrawDebugLine(SourceActor->GetWorld(),GroundCheckStart,GroundCheckEnd,FColor::Red,false,5.f);
 #endif
-	
-		
+
+
 	return FGameplayTag();
 }
 
