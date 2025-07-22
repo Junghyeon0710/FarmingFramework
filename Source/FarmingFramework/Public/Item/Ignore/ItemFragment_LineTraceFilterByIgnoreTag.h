@@ -1,0 +1,32 @@
+﻿// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Item/FarmItemFragment.h"
+#include "Item/Montage/MontageFragment.h"
+#include "ItemFragment_LineTraceFilterByIgnoreTag.generated.h"
+
+/**
+ *
+ */
+UCLASS()
+class FARMINGFRAMEWORK_API UItemFragment_LineTraceFilterByIgnoreTag : public UMontageFragment
+{
+    GENERATED_BODY()
+
+public:
+	virtual void OnInteract() override;
+
+    virtual void OnInteractSuccess(AActor*& DetectedActor) {};
+protected:
+    bool HasIgnoreTag(AActor* InActor);
+
+    UPROPERTY(EditAnywhere)
+    float TileDistance;
+
+    UPROPERTY(EditAnywhere)
+    FGameplayTag IgnoreTag;
+
+    TArray<TWeakObjectPtr<AActor>> IgnoreActors;
+};

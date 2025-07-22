@@ -7,7 +7,7 @@
 #include "MontageFragment.generated.h"
 
 /**
- * 
+ *
  */
 class UAnimMontage;
 
@@ -17,8 +17,12 @@ class FARMINGFRAMEWORK_API UMontageFragment : public UFarmItemFragment
     GENERATED_BODY()
 public:
     virtual void PlayMontage();
-    
+
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Montage")
     TObjectPtr<UAnimMontage> AnimMontage;
+
+    virtual void OnMontageEnd();
+
+    float MontageLength;
 };

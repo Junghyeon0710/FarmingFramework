@@ -6,7 +6,8 @@
 #include "DynamicWeatherSubsystem.h"
 #include "Components/BoxComponent.h"
 
-UE_DEFINE_GAMEPLAY_TAG_STATIC(State_River_Water, "State.River.Water");
+UE_DEFINE_GAMEPLAY_TAG_STATIC(Ignore_River_Water, "State.River.Water");
+UE_DEFINE_GAMEPLAY_TAG_STATIC(Ignore_Placed_Seed, "State.Placed.Seed");
 
 AFarm_TileActor::AFarm_TileActor(const FObjectInitializer& ObjectInitializer)
 {
@@ -48,6 +49,8 @@ void AFarm_TileActor::OnBuildingPlaced_Implementation(AActor* PlacedActor)
 		return;
 	}
 	SetSeed(PlacedActor);
+	AddStaticGameplayTag(Ignore_Placed_Seed);
+
 }
 
 bool AFarm_TileActor::CanBeBuiltOn_Implementation()
@@ -64,7 +67,7 @@ void AFarm_TileActor::ApplyWetSoilVisual()
 		DynMaterial->SetVectorParameterValue("SoilTint", FLinearColor(0.015f, 0.006f, 0.0f));
 	}
 
-	AddStaticGameplayTag(State_River_Water);
+	AddStaticGameplayTag(Ignore_River_Water);
 //	Box->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility,ECR_Overlap);
 }
 
