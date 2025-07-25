@@ -80,11 +80,11 @@ protected:
  //    TObjectPtr<UAnimMontage> FuncTObjectionTag;
 
 private:
-   bool bCanInteract = true;
+   static bool bIsInteractBlocked;
 
 public:
-    bool CanInteract() const {return bCanInteract;}
-    void SetCanInteract(const bool bCan) { bCanInteract = bCan; }
+    static bool IsInteractBlocked() {return bIsInteractBlocked;}
+    static void SetInteractBlocked(const bool bBlocked) { bIsInteractBlocked = bBlocked; }
 
 };
 
