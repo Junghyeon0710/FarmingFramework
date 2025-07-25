@@ -19,7 +19,8 @@ public:
 
 	static UFarm_ItemComponent* FindItemComponent(const AActor* OwnerActor) {return OwnerActor->FindComponentByClass<UFarm_ItemComponent>();}
 
-	virtual UFarmItemFragment* GetFarmItemFragment(TSubclassOf<UFarmItemFragment> FragmentClass) const ;
+    UFUNCTION(BlueprintCallable)
+    UFarmItemFragment* GetFarmItemFragment(TSubclassOf<UFarmItemFragment> FragmentClass) const ;
 
 	template< typename FragmentType> requires std::derived_from<FragmentType, UFarmItemFragment>
 	const FragmentType* GetFragment();
@@ -31,7 +32,7 @@ public:
 	void TryUseItem();
 protected:
 	virtual void BeginPlay() override;
-	
+
 private:
 
 	UPROPERTY(Instanced,EditAnywhere, Category = "Item")
