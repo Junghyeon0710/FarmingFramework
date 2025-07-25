@@ -18,7 +18,7 @@ void UMontageFragment::PlayMontage()
 	{
 		MontageLength = AnimInstance->Montage_Play(AnimMontage, 1.0f);
 	    GetOwnerCharacter()->GetCharacterMovement()->DisableMovement();
-        SetInteractBlocked(false);
+        SetInteractBlocked(true);
 	    FOnMontageEnded OnMontageEnded;
 	    OnMontageEnded.BindLambda([this](UAnimMontage* Montage, bool bInterrupted)
         {
@@ -35,5 +35,5 @@ void UMontageFragment::PlayMontage()
 void UMontageFragment::OnMontageEnd()
 {
     GetOwnerCharacter()->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
-    SetInteractBlocked(true);
+    SetInteractBlocked(false);
 }
