@@ -17,15 +17,18 @@ struct FMeshList
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<USkeletalMesh> Mesh;
+	// UPROPERTY(EditAnywhere)
+	// TObjectPtr<USkeletalMesh> Mesh;
+
+    UPROPERTY(EditAnywhere)
+    TObjectPtr<UStaticMesh> Mesh;
 
 	UPROPERTY(EditAnywhere)
 	float TransitionTime;
 
 	UPROPERTY(EditAnywhere)
 	FGameplayTag ProgressionState;
-	
+
 };
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
@@ -38,13 +41,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual void Interact();
-	
+
 	FTimerHandle ProgressTimer;
-	TArray<TInstancedStruct<FMeshList>> as;
 public:
 	FGameplayTag GetCurrentState();
 	FGameplayTag GetDesiredState();
-	
+
 	void RegisterInitTags(const TArray<FGameplayTag>& InInitTags);
 	void UnRegisterInitTags();
 
@@ -60,8 +62,11 @@ protected:
 	int32 ProgressState = 0;
 
 	UPROPERTY()
-	USkeletalMeshComponent* NewStaticMeshComp = nullptr;
-	
+	USkeletalMeshComponent* NewSkeletalMeshComp = nullptr;
+
+    UPROPERTY()
+    UStaticMeshComponent* NewStaticMeshComp = nullptr;
+
 	UPROPERTY()
 	TArray<FGameplayTag> InitTags;
 

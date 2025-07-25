@@ -26,6 +26,7 @@ public:
     EActorPivotPosition GetActorPivotPosition(const AActor* Actor);
     EActorPivotPosition GetStaticMeshPivotPosition(const UStaticMeshComponent* MeshComp);
     EActorPivotPosition GetSkeletalMeshPivotPosition(const USkeletalMeshComponent* MeshComp);
+    void SetSeedActorClass(const TSubclassOf<AActor>& NewSeedActorClass) {SeedActorClass = NewSeedActorClass; }
 private:
 
 	// UFUNCTION()
