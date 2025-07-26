@@ -8,7 +8,7 @@
 #include "Interface/FarmItemFragmentInterface.h"
 #include "Kismet/GameplayStatics.h"
 
-bool UFarmItemFragment::bCanInteract = true;
+bool UFarmItemFragment::bIsInteractBlocked = false;
 
 void UFarmItemFragment::PostInitProperties()
 {
