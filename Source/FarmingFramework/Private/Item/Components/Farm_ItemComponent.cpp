@@ -44,7 +44,10 @@ void UFarm_ItemComponent::TryUseItem()
 {
 	for (UFarmItemFragment* Fragment : Fragments)
 	{
-		Fragment->OnInteract();
+	    if (!UFarmItemFragment::IsInteractBlocked())
+	    {
+		    Fragment->OnInteract();
+	    }
 	}
 }
 

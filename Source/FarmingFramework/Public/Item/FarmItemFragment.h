@@ -8,7 +8,7 @@
 #include "FarmItemFragment.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS(DefaultToInstanced,EditInlineNew,Abstract ,Blueprintable, BlueprintType)
 class FARMINGFRAMEWORK_API UFarmItemFragment : public UObject
@@ -34,27 +34,27 @@ public:
 
 	/** 멤버변수로 태그설정 안했으면 재정의해서 태그 설정을 해주세요. */
 	virtual FGameplayTag GetFunctionTag() const {return FunctionTag;}
-	
+
 public:
 
 	AActor* GetOwner() const;
-	
+
 	ACharacter* GetOwnerCharacter() const;
 	template<typename T>
 	T* GetOwnerCharacter() const
 	{
 		return Cast<T>(GetOwnerCharacter());
 	}
-	
+
 public:
-	
+
 	/**
 	 * Owner 기준 앞에 액터가 있는지 감지하는 함수
 	 * @param TileDistance    캐릭터 앞 방향 기준 거리
 	 * @param DetectedActor   감지된 액터
 	 * @param Tag			감지 테그
 	 * @param InIgnoreActors 무시할 엑터
-	 * @return 
+	 * @return
 	 */
 	bool DetectFrontActor(float TileDistance,AActor*& DetectedActor, const FGameplayTag& Tag, const TArray<AActor*>& InIgnoreActors = TArray<AActor*>());
 
@@ -64,7 +64,7 @@ public:
 	 * @param DetectedActor 감지된 액터
 	 * @param InFunctionTag 찾고싶은 태그 (없을시 변수로 설정한 태그 가져옵니다)
 	 * @param InIgnoreActors 무시할 엑터
-	 * @return 
+	 * @return
 	 */
 	bool CheckFrontActorTagMatch(float TileDistance , AActor*& DetectedActor, FGameplayTag InFunctionTag = FGameplayTag(), const TArray<AActor*>& InIgnoreActors = TArray<AActor*>());
 
@@ -72,12 +72,20 @@ public:
 	bool operator==(const FGameplayTag& Other) const {return  this->FunctionTag.MatchesTagExact(Other);}
 	//bool operator!=(const FGameplayTag& Other) const {return !operator==(Other);}
 protected:
-	
+
 	UPROPERTY(EditAnywhere)
 	FGameplayTag FunctionTag;
-	
+
 	// UPROPERTY(EditAnywhere)
  //    TObjectPtr<UAnimMontage> FuncTObjectionTag;
+
+private:
+   static bool bIsInteractBlocked;
+
+public:
+    static bool IsInteractBlocked() {return bIsInteractBlocked;}
+    static void SetInteractBlocked(const bool bBlocked) { bIsInteractBlocked = bBlocked; }
+
 };
 
 UCLASS()

@@ -10,7 +10,7 @@ UProgressionComponent::UProgressionComponent()
 
 	PrimaryComponentTick.bStartWithTickEnabled = false;
 	PrimaryComponentTick.bCanEverTick = false;
-	
+
 }
 
 void UProgressionComponent::BeginPlay()
@@ -40,25 +40,38 @@ void UProgressionComponent::Interact()
 	{
 		return;
 	}
-	
+
 
 	AActor* Owner = GetOwner();
 	check(Owner);
 	USkeletalMeshComponent* SkeletalMeshComponent = Owner->FindComponentByClass<USkeletalMeshComponent>();
-	
-	if(SkeletalMeshComponent)
-	{
-		NewStaticMeshComp = SkeletalMeshComponent;
-	}
-	else
-	{
-		NewStaticMeshComp = NewObject<USkeletalMeshComponent>(GetOwner(),USkeletalMeshComponent::StaticClass());
-		NewStaticMeshComp->AttachToComponent(Owner->GetRootComponent(),FAttachmentTransformRules::KeepRelativeTransform);
-		NewStaticMeshComp->CreationMethod = EComponentCreationMethod::Instance;
-		NewStaticMeshComp->RegisterComponent();
-	}
+    UStaticMeshComponent* StaticMeshComponent = Owner->FindComponentByClass<UStaticMeshComponent>();
 
-	
+	// if(SkeletalMeshComponent)
+	// {
+	// 	NewSkeletalMeshComp = SkeletalMeshComponent;
+	// }
+	// else
+	// {
+	// 	NewSkeletalMeshComp = NewObject<USkeletalMeshComponent>(GetOwner(),USkeletalMeshComponent::StaticClass());
+	// 	NewSkeletalMeshComp->AttachToComponent(Owner->GetRootComponent(),FAttachmentTransformRules::KeepRelativeTransform);
+	// 	NewSkeletalMeshComp->CreationMethod = EComponentCreationMethod::Instance;
+	// 	NewSkeletalMeshComp->RegisterComponent();
+	// }
+
+    if(StaticMeshComponent)
+    {
+        NewStaticMeshComp = StaticMeshComponent;
+    }
+    else
+    {
+        NewStaticMeshComp = NewObject<UStaticMeshComponent>(GetOwner(),UStaticMeshComponent::StaticClass());
+        NewStaticMeshComp->AttachToComponent(Owner->GetRootComponent(),FAttachmentTransformRules::KeepRelativeTransform);
+        NewStaticMeshComp->CreationMethod = EComponentCreationMethod::Instance;
+        NewStaticMeshComp->RegisterComponent();
+    }
+
+
 	if(ProgressState != 0)
 	{
 		if(IProgressionStateInterface* Interface = Cast<IProgressionStateInterface>(this))
@@ -71,10 +84,10 @@ void UProgressionComponent::Interact()
 		}
 	}
 
-	
-	NewStaticMeshComp->SetSkeletalMesh(MeshList[ProgressState].Mesh);
-	
-	
+
+	//NewStaticMeshComp->SetSkeletalMesh(MeshList[ProgressState].Mesh);
+	NewStaticMeshComp->SetStaticMesh(MeshList[ProgressState].Mesh);
+
 	GetWorld()->GetTimerManager().SetTimer(
 	ProgressTimer,
 	this,
@@ -109,7 +122,7 @@ void UProgressionComponent::RegisterInitTags(const TArray<FGameplayTag>& InInitT
 	{
 		UnRegisterInitTags();
 	}
-					
+
 	InitTags = InInitTags;
 }
 

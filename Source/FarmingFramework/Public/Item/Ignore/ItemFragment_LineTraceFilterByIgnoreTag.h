@@ -8,7 +8,7 @@
 #include "ItemFragment_LineTraceFilterByIgnoreTag.generated.h"
 
 /**
- *
+ * 라인트레이서 진행시 히트액터에 무시 태그가 있으면 무시하고 다시 TileDistance 범위에 있는 액터를 체크
  */
 UCLASS()
 class FARMINGFRAMEWORK_API UItemFragment_LineTraceFilterByIgnoreTag : public UMontageFragment
