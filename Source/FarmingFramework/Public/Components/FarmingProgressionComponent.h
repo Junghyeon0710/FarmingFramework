@@ -26,7 +26,7 @@ public:
 
 
 public:
-	
+
 
 	UPROPERTY(EditAnywhere, Category = Test)
 	bool bTest1;
@@ -62,4 +62,7 @@ public:
 	// 파종 여부 관리
 	UPROPERTY(EditAnywhere, Category = "Field")
 	bool bIsSown;
+
+    UPROPERTY(EditAnywhere)
+    TSoftObjectPtr<UStaticMesh> FailedMesh;
 };

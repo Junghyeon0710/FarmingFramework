@@ -21,7 +21,7 @@ class FARMINGFRAMEWORK_API UItemFragment_Plantable : public UItemFragment_LineTr
 
 public:
 	//virtual void OnInteract() override;
-    virtual void OnInteractSuccess(AActor*& DetectedActor) override;
+    virtual void OnInteractSuccess(AActor* DetectedActor) override;
 
     EActorPivotPosition GetActorPivotPosition(const AActor* Actor);
     EActorPivotPosition GetStaticMeshPivotPosition(const UStaticMeshComponent* MeshComp);

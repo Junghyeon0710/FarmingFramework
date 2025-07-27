@@ -15,9 +15,10 @@ class FARMINGFRAMEWORK_API AFarm_TileActor : public AFarmInteractableActor, publ
 
 public:
 	AFarm_TileActor(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
-	
+
 	virtual void Interact() override;
 	void SetSeed(AActor* InSeed) { Seed = InSeed; };
+    AActor* GetSeed() const { return Seed; }
 
 	/** IBuildTargetInterface */
 	virtual void OnBuildingPlaced_Implementation(AActor* PlacedActor) override;
@@ -34,11 +35,11 @@ protected:
 	void OnDayChange( int32 Year, int32 Day,const FString& Season,  EWeatherType Weather);
 
 protected:
-	
+
 	void ApplyWetSoilVisual();
-	
+
 private:
-	
+
 	UPROPERTY()
 	TObjectPtr<class UMaterialInstanceDynamic> DynMaterial;
 

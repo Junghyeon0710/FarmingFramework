@@ -49,6 +49,7 @@ void AFarm_TileActor::OnBuildingPlaced_Implementation(AActor* PlacedActor)
 		return;
 	}
 	SetSeed(PlacedActor);
+    PlacedActor->SetOwner(this);
 	AddStaticGameplayTag(Ignore_Placed_Seed);
 
 }
