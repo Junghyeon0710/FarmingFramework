@@ -32,4 +32,20 @@ void AFarmTaggedActor::AddStaticGameplayTag(const FGameplayTag& NewTag)
 	}
 }
 
+void AFarmTaggedActor::RemoveStaticGameplayTag(const FGameplayTag& NewTag)
+{
+    if (!NewTag.IsValid())
+    {
+        UE_LOG(LogTemp, Warning, TEXT("AddStaticGameplayTag: Invalid tag"));
+        return;
+    }
+
+    if (!StaticGameplayTags.HasTag(NewTag))
+    {
+        UE_LOG(LogTemp, Verbose, TEXT("Tag %s already exists"), *NewTag.ToString());
+        return;
+    }
+    StaticGameplayTags.RemoveTag(NewTag);
+}
+
 

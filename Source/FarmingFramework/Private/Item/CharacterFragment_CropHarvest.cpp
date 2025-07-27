@@ -16,6 +16,7 @@ void UCharacterFragment_CropHarvest::OnInteractSuccess(AActor* DetectedActor)
     if (AFarm_TileActor* TileActor = Cast<AFarm_TileActor>(DetectedActor))
     {
         PlayMontage();
+        TileActor->RemoveStaticGameplayTag(GetFunctionTag());
         TileActor->GetSeed()->SetLifeSpan(MontageLength);
     }
 

@@ -55,7 +55,7 @@ public:
 
 	// Plane액터의 텍스처 관리
 	UPROPERTY(EditAnywhere, Category = "Field")
-	UTexture2D* FieldPlaneTexture;;
+	UTexture2D* FieldPlaneTexture;
 
 	//seed/ 심은 작물 관리
 
