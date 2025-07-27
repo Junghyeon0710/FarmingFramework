@@ -40,12 +40,12 @@ AActor* IProgressionStateInterface::GetOwningActor() const
 bool IProgressionStateInterface::ContinueInitStateChain(FGameplayTag CurrentState,FGameplayTag DesiredState)
 {
 	const AActor* MyActor = GetOwningActor();
-	
+
 	if(!MyActor)
 	{
 		return false;
 	}
-	
+
 	if (!CurrentState.IsValid() || !DesiredState.IsValid())
 	{
 		return false;
@@ -56,21 +56,23 @@ bool IProgressionStateInterface::ContinueInitStateChain(FGameplayTag CurrentStat
 		return false;
 	}
 
-	
+
 	if(CanChangeInitState(CurrentState,DesiredState))
 	{
 		HandleChangeInitState(CurrentState,DesiredState);
+
 		return true;
 	}
-	
+
 
 	HandleFailedInitStateChange(CurrentState,DesiredState);
+
 	return false;
-	
+
 }
 
 // Add default functionality here for any IProgressionStateInterface functions that are not pure virtual.
 void IProgressionStateInterface::BindOnActorInitStateChanged()
 {
-	
+
 }
