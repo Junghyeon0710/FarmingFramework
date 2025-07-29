@@ -43,6 +43,12 @@ private:
 	UPROPERTY()
 	TObjectPtr<class UMaterialInstanceDynamic> DynMaterial;
 
+    UPROPERTY(EditAnywhere, Category=DynamicMaterial)
+    FName MultiplyColor_Wet = "Multiply Color";
+
+    UPROPERTY(EditAnywhere, Category=DynamicMaterial)
+    FLinearColor MultiplyColor_LinearColor{0.417885f, 0.417885f, 0.417885, 1};
+
 	UPROPERTY()
 	TObjectPtr<AActor> Seed = nullptr;
 

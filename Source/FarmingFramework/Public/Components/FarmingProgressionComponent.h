@@ -28,14 +28,6 @@ public:
 public:
 
 
-	UPROPERTY(EditAnywhere, Category = Test)
-	bool bTest1;
-
-	UPROPERTY(EditAnywhere, Category = Test)
-	bool bTest2;
-
-	UPROPERTY(EditAnywhere, Category = Test)
-	bool bTest3;
 
 	//Field 레벨 관리
 	UPROPERTY(EditAnywhere, Category = Filed)

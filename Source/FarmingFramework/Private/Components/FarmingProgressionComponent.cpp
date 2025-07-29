@@ -29,27 +29,26 @@ bool UFarmingProgressionComponent::CanChangeInitState(FGameplayTag CurrentState,
 	if(CurrentState == Progress_01 && DesiredState == Progress_02)
 	{
 		UE_LOG(LogTemp,Warning, TEXT("FarmingGameplayTags::Test_1 && DesiredState == FarmingGameplayTags::Test_2"));
-		return bTest1;
+		return true;
 	}
 
 	if(CurrentState == Progress_02 && DesiredState == Progress_03)
 	{
 		UE_LOG(LogTemp,Warning, TEXT("FarmingGameplayTags::Test_2 && DesiredState == FarmingGameplayTags::Test_3"));
-		return bTest2;
+		return true;
 	}
 
 	if(CurrentState == Progress_03 && DesiredState == Progress_04)
 	{
 		UE_LOG(LogTemp,Warning, TEXT("FarmingGameplayTags::Test_3 && DesiredState == FarmingGameplayTags::Test_4"));
-		return bTest3;
+		return true;
 	}
 
     if(CurrentState == Progress_04 && DesiredState == Progress_05)
     {
-        UE_LOG(LogTemp,Warning, TEXT("FarmingGameplayTags::Test_3 && DesiredState == FarmingGameplayTags::Test_4"));
-        return bTest3;
+        UE_LOG(LogTemp,Warning, TEXT("FarmingGameplayTags::Test_4 && DesiredState == FarmingGameplayTags::Test_5"));
+        return true;
     }
-
 
 	return false;
 }

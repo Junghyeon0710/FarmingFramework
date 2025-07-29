@@ -65,7 +65,7 @@ void AFarm_TileActor::ApplyWetSoilVisual()
 
 	if (DynMaterial)
 	{
-		DynMaterial->SetVectorParameterValue("SoilTint", FLinearColor(0.015f, 0.006f, 0.0f));
+		DynMaterial->SetVectorParameterValue(MultiplyColor_Wet, MultiplyColor_LinearColor);
 	}
 
 	AddStaticGameplayTag(Ignore_River_Water);
