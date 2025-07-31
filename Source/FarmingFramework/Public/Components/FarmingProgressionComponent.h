@@ -26,16 +26,8 @@ public:
 
 
 public:
-	
 
-	UPROPERTY(EditAnywhere, Category = Test)
-	bool bTest1;
 
-	UPROPERTY(EditAnywhere, Category = Test)
-	bool bTest2;
-
-	UPROPERTY(EditAnywhere, Category = Test)
-	bool bTest3;
 
 	//Field 레벨 관리
 	UPROPERTY(EditAnywhere, Category = Filed)
@@ -55,11 +47,14 @@ public:
 
 	// Plane액터의 텍스처 관리
 	UPROPERTY(EditAnywhere, Category = "Field")
-	UTexture2D* FieldPlaneTexture;;
+	UTexture2D* FieldPlaneTexture;
 
 	//seed/ 심은 작물 관리
 
 	// 파종 여부 관리
 	UPROPERTY(EditAnywhere, Category = "Field")
 	bool bIsSown;
+
+    UPROPERTY(EditAnywhere)
+    TSoftObjectPtr<UStaticMesh> FailedMesh;
 };

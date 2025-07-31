@@ -78,12 +78,11 @@ void UProgressionComponent::Interact()
 		{
 			if(!Interface->ContinueInitStateChain(GetCurrentState(),GetDesiredState()))
 			{
-				InitState++;
 				return;
 			}
 		}
 	}
-
+    InitState++;
 
 	//NewStaticMeshComp->SetSkeletalMesh(MeshList[ProgressState].Mesh);
 	NewStaticMeshComp->SetStaticMesh(MeshList[ProgressState].Mesh);

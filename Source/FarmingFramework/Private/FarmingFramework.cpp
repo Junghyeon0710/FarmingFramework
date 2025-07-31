@@ -4,6 +4,8 @@
 
 #define LOCTEXT_NAMESPACE "FFarmingFrameworkModule"
 
+DEFINE_LOG_CATEGORY(FarmLog);
+
 void FFarmingFrameworkModule::StartupModule()
 {
 	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
@@ -16,5 +18,5 @@ void FFarmingFrameworkModule::ShutdownModule()
 }
 
 #undef LOCTEXT_NAMESPACE
-	
+
 IMPLEMENT_MODULE(FFarmingFrameworkModule, FarmingFramework)

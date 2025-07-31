@@ -97,7 +97,7 @@
 // 		}
 // 	}
 // }
-void UItemFragment_Plantable::OnInteractSuccess(AActor*& DetectedActor)
+void UItemFragment_Plantable::OnInteractSuccess(AActor* DetectedActor)
 {
     if (!IsValid(SeedActorClass))
     {

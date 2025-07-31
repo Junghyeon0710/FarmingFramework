@@ -8,7 +8,7 @@
 
 UFarm_ItemComponent::UFarm_ItemComponent()
 {
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 }
 
 UFarmItemFragment* UFarm_ItemComponent::GetFarmItemFragment(TSubclassOf<UFarmItemFragment> FragmentClass) const

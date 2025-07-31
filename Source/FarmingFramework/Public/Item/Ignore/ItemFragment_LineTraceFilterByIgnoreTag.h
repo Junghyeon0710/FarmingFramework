@@ -18,14 +18,14 @@ class FARMINGFRAMEWORK_API UItemFragment_LineTraceFilterByIgnoreTag : public UMo
 public:
 	virtual void OnInteract() override;
 
-    virtual void OnInteractSuccess(AActor*& DetectedActor) {};
+    virtual void OnInteractSuccess(AActor* DetectedActor) {};
 protected:
     bool HasIgnoreTag(AActor* InActor);
 
     UPROPERTY(EditAnywhere)
     float TileDistance;
 
-    UPROPERTY(EditAnywhere)
+    UPROPERTY(EditAnywhere, meta = (Categories = "Ignore"))
     FGameplayTag IgnoreTag;
 
     TArray<TWeakObjectPtr<AActor>> IgnoreActors;

@@ -16,7 +16,7 @@ class FARMINGFRAMEWORK_API UItemFragment_WaterGiver : public UItemFragment_LineT
 	GENERATED_BODY()
 
 public:
-	virtual void OnInteractSuccess(AActor*& DetectedActor) override;
+	virtual void OnInteractSuccess(AActor* DetectedActor) override;
 
 	virtual FGameplayTag GetFunctionTag() const override;
 

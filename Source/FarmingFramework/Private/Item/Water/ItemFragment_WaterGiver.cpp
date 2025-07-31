@@ -10,7 +10,7 @@ UE_DEFINE_GAMEPLAY_TAG_STATIC(Interact_Giver_Water, "Interact.Giver.Water");
 
 
 
-void UItemFragment_WaterGiver::OnInteractSuccess(AActor*& DetectedActor)
+void UItemFragment_WaterGiver::OnInteractSuccess(AActor* DetectedActor)
 {
     if (AFarmInteractableActor* InteractableActor = Cast<AFarmInteractableActor>(DetectedActor))
     {
