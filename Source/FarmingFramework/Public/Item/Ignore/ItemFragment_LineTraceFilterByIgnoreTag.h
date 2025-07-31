@@ -25,7 +25,7 @@ protected:
     UPROPERTY(EditAnywhere)
     float TileDistance;
 
-    UPROPERTY(EditAnywhere)
+    UPROPERTY(EditAnywhere, meta = (Categories = "Ignore"))
     FGameplayTag IgnoreTag;
 
     TArray<TWeakObjectPtr<AActor>> IgnoreActors;
