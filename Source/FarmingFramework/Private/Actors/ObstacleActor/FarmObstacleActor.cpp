@@ -4,6 +4,7 @@
 #include "Actors/ObstacleActor/FarmObstacleActor.h"
 
 #include "Components/SphereComponent.h"
+#include "Components/Interaction/Farm_HighlightableStaticMesh.h"
 #include "GameFramework/Character.h"
 
 
@@ -12,7 +13,7 @@ AFarmObstacleActor::AFarmObstacleActor()
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
 
-	
+
 	{
 		Collision = CreateDefaultSubobject<USphereComponent>(TEXT("Collision"));
 		SetRootComponent(Collision);
@@ -20,9 +21,9 @@ AFarmObstacleActor::AFarmObstacleActor()
 		Collision->OnComponentBeginOverlap.AddDynamic(this,&ThisClass::OnBeginOverlap);
 		Collision->OnComponentEndOverlap.AddDynamic(this,&ThisClass::OnEndOverlap);
 	}
-	
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	Mesh->SetupAttachment(RootComponent);
+
+	HighlightableMesh = CreateDefaultSubobject<UFarm_HighlightableStaticMesh>(TEXT("HighlightableMesh"));
+	HighlightableMesh->SetupAttachment(RootComponent);
 }
 
 void AFarmObstacleActor::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -32,7 +33,7 @@ void AFarmObstacleActor::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent
 		//Show UI
 		//UE_LOG(LogTemp,Warning,TEXT("%s : BeginOverlap"),*OtherActor->GetName());
 	}
-	
+
 }
 
 void AFarmObstacleActor::OnEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)

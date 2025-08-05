@@ -7,6 +7,7 @@
 #include "GameFramework/Actor.h"
 #include "FarmObstacleActor.generated.h"
 
+class UFarm_HighlightableStaticMesh;
 class USphereComponent;
 
 UCLASS()
@@ -27,10 +28,10 @@ protected:
 protected:
 
 	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UStaticMeshComponent> Mesh;
+	TObjectPtr<UFarm_HighlightableStaticMesh> HighlightableMesh;
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USphereComponent> Collision;
 
-	
+
 };
