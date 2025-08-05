@@ -7,6 +7,8 @@
 #include "GameFramework/Actor.h"
 #include "FarmTaggedActor.generated.h"
 
+
+
 UCLASS()
 class FARMINGFRAMEWORK_API AFarmTaggedActor : public AActor , public IGameplayTagAssetInterface
 {
