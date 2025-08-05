@@ -50,23 +50,23 @@ public:
 
 	/**
 	 * Owner 기준 앞에 액터가 있는지 감지하는 함수
-	 * @param TileDistance    캐릭터 앞 방향 기준 거리
+	 * @param InTileDistance    캐릭터 앞 방향 기준 거리
 	 * @param DetectedActor   감지된 액터
 	 * @param Tag			감지 테그
 	 * @param InIgnoreActors 무시할 엑터
 	 * @return
 	 */
-	bool DetectFrontActor(float TileDistance,AActor*& DetectedActor, const FGameplayTag& Tag, const TArray<AActor*>& InIgnoreActors = TArray<AActor*>());
+	bool DetectFrontActor(float InTileDistance,AActor*& DetectedActor, const FGameplayTag& Tag, const TArray<AActor*>& InIgnoreActors = TArray<AActor*>());
 
 	/**
 	 * Owner 기준 앞에 액터의 태그가 일치하는지 체크 함수
-	 * @param TileDistance 캐릭터 앞 방향 기준 거리
+	 * @param InTileDistance 캐릭터 앞 방향 기준 거리
 	 * @param DetectedActor 감지된 액터
 	 * @param InFunctionTag 찾고싶은 태그 (없을시 변수로 설정한 태그 가져옵니다)
 	 * @param InIgnoreActors 무시할 엑터
 	 * @return
 	 */
-	bool CheckFrontActorTagMatch(float TileDistance , AActor*& DetectedActor, FGameplayTag InFunctionTag = FGameplayTag(), const TArray<AActor*>& InIgnoreActors = TArray<AActor*>());
+	bool CheckFrontActorTagMatch(float InTileDistance , AActor*& DetectedActor, FGameplayTag InFunctionTag = FGameplayTag(), const TArray<AActor*>& InIgnoreActors = TArray<AActor*>());
 
 
 	bool operator==(const FGameplayTag& Other) const {return  this->FunctionTag.MatchesTagExact(Other);}
@@ -75,6 +75,9 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	FGameplayTag FunctionTag;
+
+    UPROPERTY(EditAnywhere)
+    float TileDistance = 100.f;
 
 	// UPROPERTY(EditAnywhere)
  //    TObjectPtr<UAnimMontage> FuncTObjectionTag;

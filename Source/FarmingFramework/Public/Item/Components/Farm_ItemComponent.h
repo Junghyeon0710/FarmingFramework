@@ -19,6 +19,8 @@ public:
 
 	static UFarm_ItemComponent* FindItemComponent(const AActor* OwnerActor) {return OwnerActor->FindComponentByClass<UFarm_ItemComponent>();}
 
+    const TArray<UFarmItemFragment*>& GetFragments() const {return Fragments ;}
+
     UFUNCTION(BlueprintCallable)
     UFarmItemFragment* GetFarmItemFragment(TSubclassOf<UFarmItemFragment> FragmentClass) const ;
 

@@ -6,6 +6,7 @@
 
 #include "Farm_TraceComponent.generated.h"
 
+class UFarm_ItemComponent;
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class FARMINGFRAMEWORK_API UFarm_TraceComponent : public UActorComponent
@@ -30,4 +31,5 @@ private:
 
     TWeakObjectPtr<AActor> ThisActor;
     TWeakObjectPtr<AActor> LastActor;
+    TWeakObjectPtr<UFarm_ItemComponent> ItemComponent;
 };

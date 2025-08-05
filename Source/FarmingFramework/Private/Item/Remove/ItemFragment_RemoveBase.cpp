@@ -6,7 +6,7 @@
 void UItemFragment_RemoveBase::OnInteract()
 {
     AActor* DetectedActor;
-	if(CheckFrontActorTagMatch(500.f,DetectedActor, GetFunctionTag()))
+	if(CheckFrontActorTagMatch(TileDistance,DetectedActor, GetFunctionTag()))
 	{
 		//애니메이션 재생
         PlayMontage();

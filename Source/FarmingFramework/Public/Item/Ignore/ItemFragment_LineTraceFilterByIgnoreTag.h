@@ -22,9 +22,6 @@ public:
 protected:
     bool HasIgnoreTag(AActor* InActor);
 
-    UPROPERTY(EditAnywhere)
-    float TileDistance;
-
     UPROPERTY(EditAnywhere, meta = (Categories = "Ignore"))
     FGameplayTag IgnoreTag;
 

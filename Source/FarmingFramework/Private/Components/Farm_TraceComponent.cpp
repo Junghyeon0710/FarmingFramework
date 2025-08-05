@@ -4,6 +4,8 @@
 #include "Components/Farm_TraceComponent.h"
 
 #include "Interface/Farm_HighlightableInterface.h"
+#include "Item/FarmItemFragment.h"
+#include "Item/Components/Farm_ItemComponent.h"
 
 
 UFarm_TraceComponent::UFarm_TraceComponent()
@@ -40,15 +42,31 @@ void UFarm_TraceComponent::TraceForwardForActor()
         return;
     }
 
-    //TODO : 무기 장착했는지 체크, 무기에서 범위 갖고오기
+    ItemComponent = nullptr;
+    TArray<AActor*> AttachedActors;
+    GetOwner()->GetAttachedActors(AttachedActors);
 
-    FHitResult HitResult;
-    FVector StartLocation = Owner->GetActorLocation();
-    FVector EndLocation = StartLocation + StartLocation.ForwardVector * 100;
-    if (!GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, TraceChannel))
+    for (AActor* Attached : AttachedActors)
+    {
+        ItemComponent = Attached->FindComponentByClass<UFarm_ItemComponent>();
+    }
+
+    // if (UFarm_ItemComponent* FoundComponent = Owner->FindComponentByClass<UFarm_ItemComponent>())
+    // {
+    //     ItemComponent = FoundComponent;
+    // }
+
+    if (!ItemComponent.Get())
     {
         return;
     }
+
+
+    FHitResult HitResult;
+    FVector StartLocation = Owner->GetActorLocation();
+    FVector EndLocation = StartLocation + Owner->GetActorForwardVector() * 100;
+    GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, TraceChannel);
+
 
     LastActor = ThisActor;
     ThisActor = HitResult.GetActor();
@@ -60,15 +78,22 @@ void UFarm_TraceComponent::TraceForwardForActor()
 
     if (ThisActor.IsValid())
     {
+
         if (UActorComponent* Highlightable = ThisActor->FindComponentByInterface(UFarm_HighlightableInterface::StaticClass()); IsValid(Highlightable))
         {
-            IFarm_HighlightableInterface::Execute_Highlight(Highlightable);
+            for (const auto& Fragment : ItemComponent->GetFragments())
+            {
+                if (IFarm_HighlightableInterface::Execute_GetHighlightableTags(Highlightable).HasTagExact(Fragment->GetFunctionTag()))
+                {
+                    IFarm_HighlightableInterface::Execute_Highlight(Highlightable);
+                }
+            }
         }
     }
 
     if (LastActor.IsValid())
     {
-        if (UActorComponent* Highlightable = ThisActor->FindComponentByInterface(UFarm_HighlightableInterface::StaticClass()); IsValid(Highlightable))
+        if (UActorComponent* Highlightable = LastActor->FindComponentByInterface(UFarm_HighlightableInterface::StaticClass()); IsValid(Highlightable))
         {
             IFarm_HighlightableInterface::Execute_Unhighlight(Highlightable);
         }

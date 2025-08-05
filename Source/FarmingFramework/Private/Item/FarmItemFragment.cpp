@@ -29,7 +29,7 @@ ACharacter* UFarmItemFragment::GetOwnerCharacter() const
 	return UGameplayStatics::GetPlayerCharacter(this,0);
 }
 
-bool UFarmItemFragment::DetectFrontActor(float TileDistance, AActor*& DetectedActor, const FGameplayTag& Tag, const TArray<AActor*>& InIgnoreActors)
+bool UFarmItemFragment::DetectFrontActor(float InTileDistance, AActor*& DetectedActor, const FGameplayTag& Tag, const TArray<AActor*>& InIgnoreActors)
 {
 	AActor* OwnerCharacter = GetOwnerCharacter();
 
@@ -41,7 +41,7 @@ bool UFarmItemFragment::DetectFrontActor(float TileDistance, AActor*& DetectedAc
 
 	FVector Start = OwnerCharacter->GetActorLocation();
 	FVector Forward = OwnerCharacter->GetActorForwardVector();
-	FVector End = Start + Forward * TileDistance;
+	FVector End = Start + Forward * InTileDistance;
 
 	FHitResult HitResult;
 	FCollisionQueryParams Params;
@@ -75,10 +75,10 @@ bool UFarmItemFragment::DetectFrontActor(float TileDistance, AActor*& DetectedAc
 	return bHit;
 }
 
-bool UFarmItemFragment::CheckFrontActorTagMatch(float TileDistance, AActor*& DetectedActor, FGameplayTag InFunctionTag, const TArray<AActor*>& InIgnoreActors)
+bool UFarmItemFragment::CheckFrontActorTagMatch(float InTileDistance, AActor*& DetectedActor, FGameplayTag InFunctionTag, const TArray<AActor*>& InIgnoreActors)
 {
 	AActor* Actor = nullptr;
-	if(!DetectFrontActor(TileDistance,Actor, InFunctionTag, InIgnoreActors))
+	if(!DetectFrontActor(InTileDistance,Actor, InFunctionTag, InIgnoreActors))
 	{
 		return false;
 	}

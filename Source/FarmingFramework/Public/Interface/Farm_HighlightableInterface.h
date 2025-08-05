@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "UObject/Interface.h"
 #include "Farm_HighlightableInterface.generated.h"
 
@@ -22,9 +23,19 @@ class FARMINGFRAMEWORK_API IFarm_HighlightableInterface
 
 public:
 
-    UFUNCTION(BlueprintNativeEvent, Category="Inventory")
+    UFUNCTION(BlueprintNativeEvent, Category="Highlight")
     void Highlight();
 
-    UFUNCTION(BlueprintNativeEvent, Category="Inventory")
+    UFUNCTION(BlueprintNativeEvent, Category="Highlight")
     void Unhighlight();
+
+    UFUNCTION(BlueprintNativeEvent, Category="Highlight")
+    const FGameplayTagContainer GetHighlightableTags() const;
+
+    // virtual bool IsSameHighlightableTag(const AActor& Other) const
+    // {
+    //     const IFarm_HighlightableInterface* HighlightableInterface = Cast<const IFarm_HighlightableInterface>(&Other);
+    //     return HighlightableInterface ? HighlightableInterface->GetHighlightableTags().HasAnyExact(GetHighlightableTags()) : false;
+    // }
+
 };

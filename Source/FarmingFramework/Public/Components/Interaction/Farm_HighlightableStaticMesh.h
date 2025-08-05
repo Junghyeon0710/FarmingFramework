@@ -5,11 +5,11 @@
 #include "CoreMinimal.h"
 #include "Components/StaticMeshComponent.h"
 #include "Interface/Farm_HighlightableInterface.h"
+
 #include "Farm_HighlightableStaticMesh.generated.h"
 
-/**
- *
- */
+struct FGameplayTagContainer;
+
 UCLASS()
 class FARMINGFRAMEWORK_API UFarm_HighlightableStaticMesh : public UStaticMeshComponent, public IFarm_HighlightableInterface
 {
@@ -18,6 +18,7 @@ class FARMINGFRAMEWORK_API UFarm_HighlightableStaticMesh : public UStaticMeshCom
 public:
     virtual void Highlight_Implementation() override;
     virtual void Unhighlight_Implementation() override;
+    virtual const FGameplayTagContainer GetHighlightableTags_Implementation() const override;
 
 private:
 
