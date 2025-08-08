@@ -7,6 +7,7 @@
 #include "GameFramework/Actor.h"
 #include "FarmObstacleActor.generated.h"
 
+class UFarm_HighlightableStaticMesh;
 class USphereComponent;
 
 UCLASS()
@@ -20,17 +21,17 @@ public:
 
 protected:
 
-	UFUNCTION()
-	virtual void OnBeginOverlap( UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,UPrimitiveComponent* OtherComp,int32 OtherBodyIndex,bool bFromSweep, const FHitResult& SweepResult);
-	UFUNCTION()
-	virtual void OnEndOverlap( UPrimitiveComponent* OverlappedComponent,AActor* OtherActor,UPrimitiveComponent* OtherComp,int32 OtherBodyIndex);
+	// UFUNCTION()
+	// virtual void OnBeginOverlap( UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,UPrimitiveComponent* OtherComp,int32 OtherBodyIndex,bool bFromSweep, const FHitResult& SweepResult);
+	// UFUNCTION()
+	// virtual void OnEndOverlap( UPrimitiveComponent* OverlappedComponent,AActor* OtherActor,UPrimitiveComponent* OtherComp,int32 OtherBodyIndex);
 protected:
 
 	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UStaticMeshComponent> Mesh;
+	TObjectPtr<UFarm_HighlightableStaticMesh> HighlightableMesh;
 
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<USphereComponent> Collision;
+	// UPROPERTY(VisibleAnywhere)
+	// TObjectPtr<USphereComponent> Collision;
 
-	
+
 };

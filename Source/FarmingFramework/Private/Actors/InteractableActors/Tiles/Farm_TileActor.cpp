@@ -11,6 +11,7 @@ UE_DEFINE_GAMEPLAY_TAG_STATIC(Ignore_Placed_Seed, "Ignore.Placed.Seed");
 
 AFarm_TileActor::AFarm_TileActor(const FObjectInitializer& ObjectInitializer)
 {
+
 }
 
 void AFarm_TileActor::BeginPlay()
