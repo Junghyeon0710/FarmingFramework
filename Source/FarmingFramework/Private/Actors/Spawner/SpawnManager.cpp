@@ -3,6 +3,7 @@
 
 #include "NavigationData.h"
 #include "NavigationSystem.h"
+#include "Engine/AssetManager.h"
 #include "NavMesh/NavMeshBoundsVolume.h"
 #include "NavMesh/RecastNavMesh.h"
 
@@ -17,6 +18,7 @@ void ASpawnManager::BeginPlay()
 {
     Super::BeginPlay();
 
+    AsyncLoadClasses();
 }
 
 FVector ASpawnManager::GetNavVolumeSize() const
@@ -36,6 +38,29 @@ int32 ASpawnManager::CalculateSpawnCountByFarmSizePercentage(float SpawnRatePerc
     FVector TileSize = GetNavVolumeSize() / 100;
 
     return TileSize.X * TileSize.Y * SpawnRatePercent;
+}
+
+void ASpawnManager::AsyncLoadClasses()
+{
+    ClassRefIndex = 0;
+    bAsyncComplete = false;
+}
+
+void ASpawnManager::AsyncLoadClass()
+{
+    FSoftObjectPath SoftObjectPath(SpawnData[ClassRefIndex].ClassRef.ToSoftObjectPath());
+    UAssetManager::GetStreamableManager().RequestAsyncLoad(SoftObjectPath, FStreamableDelegate::CreateLambda([this, SoftObjectPath]()
+    {
+        ClassRefIndex++;
+        if (ClassRefIndex > SpawnData.Num()-1)
+        {
+            bAsyncComplete = true;
+        }
+        else
+        {
+            AsyncLoadClass();
+        }
+   }));
 }
 
 
