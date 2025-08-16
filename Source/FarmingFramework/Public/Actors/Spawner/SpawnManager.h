@@ -54,8 +54,9 @@ private:
     TArray<FSpawnData> SpawnTypes;
 
     int32 ClassRefIndex;
-    bool bAsyncComplete;
+    bool bAsyncCompleted;
     int32 SpawnIndexCounter;
+    bool bSpawnCompleted;
 
     /**
     * 현재 네비게이션 영역 크기에 맞춰 스폰 개수를 계산합니다.
@@ -81,6 +82,8 @@ private:
      */
     void SpawnAssets(const FSpawnData& InSpawnData);
 
+
+    FTimerHandle SpawnTimerHandle;
 private:
 
 
