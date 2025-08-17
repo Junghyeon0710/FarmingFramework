@@ -18,7 +18,14 @@ ASpawnManager::ASpawnManager()
 void ASpawnManager::BeginPlay()
 {
     Super::BeginPlay();
+    FActorSpawnParameters SpawnParams;
+    SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
+    NavigationData = GetWorld()->SpawnActor<ARecastNavMesh>(
+    ARecastNavMesh::StaticClass(),
+    FVector::ZeroVector,
+    FRotator::ZeroRotator,
+    SpawnParams);
     AsyncLoadClasses();
 }
 
@@ -101,6 +108,7 @@ void ASpawnManager::ReadyToSpawn()
 
 void ASpawnManager::SpawnAssets(const FSpawnData& InSpawnData)
 {
+
     checkf(NavigationData,TEXT("NavigationData is NULL"));
     checkf(NavMeshBoundsVolume,TEXT("NavMeshBoundsVolume is NULL"));
 
@@ -120,6 +128,7 @@ void ASpawnManager::SpawnAssets(const FSpawnData& InSpawnData)
         {
             if (UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(GetWorld()))
             {
+
                 FNavLocation RandomLocation;
 
                 if (NavSystem->GetRandomPointInNavigableRadius(NavOrigin, NavRadius, RandomLocation, NavigationData))
@@ -144,7 +153,7 @@ void ASpawnManager::SpawnAssets(const FSpawnData& InSpawnData)
             if (SpawnIndex >= SpawnCount)
             {
                 GetWorld()->GetTimerManager().ClearTimer(SpawnTimerHandle);
-                NavigationData->RebuildAll();
+                if (NavigationData) NavigationData->RebuildAll();
                 bSpawnCompleted = true;
             }
 
