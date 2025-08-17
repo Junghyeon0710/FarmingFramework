@@ -96,6 +96,8 @@ private:
      */
     void SpawnAssets(FSpawnData& InSpawnData);
 
+    /** “스폰 완료 상태를 재검사합니다. */
+    void RecheckSpawnCompletion();
 
     FTimerHandle SpawnTimerHandle;
 private:

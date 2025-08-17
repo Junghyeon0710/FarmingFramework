@@ -70,14 +70,17 @@ void ASpawnManager::AsyncLoadClass()
 void ASpawnManager::WaitForNavMeshAndAssets()
 {
     SpawnIndexCounter = 0;
-    bSpawnCompleted = true;
 
     StartNavCheckTimer();
 }
 
 void ASpawnManager::StartNavCheckTimer()
 {
-    GetWorld()->GetTimerManager().SetTimer(NavCheckHandle, this, &ThisClass::ReadyToSpawn, .5, true);
+    bSpawnCompleted = true;
+    if (!GetWorld()->GetTimerManager().IsTimerActive(NavCheckHandle))
+    {
+        GetWorld()->GetTimerManager().SetTimer(NavCheckHandle, this, &ThisClass::ReadyToSpawn, .5, true);
+    }
 }
 
 void ASpawnManager::ReadyToSpawn()
@@ -89,12 +92,16 @@ void ASpawnManager::ReadyToSpawn()
         return;
     }
 
-    SpawnAssets(SpawnTypes[SpawnIndexCounter]);
-
-    if (++SpawnIndexCounter >=SpawnTypes.Num())
+    if (SpawnTypes.IsValidIndex(SpawnIndexCounter))
     {
-        SpawnIndexCounter = -1;
+        SpawnAssets(SpawnTypes[SpawnIndexCounter]);
+    }
+
+    if (++SpawnIndexCounter >SpawnTypes.Num())
+    {
+        SpawnIndexCounter = 0;
         GetWorld()->GetTimerManager().ClearTimer(NavCheckHandle);
+        RecheckSpawnCompletion();
     }
 
 }
@@ -105,14 +112,23 @@ void ASpawnManager::SpawnAssets(FSpawnData& InSpawnData)
     checkf(NavigationData,TEXT("NavigationData is NULL"));
     checkf(NavMeshBoundsVolume,TEXT("NavMeshBoundsVolume is NULL"));
     bSpawnCompleted = false;
+
+    if (InSpawnData.bSpawnCompleted)
+    {
+        bSpawnCompleted = true;
+        return;
+    }
+
     int32 SpawnCount = CalculateSpawnCountByFarmSizePercentage(InSpawnData.SpawnRatePerFarmSize);
+    InSpawnData.TotalSpawnCount = SpawnCount;
+
     FVector NavOrigin, Extent;
     NavMeshBoundsVolume->GetActorBounds(false, NavOrigin, Extent);
     float NavRadius = FMath::Max(Extent.X, Extent.Y) * 1.25;
 
-    int32 SpawnIndex = 0;
+    int32 SpawnIndex = InSpawnData.CurrentSpawnCount;
 
-    GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle,[this, NavOrigin, NavRadius, InSpawnData, SpawnIndex, SpawnCount]() mutable
+    GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle,[this, NavOrigin, NavRadius, &InSpawnData, SpawnIndex, SpawnCount]() mutable
         {
             if (UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(GetWorld()))
             {
@@ -126,8 +142,10 @@ void ASpawnManager::SpawnAssets(FSpawnData& InSpawnData)
                     FActorSpawnParameters SpawnParam;
                     SpawnParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
-                    GetWorld()->SpawnActor<AActor>(InSpawnData.ClassRef.Get(), RandomLocation.Location, FRotator::ZeroRotator,SpawnParam);
-                    InSpawnData.IncrementSpawnCount();
+                   if (AActor* SpawnedActor = GetWorld()->SpawnActor<AActor>(InSpawnData.ClassRef.Get(), RandomLocation.Location, FRotator::ZeroRotator,SpawnParam))
+                   {
+                       InSpawnData.IncrementSpawnCount();
+                   }
                 }
             }
 
@@ -138,6 +156,29 @@ void ASpawnManager::SpawnAssets(FSpawnData& InSpawnData)
             }
         },.1f, true);
 
+}
+
+void ASpawnManager::RecheckSpawnCompletion()
+{
+    for (FSpawnData& Data : SpawnTypes)
+    {
+        if (Data.bSpawnCompleted)
+        {
+            continue;
+        }
+
+        FVector NavOrigin, Extent;
+        NavMeshBoundsVolume->GetActorBounds(false, NavOrigin, Extent);
+        float NavRadius = FMath::Max(Extent.X, Extent.Y) * 1.25;
+        if (UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(GetWorld()))
+        {
+            FNavLocation RandomLocation;
+            if (NavSystem->GetRandomPointInNavigableRadius(NavOrigin, NavRadius, RandomLocation, NavigationData))
+            {
+                StartNavCheckTimer();
+            }
+        }
+    }
 }
 
 
