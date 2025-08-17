@@ -72,12 +72,12 @@ void ASpawnManager::WaitForNavMeshAndAssets()
     SpawnIndexCounter = 0;
     bSpawnCompleted = true;
 
-    GetWorld()->GetTimerManager().SetTimer(
-    NavCheckHandle,
-    this,
-    &ThisClass::ReadyToSpawn,
-    .5,
-    true);
+    StartNavCheckTimer();
+}
+
+void ASpawnManager::StartNavCheckTimer()
+{
+    GetWorld()->GetTimerManager().SetTimer(NavCheckHandle, this, &ThisClass::ReadyToSpawn, .5, true);
 }
 
 void ASpawnManager::ReadyToSpawn()
@@ -99,25 +99,20 @@ void ASpawnManager::ReadyToSpawn()
 
 }
 
-void ASpawnManager::SpawnAssets(const FSpawnData& InSpawnData)
+void ASpawnManager::SpawnAssets(FSpawnData& InSpawnData)
 {
 
     checkf(NavigationData,TEXT("NavigationData is NULL"));
     checkf(NavMeshBoundsVolume,TEXT("NavMeshBoundsVolume is NULL"));
-
     bSpawnCompleted = false;
     int32 SpawnCount = CalculateSpawnCountByFarmSizePercentage(InSpawnData.SpawnRatePerFarmSize);
-
     FVector NavOrigin, Extent;
     NavMeshBoundsVolume->GetActorBounds(false, NavOrigin, Extent);
     float NavRadius = FMath::Max(Extent.X, Extent.Y) * 1.25;
 
-
     int32 SpawnIndex = 0;
 
-    GetWorld()->GetTimerManager().SetTimer(
-        SpawnTimerHandle,
-        [this, NavOrigin, NavRadius, InSpawnData, SpawnIndex, SpawnCount]() mutable
+    GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle,[this, NavOrigin, NavRadius, InSpawnData, SpawnIndex, SpawnCount]() mutable
         {
             if (UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(GetWorld()))
             {
@@ -131,25 +126,18 @@ void ASpawnManager::SpawnAssets(const FSpawnData& InSpawnData)
                     FActorSpawnParameters SpawnParam;
                     SpawnParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
-                    GetWorld()->SpawnActor<AActor>(
-                        InSpawnData.ClassRef.Get(),
-                        RandomLocation.Location,
-                        FRotator::ZeroRotator,
-                        SpawnParam
-                    );
-                    NavSystem->Build();
+                    GetWorld()->SpawnActor<AActor>(InSpawnData.ClassRef.Get(), RandomLocation.Location, FRotator::ZeroRotator,SpawnParam);
+                    InSpawnData.IncrementSpawnCount();
                 }
             }
 
-            SpawnIndex++;
-            if (SpawnIndex >= SpawnCount)
+            if (++SpawnIndex >= SpawnCount)
             {
                 GetWorld()->GetTimerManager().ClearTimer(SpawnTimerHandle);
-                if (NavigationData) NavigationData->RebuildAll();
                 bSpawnCompleted = true;
             }
-
         },.1f, true);
+
 }
 
 
