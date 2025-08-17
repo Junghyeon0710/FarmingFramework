@@ -1,12 +1,9 @@
 ﻿
 #include "Actors/Spawner/SpawnManager.h"
 
-#include "NavigationData.h"
 #include "NavigationSystem.h"
 #include "Engine/AssetManager.h"
-#include "NavFilters/NavigationQueryFilter.h"
 #include "NavMesh/NavMeshBoundsVolume.h"
-#include "NavMesh/RecastNavMesh.h"
 
 
 ASpawnManager::ASpawnManager()
