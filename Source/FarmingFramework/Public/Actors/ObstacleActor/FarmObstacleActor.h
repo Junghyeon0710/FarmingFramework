@@ -36,5 +36,11 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UBoxComponent> Collision;
 
+    UPROPERTY(EditAnywhere, Category = "RandomeMesh")
+    bool bUseRandomMesh = false;
+
+    UPROPERTY(EditAnywhere, Category = "RandomeMesh")
+    TArray<TSoftObjectPtr<UStaticMesh>> MeshList;
+
 
 };

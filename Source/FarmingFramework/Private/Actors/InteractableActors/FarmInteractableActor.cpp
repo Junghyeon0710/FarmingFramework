@@ -23,10 +23,6 @@ void AFarmInteractableActor::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
 
-    if (!bUseRandomMesh || MeshList.IsEmpty()) return;
-
-    Mesh->SetStaticMesh(MeshList[FMath::RandRange(0,MeshList.Num()-1)].LoadSynchronous());
-
 	FVector LocalMin, LocalMax;
 	Mesh->GetLocalBounds(LocalMin, LocalMax);
 

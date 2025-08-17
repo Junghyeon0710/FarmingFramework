@@ -6,7 +6,11 @@
 #include "GameFramework/Actor.h"
 #include "SpawnManager.generated.h"
 
+class UFarmSpawnDataAsset;
 class ANavMeshBoundsVolume;
+
+
+class ANavigationData;
 
 USTRUCT(BlueprintType)
 struct FSpawnData
@@ -19,8 +23,6 @@ struct FSpawnData
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float SpawnRatePerFarmSize = 0.1f;
 };
-
-class ANavigationData;
 
 UCLASS(Abstract, MinimalAPI)
 class ASpawnManager : public AActor

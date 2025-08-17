@@ -31,6 +31,10 @@ void AFarmObstacleActor::OnConstruction(const FTransform& Transform)
 {
     Super::OnConstruction(Transform);
 
+    if (!bUseRandomMesh || MeshList.IsEmpty()) return;
+
+    HighlightableMesh->SetStaticMesh(MeshList[FMath::RandRange(0,MeshList.Num()-1)].LoadSynchronous());
+
     if (!HighlightableMesh || !HighlightableMesh->GetStaticMesh())
     {
        return;

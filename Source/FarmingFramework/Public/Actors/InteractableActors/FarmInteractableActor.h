@@ -33,9 +33,5 @@ protected:
 	UPROPERTY(EditAnywhere)
 	int32 ZScale{1};
 
-    UPROPERTY(EditAnywhere, Category = "RandomeMesh")
-    bool bUseRandomMesh = false;
 
-    UPROPERTY(EditAnywhere, Category = "RandomeMesh")
-    TArray<TSoftObjectPtr<UStaticMesh>> MeshList;
 };
