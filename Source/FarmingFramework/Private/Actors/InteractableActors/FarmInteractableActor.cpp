@@ -11,10 +11,10 @@ AFarmInteractableActor::AFarmInteractableActor(const FObjectInitializer& ObjectI
 {
 	Root = CreateDefaultSubobject<USceneComponent>("Root");
 	SetRootComponent(Root);
-	
+
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
 	Mesh->SetupAttachment(RootComponent);
-	
+
 	Box = CreateDefaultSubobject<UBoxComponent>("Box");
 	Box->SetupAttachment(RootComponent);
 }
@@ -22,12 +22,16 @@ AFarmInteractableActor::AFarmInteractableActor(const FObjectInitializer& ObjectI
 void AFarmInteractableActor::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
-	
+
+    if (!bUseRandomMesh || MeshList.IsEmpty()) return;
+
+    Mesh->SetStaticMesh(MeshList[FMath::RandRange(0,MeshList.Num()-1)].LoadSynchronous());
+
 	FVector LocalMin, LocalMax;
 	Mesh->GetLocalBounds(LocalMin, LocalMax);
 
 	FVector LocalSize = (LocalMax - LocalMin) * Mesh->GetComponentScale();
-	
+
 	FVector NormalizedMax = LocalSize / GridSize;
 
 	int32 SnappedX = FMath::RoundToInt32(NormalizedMax.X) * GridSize;
