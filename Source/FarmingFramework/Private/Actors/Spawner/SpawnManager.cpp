@@ -9,7 +9,6 @@
 #include "NavMesh/RecastNavMesh.h"
 
 
-static int32 TestInt = 0;
 ASpawnManager::ASpawnManager()
 {
     PrimaryActorTick.bCanEverTick = false;
@@ -138,7 +137,6 @@ void ASpawnManager::SpawnAssets(const FSpawnData& InSpawnData)
                         FRotator::ZeroRotator,
                         SpawnParam
                     );
-                    GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("Spawned %d"), TestInt++));
                     NavSystem->Build();
                 }
             }
