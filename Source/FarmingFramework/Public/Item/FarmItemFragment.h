@@ -56,7 +56,7 @@ public:
 	 * @param InIgnoreActors 무시할 엑터
 	 * @return
 	 */
-	bool DetectFrontActor(float InTileDistance,AActor*& DetectedActor, const FGameplayTag& Tag, const TArray<AActor*>& InIgnoreActors = TArray<AActor*>());
+	bool DetectFrontActor(float InTileDistance,AActor*& DetectedActor, const FGameplayTag& Tag, const TArray<AActor*>& InIgnoreActors = TArray<AActor*>{});
 
 	/**
 	 * Owner 기준 앞에 액터의 태그가 일치하는지 체크 함수
@@ -68,6 +68,11 @@ public:
 	 */
 	bool CheckFrontActorTagMatch(float InTileDistance , AActor*& DetectedActor, FGameplayTag InFunctionTag = FGameplayTag(), const TArray<AActor*>& InIgnoreActors = TArray<AActor*>());
 
+    /**
+     * 상호작요한 액터가 있는지 알려줍니다.
+     * @return 상요작용이 가능한 액터
+     */
+    virtual AActor* GetInteractableActor();
 
 	bool operator==(const FGameplayTag& Other) const {return  this->FunctionTag.MatchesTagExact(Other);}
 	//bool operator!=(const FGameplayTag& Other) const {return !operator==(Other);}

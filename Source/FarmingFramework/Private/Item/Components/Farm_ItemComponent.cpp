@@ -51,4 +51,17 @@ void UFarm_ItemComponent::TryUseItem()
 	}
 }
 
+AActor* UFarm_ItemComponent::FindInteractableActorFromItems() const
+{
+    for (UFarmItemFragment* Fragment : Fragments)
+    {
+        if (AActor* InteractableActor = Fragment->GetInteractableActor())
+        {
+            return InteractableActor;
+        }
+    }
+
+    return nullptr;
+}
+
 

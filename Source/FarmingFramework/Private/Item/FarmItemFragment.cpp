@@ -120,6 +120,17 @@ bool UFarmItemFragment::CheckFrontActorTagMatch(float InTileDistance, AActor*& D
 	return false;
 }
 
+AActor* UFarmItemFragment::GetInteractableActor()
+{
+    AActor* InteractableActor;
+    if (DetectFrontActor(TileDistance,InteractableActor , GetFunctionTag()))
+    {
+        return InteractableActor;
+    }
+
+    return nullptr;
+}
+
 FGameplayTagContainer UFarmItemStatics::TraceForwardForActorTagContainer(AActor* SourceActor, float TraceDistance , ECollisionChannel Channel)
 {
 	if(!SourceActor)

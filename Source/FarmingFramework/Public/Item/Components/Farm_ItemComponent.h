@@ -32,6 +32,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void TryUseItem();
+
+    UFUNCTION(BlueprintCallable)
+    AActor* FindInteractableActorFromItems() const;
 protected:
 	virtual void BeginPlay() override;
 

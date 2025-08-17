@@ -28,6 +28,27 @@ void UItemFragment_LineTraceFilterByIgnoreTag::OnInteract()
     IgnoreActors.Reset();
 }
 
+AActor* UItemFragment_LineTraceFilterByIgnoreTag::GetInteractableActor()
+{
+    AActor* DetectedActor;
+    TArray<AActor*> TempIgnoreActors;
+    for (auto& Actor : IgnoreActors)
+    {
+        TempIgnoreActors.Add(Actor.Get());
+    }
+
+    if (CheckFrontActorTagMatch(TileDistance,DetectedActor, GetFunctionTag(), TempIgnoreActors))
+    {
+        if (HasIgnoreTag(DetectedActor))
+        {
+            return GetInteractableActor();
+        }
+        return DetectedActor;
+    }
+    IgnoreActors.Reset();
+    return nullptr;
+}
+
 bool UItemFragment_LineTraceFilterByIgnoreTag::HasIgnoreTag(AActor* InActor)
 {
     if (!InActor)
