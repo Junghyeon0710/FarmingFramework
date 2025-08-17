@@ -17,6 +17,7 @@ class FARMINGFRAMEWORK_API UItemFragment_LineTraceFilterByIgnoreTag : public UMo
 
 public:
 	virtual void OnInteract() override;
+    virtual AActor* GetInteractableActor() override;
 
     virtual void OnInteractSuccess(AActor* DetectedActor) {};
 protected:
