@@ -125,33 +125,36 @@ void ASpawnManager::SpawnAssets(FSpawnData& InSpawnData)
 
     int32 SpawnIndex = InSpawnData.CurrentSpawnCount;
 
-    GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle,[this, NavOrigin, NavRadius, &InSpawnData, SpawnIndex, SpawnCount]() mutable
+    UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(GetWorld());
+    if (!NavSystem)
+    {
+        return;
+    }
+
+    while (SpawnIndex < InSpawnData.TotalSpawnCount)
+    {
+        FNavLocation RandomLocation;
+        if (NavSystem->GetRandomPointInNavigableRadius(NavOrigin, NavRadius, RandomLocation, NavigationData))
         {
-            if (UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(GetWorld()))
+            if (InSpawnData.ClassRef.IsValid())
             {
+                FActorSpawnParameters SpawnParam;
+                SpawnParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
-                FNavLocation RandomLocation;
-
-                if (NavSystem->GetRandomPointInNavigableRadius(NavOrigin, NavRadius, RandomLocation, NavigationData))
+                if (AActor* SpawnedActor = GetWorld()->SpawnActor<AActor>(InSpawnData.ClassRef.Get(), RandomLocation.Location,FRotator::ZeroRotator, SpawnParam))
                 {
-                    checkf(InSpawnData.ClassRef.IsValid(), TEXT("SpawnParams.ClassRef is NULL"));
-
-                    FActorSpawnParameters SpawnParam;
-                    SpawnParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-
-                   if (AActor* SpawnedActor = GetWorld()->SpawnActor<AActor>(InSpawnData.ClassRef.Get(), RandomLocation.Location, FRotator::ZeroRotator,SpawnParam))
-                   {
-                       InSpawnData.IncrementSpawnCount();
-                   }
+                    InSpawnData.IncrementSpawnCount();
                 }
             }
+            SpawnIndex++;
+        }
+        else
+        {
+            break;
+        }
+    }
 
-            if (++SpawnIndex >= SpawnCount)
-            {
-                GetWorld()->GetTimerManager().ClearTimer(SpawnTimerHandle);
-                bSpawnCompleted = true;
-            }
-        },.1f, true);
+    bSpawnCompleted = true;
 
 }
 
