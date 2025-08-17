@@ -36,7 +36,6 @@ protected:
     virtual void BeginPlay() override;
 
 private:
-
     UPROPERTY(EditAnywhere, Category = "Navigation")
     TObjectPtr<ANavigationData> NavigationData;
 

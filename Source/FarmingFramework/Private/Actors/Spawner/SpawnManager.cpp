@@ -9,6 +9,7 @@
 #include "NavMesh/RecastNavMesh.h"
 
 
+static int32 TestInt = 0;
 ASpawnManager::ASpawnManager()
 {
     PrimaryActorTick.bCanEverTick = false;
@@ -18,14 +19,7 @@ ASpawnManager::ASpawnManager()
 void ASpawnManager::BeginPlay()
 {
     Super::BeginPlay();
-    FActorSpawnParameters SpawnParams;
-    SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-    NavigationData = GetWorld()->SpawnActor<ARecastNavMesh>(
-    ARecastNavMesh::StaticClass(),
-    FVector::ZeroVector,
-    FRotator::ZeroRotator,
-    SpawnParams);
     AsyncLoadClasses();
 }
 
@@ -144,7 +138,7 @@ void ASpawnManager::SpawnAssets(const FSpawnData& InSpawnData)
                         FRotator::ZeroRotator,
                         SpawnParam
                     );
-
+                    GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("Spawned %d"), TestInt++));
                     NavSystem->Build();
                 }
             }
