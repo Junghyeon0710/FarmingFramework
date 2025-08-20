@@ -15,7 +15,7 @@ void UItemFragment_WaterGiver::OnInteractSuccess(AActor* DetectedActor)
     if (AFarmInteractableActor* InteractableActor = Cast<AFarmInteractableActor>(DetectedActor))
     {
         PlayMontage();
-        InteractableActor->Interact();
+        InteractableActor->OnInteract();
         InteractableActor->AddStaticGameplayTag(IgnoreTag);
     }
 }

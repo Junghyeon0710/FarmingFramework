@@ -6,6 +6,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/SphereComponent.h"
 #include "Components/Interaction/Farm_HighlightableStaticMesh.h"
+#include "Engine/AssetManager.h"
 #include "GameFramework/Character.h"
 
 
@@ -31,18 +32,96 @@ void AFarmObstacleActor::OnConstruction(const FTransform& Transform)
 {
     Super::OnConstruction(Transform);
 
-    if (!bUseRandomMesh || MeshList.IsEmpty()) return;
+    if (!bUseRandomMesh || RandomMeshList.IsEmpty())
+    {
+        return;
+    }
 
-    HighlightableMesh->SetStaticMesh(MeshList[FMath::RandRange(0,MeshList.Num()-1)].LoadSynchronous());
-
-    if (!HighlightableMesh || !HighlightableMesh->GetStaticMesh())
+    if (!HighlightableMesh || !HighlightableMesh->GetStaticMesh() || !Collision)
     {
        return;
     }
 
-    FBoxSphereBounds MeshBound = HighlightableMesh->GetStaticMesh()->GetBounds();
+    HighlightableMesh->SetStaticMesh(RandomMeshList[FMath::RandRange(0,RandomMeshList.Num()-1)].LoadSynchronous());
 
+    FBoxSphereBounds MeshBound = HighlightableMesh->GetStaticMesh()->GetBounds();
     Collision->SetBoxExtent(MeshBound.BoxExtent * 2);
+
+    UpdateRequiredInteractionsFromHighlightMesh();
+}
+
+void AFarmObstacleActor::OnInteract(AActor* Interactor)
+{
+    if (!Interactor)
+    {
+        return;
+    }
+
+    CurrentInteractionCount++;
+
+    if (CurrentInteractionCount >= RequiredInteractions)
+    {
+        CurrentInteractionCount = 0;
+        Destroy();
+        return;
+    }
+
+    LoadAndSetMeshAsync();
+}
+
+void AFarmObstacleActor::LoadAndSetMeshAsync()
+{
+    if (RemoveMeshList.IsValidIndex(CurrentInteractionCount))
+    {
+        if (RemoveMeshList[CurrentInteractionCount].Get())
+        {
+            HighlightableMesh->SetStaticMesh(RemoveMeshList[CurrentInteractionCount].Get());
+        }
+        else
+        {
+            TSoftObjectPtr<UStaticMesh> SoftMesh = RemoveMeshList[CurrentInteractionCount];
+
+            if (!SoftMesh.IsNull())
+            {
+                FStreamableManager& Streamable = UAssetManager::GetStreamableManager();
+
+                Streamable.RequestAsyncLoad(SoftMesh.ToSoftObjectPath(),
+                  FStreamableDelegate::CreateLambda([this, SoftMesh]()
+                  {
+                      if (HighlightableMesh && SoftMesh.IsValid())
+                      {
+                          HighlightableMesh->SetStaticMesh(SoftMesh.Get());
+                      }
+                  })
+                );
+            }
+        }
+    }
+}
+
+void AFarmObstacleActor::UpdateRequiredInteractionsFromHighlightMesh()
+{
+    if (RemoveMeshList.IsEmpty() || !HighlightableMesh)
+    {
+        return;
+    }
+
+    UStaticMesh* CurrentMesh = HighlightableMesh->GetStaticMesh();
+    if (!CurrentMesh)
+    {
+        return;
+    }
+
+    FSoftObjectPath CurrentMeshPath(CurrentMesh);
+
+    for (int32 i = 0; i < RemoveMeshList.Num(); ++i)
+    {
+        if (RemoveMeshList[i].ToSoftObjectPath() == CurrentMeshPath)
+        {
+            RequiredInteractions = i;
+            return;
+        }
+    }
 }
 
 // void AFarmObstacleActor::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

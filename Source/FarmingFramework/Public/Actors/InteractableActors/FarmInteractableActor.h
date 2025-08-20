@@ -13,7 +13,7 @@ class FARMINGFRAMEWORK_API AFarmInteractableActor : public AFarmTaggedActor
 
 public:
 	AFarmInteractableActor(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
-	virtual void Interact() {};
+	virtual void OnInteract() {};
 
 protected:
 	virtual void OnConstruction(const FTransform& Transform) override;

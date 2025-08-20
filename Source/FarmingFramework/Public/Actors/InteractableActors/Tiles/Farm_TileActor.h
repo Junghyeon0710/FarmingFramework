@@ -16,7 +16,7 @@ class FARMINGFRAMEWORK_API AFarm_TileActor : public AFarmInteractableActor, publ
 public:
 	AFarm_TileActor(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
-	virtual void Interact() override;
+	virtual void OnInteract() override;
 	void SetSeed(AActor* InSeed) { Seed = InSeed; };
     AActor* GetSeed() const { return Seed; }
     bool TryCropHarvest(float LifeSpan);
