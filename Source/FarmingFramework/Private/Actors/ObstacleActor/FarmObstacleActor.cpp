@@ -35,6 +35,12 @@ void AFarmObstacleActor::PostEditChangeProperty(FPropertyChangedEvent& PropertyC
     {
         RandomMeshList = RemoveMeshList;
     }
+
+    if ( PropertyChangedEvent.Property->GetFName() == GET_MEMBER_NAME_CHECKED(AFarmObstacleActor, RandomMeshList) && RemoveMeshList.Num() > 0)
+    {
+        RandomMeshList = RemoveMeshList;
+        UE_LOG(LogTemp, Warning, TEXT("RemoveMeshList exists. Do not set RandomMeshList."));
+    }
 }
 
 void AFarmObstacleActor::OnConstruction(const FTransform& Transform)
