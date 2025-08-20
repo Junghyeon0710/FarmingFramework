@@ -4,10 +4,8 @@
 #include "Actors/ObstacleActor/FarmObstacleActor.h"
 
 #include "Components/BoxComponent.h"
-#include "Components/SphereComponent.h"
 #include "Components/Interaction/Farm_HighlightableStaticMesh.h"
 #include "Engine/AssetManager.h"
-#include "GameFramework/Character.h"
 
 
 AFarmObstacleActor::AFarmObstacleActor()
