@@ -132,13 +132,11 @@ void AFarmObstacleActor::UpdateRequiredInteractionsFromHighlightMesh()
     }
 
     FSoftObjectPath CurrentMeshPath(CurrentMesh);
-    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Required Interactions : %s"), *CurrentMeshPath.ToString()));
 
     for (int32 i = 0; i < RemoveMeshList.Num(); ++i)
     {
         if (RemoveMeshList[i].ToSoftObjectPath() == CurrentMeshPath)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Required Interactions : %s"), *RemoveMeshList[i].ToSoftObjectPath().ToString()));
             RequiredInteractions = i + 1;
             return;
         }
