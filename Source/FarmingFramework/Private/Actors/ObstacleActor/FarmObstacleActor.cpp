@@ -137,7 +137,7 @@ void AFarmObstacleActor::UpdateRequiredInteractionsFromHighlightMesh()
     {
         if (RemoveMeshList[i].ToSoftObjectPath() == CurrentMeshPath)
         {
-            RequiredInteractions = i + 1;
+            RequiredInteractions =  RemoveMeshList.Num() - i;
             return;
         }
     }
