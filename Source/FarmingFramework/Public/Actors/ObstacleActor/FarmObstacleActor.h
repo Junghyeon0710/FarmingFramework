@@ -31,6 +31,10 @@ protected:
 	// virtual void OnEndOverlap( UPrimitiveComponent* OverlappedComponent,AActor* OtherActor,UPrimitiveComponent* OtherComp,int32 OtherBodyIndex);
 
 public:
+    /** IFarmInteractableInterface */
+    virtual void Interact(AActor* Interactor) override;
+    /** ~IFarmInteractableInterface */
+
     virtual void OnInteract(AActor* Interactor);
 protected:
 

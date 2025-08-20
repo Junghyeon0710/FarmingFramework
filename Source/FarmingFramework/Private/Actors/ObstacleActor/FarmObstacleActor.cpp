@@ -50,6 +50,11 @@ void AFarmObstacleActor::OnConstruction(const FTransform& Transform)
     UpdateRequiredInteractionsFromHighlightMesh();
 }
 
+void AFarmObstacleActor::Interact(AActor* Interactor)
+{
+    OnInteract(Interactor);
+}
+
 void AFarmObstacleActor::OnInteract(AActor* Interactor)
 {
     if (!Interactor)
