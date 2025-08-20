@@ -18,12 +18,16 @@ class FARMINGFRAMEWORK_API AFarmObstacleActor : public AFarmTaggedActor,public I
 	GENERATED_BODY()
 
 public:
-
 	AFarmObstacleActor();
+
+#if WITH_EDITOR
+    virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+#endif
 
 protected:
 
     virtual void OnConstruction(const FTransform& Transform) override;
+
 
     // UFUNCTION()
 	// virtual void OnBeginOverlap( UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,UPrimitiveComponent* OtherComp,int32 OtherBodyIndex,bool bFromSweep, const FHitResult& SweepResult);

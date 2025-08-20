@@ -28,6 +28,15 @@ AFarmObstacleActor::AFarmObstacleActor()
 	HighlightableMesh->SetupAttachment(RootComponent);
 }
 
+void AFarmObstacleActor::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
+{
+    Super::PostEditChangeProperty(PropertyChangedEvent);
+    if ( PropertyChangedEvent.Property->GetFName() == GET_MEMBER_NAME_CHECKED(AFarmObstacleActor, RemoveMeshList))
+    {
+        RandomMeshList = RemoveMeshList;
+    }
+}
+
 void AFarmObstacleActor::OnConstruction(const FTransform& Transform)
 {
     Super::OnConstruction(Transform);
@@ -37,12 +46,17 @@ void AFarmObstacleActor::OnConstruction(const FTransform& Transform)
         return;
     }
 
-    if (!HighlightableMesh || !HighlightableMesh->GetStaticMesh() || !Collision)
+    if (!HighlightableMesh)
     {
        return;
     }
 
     HighlightableMesh->SetStaticMesh(RandomMeshList[FMath::RandRange(0,RandomMeshList.Num()-1)].LoadSynchronous());
+
+    if (!HighlightableMesh->GetStaticMesh() || !Collision)
+    {
+        return;
+    }
 
     FBoxSphereBounds MeshBound = HighlightableMesh->GetStaticMesh()->GetBounds();
     Collision->SetBoxExtent(MeshBound.BoxExtent * 2);
@@ -118,12 +132,14 @@ void AFarmObstacleActor::UpdateRequiredInteractionsFromHighlightMesh()
     }
 
     FSoftObjectPath CurrentMeshPath(CurrentMesh);
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Required Interactions : %s"), *CurrentMeshPath.ToString()));
 
     for (int32 i = 0; i < RemoveMeshList.Num(); ++i)
     {
         if (RemoveMeshList[i].ToSoftObjectPath() == CurrentMeshPath)
         {
-            RequiredInteractions = i;
+            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Required Interactions : %s"), *RemoveMeshList[i].ToSoftObjectPath().ToString()));
+            RequiredInteractions = i + 1;
             return;
         }
     }
