@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "..\FarmTaggedActor.h"
 #include "GameFramework/Actor.h"
+#include "Interface/FarmInteractableInterface.h"
 #include "FarmObstacleActor.generated.h"
 
 class UBoxComponent;
@@ -12,7 +13,7 @@ class UFarm_HighlightableStaticMesh;
 class USphereComponent;
 
 UCLASS()
-class FARMINGFRAMEWORK_API AFarmObstacleActor : public AFarmTaggedActor
+class FARMINGFRAMEWORK_API AFarmObstacleActor : public AFarmTaggedActor,public IFarmInteractableInterface
 {
 	GENERATED_BODY()
 
