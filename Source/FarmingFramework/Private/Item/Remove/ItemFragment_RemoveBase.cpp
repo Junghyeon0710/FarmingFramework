@@ -3,15 +3,19 @@
 
 #include "Item/Remove/ItemFragment_RemoveBase.h"
 
+#include "Interface/FarmInteractableInterface.h"
+
 void UItemFragment_RemoveBase::OnInteract()
 {
     AActor* DetectedActor;
 	if(CheckFrontActorTagMatch(TileDistance,DetectedActor, GetFunctionTag()))
 	{
-		//애니메이션 재생
         PlayMontage();
-		// 나무 제거
-	    DetectedActor->SetLifeSpan(MontageLength);
+
+        if (IFarmInteractableInterface* FarmInteractableInterface = Cast<IFarmInteractableInterface>(DetectedActor))
+        {
+            FarmInteractableInterface->Interact(GetOwner());
+        }
 	}
 }
 

@@ -37,7 +37,7 @@ void AFarm_TileActor::OnDayChange(int32 Year, int32 Day, const FString& Season, 
 	}
 }
 
-void AFarm_TileActor::Interact()
+void AFarm_TileActor::OnInteract()
 {
 	ApplyWetSoilVisual();
 }

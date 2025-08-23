@@ -4,9 +4,8 @@
 #include "Actors/ObstacleActor/FarmObstacleActor.h"
 
 #include "Components/BoxComponent.h"
-#include "Components/SphereComponent.h"
 #include "Components/Interaction/Farm_HighlightableStaticMesh.h"
-#include "GameFramework/Character.h"
+#include "Engine/AssetManager.h"
 
 
 AFarmObstacleActor::AFarmObstacleActor()
@@ -27,18 +26,125 @@ AFarmObstacleActor::AFarmObstacleActor()
 	HighlightableMesh->SetupAttachment(RootComponent);
 }
 
+void AFarmObstacleActor::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
+{
+    Super::PostEditChangeProperty(PropertyChangedEvent);
+    if ( PropertyChangedEvent.Property->GetFName() == GET_MEMBER_NAME_CHECKED(AFarmObstacleActor, RemoveMeshList))
+    {
+        RandomMeshList = RemoveMeshList;
+    }
+
+    if ( PropertyChangedEvent.Property->GetFName() == GET_MEMBER_NAME_CHECKED(AFarmObstacleActor, RandomMeshList) && RemoveMeshList.Num() > 0)
+    {
+        RandomMeshList = RemoveMeshList;
+        UE_LOG(LogTemp, Warning, TEXT("RemoveMeshList exists. Do not set RandomMeshList."));
+    }
+}
+
 void AFarmObstacleActor::OnConstruction(const FTransform& Transform)
 {
     Super::OnConstruction(Transform);
 
-    if (!HighlightableMesh || !HighlightableMesh->GetStaticMesh())
+    if (!bUseRandomMesh || RandomMeshList.IsEmpty())
+    {
+        return;
+    }
+
+    if (!HighlightableMesh)
     {
        return;
     }
 
-    FBoxSphereBounds MeshBound = HighlightableMesh->GetStaticMesh()->GetBounds();
+    HighlightableMesh->SetStaticMesh(RandomMeshList[FMath::RandRange(0,RandomMeshList.Num()-1)].LoadSynchronous());
 
+    if (!HighlightableMesh->GetStaticMesh() || !Collision)
+    {
+        return;
+    }
+
+    FBoxSphereBounds MeshBound = HighlightableMesh->GetStaticMesh()->GetBounds();
     Collision->SetBoxExtent(MeshBound.BoxExtent * 2);
+
+    UpdateRequiredInteractionsFromHighlightMesh();
+}
+
+void AFarmObstacleActor::Interact(AActor* Interactor)
+{
+    OnInteract(Interactor);
+}
+
+void AFarmObstacleActor::OnInteract(AActor* Interactor)
+{
+    if (!Interactor)
+    {
+        return;
+    }
+
+    CurrentInteractionCount++;
+
+    if (CurrentInteractionCount >= RequiredInteractions)
+    {
+        CurrentInteractionCount = 0;
+        Destroy();
+        return;
+    }
+
+    LoadAndSetMeshAsync();
+}
+
+void AFarmObstacleActor::LoadAndSetMeshAsync()
+{
+    if (RemoveMeshList.IsValidIndex(CurrentInteractionCount))
+    {
+        if (RemoveMeshList[CurrentInteractionCount].Get())
+        {
+            HighlightableMesh->SetStaticMesh(RemoveMeshList[CurrentInteractionCount].Get());
+        }
+        else
+        {
+            TSoftObjectPtr<UStaticMesh> SoftMesh = RemoveMeshList[CurrentInteractionCount];
+
+            if (!SoftMesh.IsNull())
+            {
+                FStreamableManager& Streamable = UAssetManager::GetStreamableManager();
+
+                Streamable.RequestAsyncLoad(SoftMesh.ToSoftObjectPath(),
+                  FStreamableDelegate::CreateLambda([this, SoftMesh]()
+                  {
+                      if (HighlightableMesh && SoftMesh.IsValid())
+                      {
+                          HighlightableMesh->SetStaticMesh(SoftMesh.Get());
+                      }
+                  })
+                );
+            }
+        }
+    }
+}
+
+void AFarmObstacleActor::UpdateRequiredInteractionsFromHighlightMesh()
+{
+    if (RemoveMeshList.IsEmpty() || !HighlightableMesh)
+    {
+        return;
+    }
+
+    UStaticMesh* CurrentMesh = HighlightableMesh->GetStaticMesh();
+    if (!CurrentMesh)
+    {
+        return;
+    }
+
+    FSoftObjectPath CurrentMeshPath(CurrentMesh);
+
+    for (int32 i = 0; i < RemoveMeshList.Num(); ++i)
+    {
+        if (RemoveMeshList[i].ToSoftObjectPath() == CurrentMeshPath)
+        {
+            RequiredInteractions =  RemoveMeshList.Num() - i;
+            return;
+        }
+    }
 }
 
 // void AFarmObstacleActor::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

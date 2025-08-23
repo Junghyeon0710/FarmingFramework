@@ -13,14 +13,14 @@ class FARMINGFRAMEWORK_API AFarmInteractableActor : public AFarmTaggedActor
 
 public:
 	AFarmInteractableActor(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
-	virtual void Interact() {};
+	virtual void OnInteract() {};
 
 protected:
 	virtual void OnConstruction(const FTransform& Transform) override;
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<class USceneComponent> Root;
-	
+
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<class UStaticMeshComponent> Mesh;
 
@@ -32,4 +32,6 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	int32 ZScale{1};
+
+
 };

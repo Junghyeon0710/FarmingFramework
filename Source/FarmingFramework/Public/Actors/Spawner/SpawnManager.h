@@ -6,7 +6,11 @@
 #include "GameFramework/Actor.h"
 #include "SpawnManager.generated.h"
 
+class UFarmSpawnDataAsset;
 class ANavMeshBoundsVolume;
+
+
+class ANavigationData;
 
 USTRUCT(BlueprintType)
 struct FSpawnData
@@ -18,9 +22,17 @@ struct FSpawnData
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float SpawnRatePerFarmSize = 0.1f;
-};
 
-class ANavigationData;
+    int32 TotalSpawnCount = 0;
+    int32 CurrentSpawnCount = 0;
+    bool bSpawnCompleted = false;
+
+    void IncrementSpawnCount()
+    {
+        CurrentSpawnCount++;
+        bSpawnCompleted = CurrentSpawnCount == TotalSpawnCount;
+    }
+};
 
 UCLASS(Abstract, MinimalAPI)
 class ASpawnManager : public AActor
@@ -34,7 +46,6 @@ protected:
     virtual void BeginPlay() override;
 
 private:
-
     UPROPERTY(EditAnywhere, Category = "Navigation")
     TObjectPtr<ANavigationData> NavigationData;
 
@@ -48,6 +59,9 @@ private:
 
     /** 네비게이션 매쉬와 에셋이 준비 됐는지 */
     void WaitForNavMeshAndAssets();
+
+    /** 네비게이션 체크 타이머를 시작합니다. */
+    void StartNavCheckTimer();
 
 private:
     UPROPERTY(EditAnywhere, Category = "Spawn")
@@ -80,8 +94,10 @@ private:
      * 지정된 데이터를 기반으로 에셋을 스폰합니다.
      * @param InSpawnData 스폰에 필요한 데이터
      */
-    void SpawnAssets(const FSpawnData& InSpawnData);
+    void SpawnAssets(FSpawnData& InSpawnData);
 
+    /** “스폰 완료 상태를 재검사합니다. */
+    void RecheckSpawnCompletion();
 
     FTimerHandle SpawnTimerHandle;
 private:
