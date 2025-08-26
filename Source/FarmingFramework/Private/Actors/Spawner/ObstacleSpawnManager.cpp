@@ -52,9 +52,21 @@ bool AObstacleSpawnManager::CanSpawn(const FSpawnData& InSpawnData) const
     return false;
 }
 
+void AObstacleSpawnManager::ReSpawn()
+{
+    Super::ReSpawn();
+
+    WeatherTypes.Reset();
+}
+
 void AObstacleSpawnManager::HandleDayChanged(int32 Year, int32 Day, const FString& Season, EWeatherType Weather)
 {
     WeatherTypes.Add(Weather);
+}
+
+void AObstacleSpawnManager::TestSleep()
+{
+    ReSpawn();
 }
 
 

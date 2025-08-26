@@ -20,6 +20,7 @@ protected:
 
     /** AFarmSpawnManager */
     virtual bool CanSpawn(const FSpawnData& InSpawnData) const override;
+    virtual void ReSpawn() override;
     /** ~AFarmSpawnManager */
 
 private:
@@ -27,4 +28,11 @@ private:
     void HandleDayChanged(int32 Year, int32 Day,const FString& Season, EWeatherType Weather);
 
     TSet<EWeatherType> WeatherTypes;
+
+public:
+#if WITH_EDITOR
+    UFUNCTION(BlueprintCallable, CallInEditor)
+    void TestSleep();
+#endif
+
 };
