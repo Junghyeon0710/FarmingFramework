@@ -1,25 +1,25 @@
 ﻿
-#include "Actors/Spawner/SpawnManager.h"
+#include "Actors/Spawner/FarmSpawnManager.h"
 
 #include "NavigationSystem.h"
 #include "Engine/AssetManager.h"
 #include "NavMesh/NavMeshBoundsVolume.h"
 
 
-ASpawnManager::ASpawnManager()
+AFarmSpawnManager::AFarmSpawnManager()
 {
     PrimaryActorTick.bCanEverTick = false;
 
 }
 
-void ASpawnManager::BeginPlay()
+void AFarmSpawnManager::BeginPlay()
 {
     Super::BeginPlay();
 
     AsyncLoadClasses();
 }
 
-FVector ASpawnManager::GetNavVolumeSize() const
+FVector AFarmSpawnManager::GetNavVolumeSize() const
 {
     checkf(NavMeshBoundsVolume,TEXT("NavMeshBoundsVolume is NULL"));
 
@@ -31,14 +31,14 @@ FVector ASpawnManager::GetNavVolumeSize() const
     return Extent * 2;
 }
 
-int32 ASpawnManager::CalculateSpawnCountByFarmSizePercentage(float SpawnRatePercent) const
+int32 AFarmSpawnManager::CalculateSpawnCountByFarmSizePercentage(float SpawnRatePercent) const
 {
     FVector TileSize = GetNavVolumeSize() / 100;
 
     return TileSize.X * TileSize.Y * SpawnRatePercent;
 }
 
-void ASpawnManager::AsyncLoadClasses()
+void AFarmSpawnManager::AsyncLoadClasses()
 {
     ClassRefIndex = 0;
     bAsyncCompleted = false;
@@ -46,7 +46,7 @@ void ASpawnManager::AsyncLoadClasses()
     AsyncLoadClass();
 }
 
-void ASpawnManager::AsyncLoadClass()
+void AFarmSpawnManager::AsyncLoadClass()
 {
     FSoftObjectPath SoftObjectPath(SpawnTypes[ClassRefIndex].ClassRef.ToSoftObjectPath());
     UAssetManager::GetStreamableManager().RequestAsyncLoad(SoftObjectPath, FStreamableDelegate::CreateLambda([this, SoftObjectPath]()
@@ -64,14 +64,14 @@ void ASpawnManager::AsyncLoadClass()
    }));
 }
 
-void ASpawnManager::WaitForNavMeshAndAssets()
+void AFarmSpawnManager::WaitForNavMeshAndAssets()
 {
     SpawnIndexCounter = 0;
 
     StartNavCheckTimer();
 }
 
-void ASpawnManager::StartNavCheckTimer()
+void AFarmSpawnManager::StartNavCheckTimer()
 {
     bSpawnCompleted = true;
     if (!GetWorld()->GetTimerManager().IsTimerActive(NavCheckHandle))
@@ -80,7 +80,7 @@ void ASpawnManager::StartNavCheckTimer()
     }
 }
 
-void ASpawnManager::ReadyToSpawn()
+void AFarmSpawnManager::ReadyToSpawn()
 {
     bool bNavigationBeingBuilt = UNavigationSystemV1::GetNavigationSystem(this)->IsNavigationBeingBuilt(this);
 
@@ -103,7 +103,7 @@ void ASpawnManager::ReadyToSpawn()
 
 }
 
-void ASpawnManager::SpawnAssets(FSpawnData& InSpawnData)
+void AFarmSpawnManager::SpawnAssets(FSpawnData& InSpawnData)
 {
     if (!CanSpawn(InSpawnData))
     {
@@ -162,7 +162,7 @@ void ASpawnManager::SpawnAssets(FSpawnData& InSpawnData)
 
 }
 
-void ASpawnManager::RecheckSpawnCompletion()
+void AFarmSpawnManager::RecheckSpawnCompletion()
 {
     for (FSpawnData& Data : SpawnTypes)
     {
