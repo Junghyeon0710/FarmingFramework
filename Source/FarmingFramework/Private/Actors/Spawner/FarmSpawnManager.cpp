@@ -196,6 +196,7 @@ void AFarmSpawnManager::ReSpawn()
 
 void AFarmSpawnManager::OnSpawnCompleted()
 {
+    UE_LOG(LogTemp, Warning, TEXT("OnSpawnCompleted"));
     for (FSpawnData& SpawnData : SpawnTypes)
     {
         SpawnData.Reset();
