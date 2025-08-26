@@ -17,7 +17,7 @@ void AObstacleSpawnManager::BeginPlay()
 
     if (UDynamicWeatherSubsystem* DynamicSubsystem = UDynamicWeatherSubsystem::Get(GetWorld()))
     {
-        DynamicSubsystem->OnDayChanged.AddDynamic(this, ThisClass::HandleDayChanged);
+        DynamicSubsystem->OnDayChanged.AddDynamic(this,&ThisClass::HandleDayChanged);
         WeatherTypes.Add(DynamicSubsystem->GetWeatherType());
     }
 
