@@ -178,6 +178,7 @@ void AFarmSpawnManager::RecheckSpawnCompletion()
         if (UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(GetWorld()))
         {
             FNavLocation RandomLocation;
+            NavigationData->RebuildAll();
             if (NavSystem->GetRandomPointInNavigableRadius(NavOrigin, NavRadius, RandomLocation, NavigationData))
             {
                 StartNavCheckTimer();
