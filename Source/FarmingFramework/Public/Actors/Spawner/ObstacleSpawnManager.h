@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "FarmSpawnManager.h"
+#include "SeasonWeatherData.h"
 #include "ObstacleSpawnManager.generated.h"
 
 UCLASS()
@@ -17,5 +18,9 @@ public:
 protected:
     virtual void BeginPlay() override;
 
-public:
+    virtual bool CanSpawn(const FSpawnData& InSpawnData) const override;
+
+private:
+
+    TSet<EWeatherType> WeatherTypes;
 };

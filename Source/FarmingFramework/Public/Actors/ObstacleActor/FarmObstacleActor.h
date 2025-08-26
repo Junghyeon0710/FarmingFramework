@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "SeasonWeatherData.h"
 #include "..\FarmTaggedActor.h"
 #include "GameFramework/Actor.h"
 #include "Interface/FarmInteractableInterface.h"
@@ -68,5 +69,9 @@ private:
     void LoadAndSetMeshAsync();
     void UpdateRequiredInteractionsFromHighlightMesh();
 
+    UPROPERTY(EditAnywhere, Category = "Weather")
+    TEnumAsByte<EWeatherType> WeatherType = EWeatherType::None;
 
+public:
+    FORCEINLINE EWeatherType GetWeatherType() const { return WeatherType; }
 };
