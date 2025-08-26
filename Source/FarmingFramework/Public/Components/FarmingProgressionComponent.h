@@ -17,7 +17,6 @@ public:
 	UFarmingProgressionComponent();
 
 	/** IProgressionStateInterface*/
-
 	virtual bool CanChangeInitState(FGameplayTag CurrentState, FGameplayTag DesiredState) const override;
 	virtual void HandleChangeInitState(FGameplayTag CurrentState, FGameplayTag DesiredState) const override;
 	virtual void HandleFailedInitStateChange(FGameplayTag CurrentState, FGameplayTag DesiredState) const override;

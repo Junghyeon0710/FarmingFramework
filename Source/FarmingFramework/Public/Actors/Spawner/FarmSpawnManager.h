@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "SpawnManager.generated.h"
+#include "FarmSpawnManager.generated.h"
 
 class UFarmSpawnDataAsset;
 class ANavMeshBoundsVolume;
@@ -32,15 +32,21 @@ struct FSpawnData
         CurrentSpawnCount++;
         bSpawnCompleted = CurrentSpawnCount == TotalSpawnCount;
     }
+
+    void Reset()
+    {
+        CurrentSpawnCount = 0;
+        bSpawnCompleted = false;
+    }
 };
 
 UCLASS(Abstract, MinimalAPI)
-class ASpawnManager : public AActor
+class AFarmSpawnManager : public AActor
 {
     GENERATED_BODY()
 
 public:
-    ASpawnManager();
+    AFarmSpawnManager();
 
 protected:
     virtual void BeginPlay() override;
@@ -100,6 +106,14 @@ private:
     void RecheckSpawnCompletion();
 
     FTimerHandle SpawnTimerHandle;
+
+public:
+    virtual void ReSpawn();
+    virtual void OnSpawnCompleted();
+protected:
+    virtual bool CanSpawn(const FSpawnData& InSpawnData) const { return true; }
+
+    bool bIsReSpawn = false;
 private:
 
 
