@@ -18,9 +18,13 @@ public:
 protected:
     virtual void BeginPlay() override;
 
+    /** AFarmSpawnManager */
     virtual bool CanSpawn(const FSpawnData& InSpawnData) const override;
+    /** ~AFarmSpawnManager */
 
 private:
+    UFUNCTION()
+    void HandleDayChanged(int32 Year, int32 Day,const FString& Season, EWeatherType Weather);
 
     TSet<EWeatherType> WeatherTypes;
 };

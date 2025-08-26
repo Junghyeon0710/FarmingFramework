@@ -3,6 +3,7 @@
 
 #include "Actors/Spawner/ObstacleSpawnManager.h"
 
+#include "DynamicWeatherSubsystem.h"
 #include "Actors/ObstacleActor/FarmObstacleActor.h"
 
 AObstacleSpawnManager::AObstacleSpawnManager()
@@ -13,6 +14,12 @@ AObstacleSpawnManager::AObstacleSpawnManager()
 void AObstacleSpawnManager::BeginPlay()
 {
     Super::BeginPlay();
+
+    if (UDynamicWeatherSubsystem* DynamicSubsystem = UDynamicWeatherSubsystem::Get(GetWorld()))
+    {
+        DynamicSubsystem->OnDayChanged.AddDynamic(this, ThisClass::HandleDayChanged);
+        WeatherTypes.Add(DynamicSubsystem->GetWeatherType());
+    }
 
 }
 
@@ -43,6 +50,11 @@ bool AObstacleSpawnManager::CanSpawn(const FSpawnData& InSpawnData) const
     }
 
     return false;
+}
+
+void AObstacleSpawnManager::HandleDayChanged(int32 Year, int32 Day, const FString& Season, EWeatherType Weather)
+{
+    WeatherTypes.Add(Weather);
 }
 
 
