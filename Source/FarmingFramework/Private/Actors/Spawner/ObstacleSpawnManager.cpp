@@ -55,8 +55,16 @@ bool AObstacleSpawnManager::CanSpawn(const FSpawnData& InSpawnData) const
 void AObstacleSpawnManager::ReSpawn()
 {
     Super::ReSpawn();
+}
 
-    WeatherTypes.Reset();
+void AObstacleSpawnManager::OnSpawnCompleted()
+{
+    Super::OnSpawnCompleted();
+
+    if (bIsReSpawn)
+    {
+        WeatherTypes.Reset();
+    }
 }
 
 void AObstacleSpawnManager::HandleDayChanged(int32 Year, int32 Day, const FString& Season, EWeatherType Weather)

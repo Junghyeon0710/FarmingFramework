@@ -21,6 +21,7 @@ protected:
     /** AFarmSpawnManager */
     virtual bool CanSpawn(const FSpawnData& InSpawnData) const override;
     virtual void ReSpawn() override;
+    virtual void OnSpawnCompleted() override;
     /** ~AFarmSpawnManager */
 
 private:

@@ -105,8 +105,9 @@ void AFarmSpawnManager::ReadyToSpawn()
 
 void AFarmSpawnManager::SpawnAssets(FSpawnData& InSpawnData)
 {
-    if (!CanSpawn(InSpawnData) && bIsReSpawn)
+    if (bIsReSpawn && !CanSpawn(InSpawnData))
     {
+        InSpawnData.bSpawnCompleted = true;
         return;
     }
 
@@ -180,15 +181,25 @@ void AFarmSpawnManager::RecheckSpawnCompletion()
             if (NavSystem->GetRandomPointInNavigableRadius(NavOrigin, NavRadius, RandomLocation, NavigationData))
             {
                 StartNavCheckTimer();
+                return;
             }
         }
     }
+    OnSpawnCompleted();
 }
 
 void AFarmSpawnManager::ReSpawn()
 {
     bIsReSpawn = true;
     WaitForNavMeshAndAssets();
+}
+
+void AFarmSpawnManager::OnSpawnCompleted()
+{
+    for (FSpawnData& SpawnData : SpawnTypes)
+    {
+        SpawnData.Reset();
+    }
 }
 
 
