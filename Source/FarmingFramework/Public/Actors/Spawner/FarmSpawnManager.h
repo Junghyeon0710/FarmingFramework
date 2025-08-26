@@ -101,6 +101,8 @@ private:
 
     FTimerHandle SpawnTimerHandle;
 
+public:
+    virtual void ReSpawn();
 protected:
     virtual bool CanSpawn(const FSpawnData& InSpawnData) const { return true; }
 private:

@@ -185,5 +185,10 @@ void AFarmSpawnManager::RecheckSpawnCompletion()
     }
 }
 
+void AFarmSpawnManager::ReSpawn()
+{
+    WaitForNavMeshAndAssets();
+}
+
 
 
