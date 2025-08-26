@@ -7,7 +7,7 @@
 #include "SeasonWeatherData.h"
 #include "ObstacleSpawnManager.generated.h"
 
-UCLASS()
+UCLASS(Abstract)
 class FARMINGFRAMEWORK_API AObstacleSpawnManager : public AFarmSpawnManager
 {
     GENERATED_BODY()

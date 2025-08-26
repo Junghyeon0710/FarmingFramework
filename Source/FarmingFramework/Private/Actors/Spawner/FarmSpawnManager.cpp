@@ -105,7 +105,7 @@ void AFarmSpawnManager::ReadyToSpawn()
 
 void AFarmSpawnManager::SpawnAssets(FSpawnData& InSpawnData)
 {
-    if (!CanSpawn(InSpawnData))
+    if (!CanSpawn(InSpawnData) && bIsReSpawn)
     {
         return;
     }
@@ -187,6 +187,7 @@ void AFarmSpawnManager::RecheckSpawnCompletion()
 
 void AFarmSpawnManager::ReSpawn()
 {
+    bIsReSpawn = true;
     WaitForNavMeshAndAssets();
 }
 
