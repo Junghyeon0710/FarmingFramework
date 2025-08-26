@@ -18,9 +18,9 @@ AFarmObstacleActor::AFarmObstacleActor()
 		Collision = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision"));
 		SetRootComponent(Collision);
 
-	    Collision->SetCollisionObjectType(ECollisionChannel::ECC_WorldStatic);
-	    Collision->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldStatic,ECR_Overlap);
-	    Collision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Vehicle, ECR_Block);
+	    Collision->SetCollisionObjectType(ECC_Vehicle);
+	    Collision->SetCollisionResponseToChannel(ECC_WorldStatic,ECR_Overlap);
+	    Collision->SetCollisionResponseToChannel(ECC_Vehicle, ECR_Block);
 
 		// Collision->OnComponentBeginOverlap.AddDynamic(this,&ThisClass::OnBeginOverlap);
 		// Collision->OnComponentEndOverlap.AddDynamic(this,&ThisClass::OnEndOverlap);
