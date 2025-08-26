@@ -105,6 +105,10 @@ void ASpawnManager::ReadyToSpawn()
 
 void ASpawnManager::SpawnAssets(FSpawnData& InSpawnData)
 {
+    if (!CanSpawn(InSpawnData))
+    {
+        return;
+    }
 
     checkf(NavigationData,TEXT("NavigationData is NULL"));
     checkf(NavMeshBoundsVolume,TEXT("NavMeshBoundsVolume is NULL"));

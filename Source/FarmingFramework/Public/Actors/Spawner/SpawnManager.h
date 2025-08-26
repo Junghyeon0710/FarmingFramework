@@ -100,6 +100,9 @@ private:
     void RecheckSpawnCompletion();
 
     FTimerHandle SpawnTimerHandle;
+
+protected:
+    virtual bool CanSpawn(const FSpawnData& InSpawnData) const { return true; }
 private:
 
 
