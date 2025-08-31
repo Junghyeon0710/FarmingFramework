@@ -37,4 +37,6 @@ private:
      * 에디터 전용: 이동, 스케일, Brush 변경 후 호출
      */
     void UpdateNavMeshBoundsVolume();
+
+    void UpdateNavMeshBoundsVolumeFromBox();
 };

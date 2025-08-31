@@ -6,6 +6,7 @@
 #include "NavigationSystem.h"
 #include "Builders/CubeBuilder.h"
 #include "Components/BoxComponent.h"
+#include "Components/BrushComponent.h"
 #include "NavMesh/NavMeshBoundsVolume.h"
 
 
@@ -31,9 +32,12 @@ void AFarmPlotActor::OnConstruction(const FTransform& Transform)
     {
         return;
     }
-
     NavMeshBoundsVolume->SetActorTransform(GetActorTransform());
 
+    if (!NavBoxBoundVolume->GetScaledBoxExtent().Equals(NavMeshBoundsVolume->GetBounds().BoxExtent,0.001f))
+    {
+        UpdateNavMeshBoundsVolumeFromBox();
+    }
 }
 
 void AFarmPlotActor::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
@@ -53,20 +57,7 @@ void AFarmPlotActor::PostEditChangeProperty(struct FPropertyChangedEvent& Proper
         return;
     }
 
-    if (UCubeBuilder* Cube = Cast<UCubeBuilder>(NavMeshBoundsVolume->BrushBuilder))
-    {
-        Cube->X = NavBoxBoundVolume->GetScaledBoxExtent().X * 2;
-        Cube->Y = NavBoxBoundVolume->GetScaledBoxExtent().Y * 2;
-        Cube->Z = NavBoxBoundVolume->GetScaledBoxExtent().Z * 2;
-
-        if (ABrush* Brush = Cast<ABrush>(Cube->GetOuter()))
-        {
-            FPropertyChangedEvent PropertyChangedEvent(nullptr);
-            Cube->PostEditChangeProperty(PropertyChangedEvent);
-            NavMeshBoundsVolume->PostEditChangeProperty(PropertyChangedEvent);
-            UpdateNavMeshBoundsVolume();
-        }
-    }
+    UpdateNavMeshBoundsVolumeFromBox();
 #endif
 }
 
@@ -91,6 +82,27 @@ void AFarmPlotActor::UpdateNavMeshBoundsVolume()
         NavSys->OnNavigationBoundsUpdated(NavMeshBoundsVolume);
     }
 #endif
+}
+
+void AFarmPlotActor::UpdateNavMeshBoundsVolumeFromBox()
+{
+#if WITH_EDITOR
+    if (UCubeBuilder* Cube = Cast<UCubeBuilder>(NavMeshBoundsVolume->BrushBuilder))
+    {
+        Cube->X = NavBoxBoundVolume->GetScaledBoxExtent().X * 2;
+        Cube->Y = NavBoxBoundVolume->GetScaledBoxExtent().Y * 2;
+        Cube->Z = NavBoxBoundVolume->GetScaledBoxExtent().Z * 2;
+
+        if (ABrush* Brush = Cast<ABrush>(Cube->GetOuter()))
+        {
+            FPropertyChangedEvent PropertyChangedEvent(nullptr);
+            Cube->PostEditChangeProperty(PropertyChangedEvent);
+            NavMeshBoundsVolume->PostEditChangeProperty(PropertyChangedEvent);
+            UpdateNavMeshBoundsVolume();
+        }
+    }
+#endif
+
 }
 
 
