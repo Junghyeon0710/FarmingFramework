@@ -3,11 +3,9 @@
 
 #include "Actors/FarmPlotActor.h"
 
-#include "NavigationData.h"
 #include "NavigationSystem.h"
 #include "Builders/CubeBuilder.h"
 #include "Components/BoxComponent.h"
-#include "Components/BrushComponent.h"
 #include "NavMesh/NavMeshBoundsVolume.h"
 
 
@@ -16,7 +14,6 @@ AFarmPlotActor::AFarmPlotActor()
     PrimaryActorTick.bCanEverTick = false;
 
     NavBoxBoundVolume = CreateDefaultSubobject<UBoxComponent>("NavBoxBoundVolume");
-
 
 }
 
@@ -37,7 +34,25 @@ void AFarmPlotActor::OnConstruction(const FTransform& Transform)
 
     NavMeshBoundsVolume->SetActorTransform(GetActorTransform());
 
+}
+
+void AFarmPlotActor::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
+{
+    Super::PostEditChangeProperty(PropertyChangedEvent);
+
 #if WITH_EDITOR
+    if (!PropertyChangedEvent.ChangeType == EPropertyChangeType::Interactive)
+    {
+        UpdateNavMeshBoundsVolume();
+    }
+
+    const FName PropName = (PropertyChangedEvent.Property != nullptr) ? PropertyChangedEvent.Property->GetFName() : FName();
+
+    if (PropName != GET_MEMBER_NAME_CHECKED(AFarmPlotActor, NavBoxBoundVolume))
+    {
+        return;
+    }
+
     if (UCubeBuilder* Cube = Cast<UCubeBuilder>(NavMeshBoundsVolume->BrushBuilder))
     {
         Cube->X = NavBoxBoundVolume->GetScaledBoxExtent().X * 2;
@@ -49,14 +64,34 @@ void AFarmPlotActor::OnConstruction(const FTransform& Transform)
             FPropertyChangedEvent PropertyChangedEvent(nullptr);
             Cube->PostEditChangeProperty(PropertyChangedEvent);
             NavMeshBoundsVolume->PostEditChangeProperty(PropertyChangedEvent);
-            UNavigationSystemV1* NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld());
-            if (GIsEditor && NavSys)
-            {
-                NavSys->OnNavigationBoundsUpdated(NavMeshBoundsVolume);
-            }
+            UpdateNavMeshBoundsVolume();
         }
     }
 #endif
 }
+
+void AFarmPlotActor::PostEditMove(bool bFinished)
+{
+    Super::PostEditMove(bFinished);
+
+   if (!bFinished)
+   {
+       return;
+   }
+
+    UpdateNavMeshBoundsVolume();
+}
+
+void AFarmPlotActor::UpdateNavMeshBoundsVolume()
+{
+#if WITH_EDITOR
+    UNavigationSystemV1* NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld());
+    if (GIsEditor && NavSys)
+    {
+        NavSys->OnNavigationBoundsUpdated(NavMeshBoundsVolume);
+    }
+#endif
+}
+
 
 

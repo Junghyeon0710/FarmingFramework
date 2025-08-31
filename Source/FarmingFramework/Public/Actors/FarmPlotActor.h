@@ -20,6 +20,10 @@ public:
 protected:
     virtual void BeginPlay() override;
     virtual void OnConstruction(const FTransform& Transform) override;
+    virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;
+#if WITH_EDITOR
+    virtual void PostEditMove(bool bFinished) override;
+#endif
 private:
 
     UPROPERTY(EditAnywhere, Category = "Navigation")
@@ -27,4 +31,10 @@ private:
 
     UPROPERTY(VisibleAnywhere, Category = "Navigation")
     TObjectPtr<UBoxComponent> NavBoxBoundVolume;
+
+    /**
+     * NavMeshBoundsVolume 갱신 함수
+     * 에디터 전용: 이동, 스케일, Brush 변경 후 호출
+     */
+    void UpdateNavMeshBoundsVolume();
 };
