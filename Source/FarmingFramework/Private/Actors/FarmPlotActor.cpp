@@ -6,7 +6,6 @@
 #include "NavigationSystem.h"
 #include "Builders/CubeBuilder.h"
 #include "Components/BoxComponent.h"
-#include "Components/BrushComponent.h"
 #include "NavMesh/NavMeshBoundsVolume.h"
 
 
@@ -49,15 +48,6 @@ void AFarmPlotActor::PostEditChangeProperty(struct FPropertyChangedEvent& Proper
     {
         UpdateNavMeshBoundsVolume();
     }
-
-    const FName PropName = (PropertyChangedEvent.Property != nullptr) ? PropertyChangedEvent.Property->GetFName() : FName();
-
-    if (PropName != GET_MEMBER_NAME_CHECKED(AFarmPlotActor, NavBoxBoundVolume))
-    {
-        return;
-    }
-
-    UpdateNavMeshBoundsVolumeFromBox();
 #endif
 }
 
