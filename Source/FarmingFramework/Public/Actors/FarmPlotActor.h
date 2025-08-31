@@ -6,20 +6,25 @@
 #include "FarmTaggedActor.h"
 #include "FarmPlotActor.generated.h"
 
+class UBoxComponent;
+class ANavMeshBoundsVolume;
+
 UCLASS()
 class FARMINGFRAMEWORK_API AFarmPlotActor : public AFarmTaggedActor
 {
     GENERATED_BODY()
 
 public:
-    // Sets default values for this actor's properties
     AFarmPlotActor();
 
 protected:
-    // Called when the game starts or when spawned
     virtual void BeginPlay() override;
+    virtual void OnConstruction(const FTransform& Transform) override;
+private:
 
-public:
-    // Called every frame
-    virtual void Tick(float DeltaTime) override;
+    UPROPERTY(EditAnywhere, Category = "Navigation")
+    TObjectPtr<ANavMeshBoundsVolume> NavMeshBoundsVolume;
+
+    UPROPERTY(VisibleAnywhere, Category = "Navigation")
+    TObjectPtr<UBoxComponent> NavBoxBoundVolume;
 };
