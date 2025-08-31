@@ -41,7 +41,7 @@ void AFarmPlotActor::PostEditChangeProperty(struct FPropertyChangedEvent& Proper
     Super::PostEditChangeProperty(PropertyChangedEvent);
 
 #if WITH_EDITOR
-    if (!PropertyChangedEvent.ChangeType == EPropertyChangeType::Interactive)
+    if (PropertyChangedEvent.ChangeType != EPropertyChangeType::Interactive)
     {
         UpdateNavMeshBoundsVolume();
     }
