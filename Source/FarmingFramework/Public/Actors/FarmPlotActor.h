@@ -38,5 +38,8 @@ private:
      */
     void UpdateNavMeshBoundsVolume();
 
+    /**
+    * NavMeshBoundsVolume을 BoxComponent 크기에 맞춰 갱신하는 함수
+    */
     void UpdateNavMeshBoundsVolumeFromBox();
 };
