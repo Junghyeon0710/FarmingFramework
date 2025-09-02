@@ -11,6 +11,7 @@ void UItemFragment_GroundFlatten::OnInteract()
 {
     if (!GetInteractableActor())
     {
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("This is not a farmland area"));
         return;
     }
 
