@@ -44,7 +44,7 @@ AActor* UItemFragment_GroundFlatten::GetInteractableActor()
 
     if (!OwnerCharacter)
     {
-        UE_LOG(LogTemp, Error , TEXT("No OwenrActor"));
+        UE_LOG(LogTemp, Error , TEXT("No OwnerActor"));
         return nullptr;
     }
 
@@ -53,9 +53,9 @@ AActor* UItemFragment_GroundFlatten::GetInteractableActor()
     FVector End = OwnerCharacter->GetActorLocation() - Up * TileDistance;
 
     FHitResult HitResult;
-    GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, GroundChannel, FCollisionQueryParams());
+    bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, GroundChannel, FCollisionQueryParams());
 
-    return HitResult.GetActor();
+    return bHit ? HitResult.GetActor() : nullptr;
 }
 
 void UItemFragment_GroundFlatten::SpawnGroundActor()
