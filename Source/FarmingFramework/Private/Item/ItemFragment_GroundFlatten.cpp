@@ -17,7 +17,7 @@ void UItemFragment_GroundFlatten::OnInteract()
     AActor* DetectedActor;
     if (DetectDownActor(TileDistance, DetectedActor, GetFunctionTag()))
     {
-        if (DoesActorHaveTag(DetectedActor, bIgnoreDestroyTag))
+        if (DoesActorHaveTag(DetectedActor, IgnoreDestroyTag))
         {
             GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Placed Seed"));
         }
@@ -53,7 +53,7 @@ AActor* UItemFragment_GroundFlatten::GetInteractableActor()
     FVector End = OwnerCharacter->GetActorLocation() - Up * TileDistance;
 
     FHitResult HitResult;
-    GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, Channel, FCollisionQueryParams());
+    GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, GroundChannel, FCollisionQueryParams());
 
     return HitResult.GetActor();
 }

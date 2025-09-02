@@ -20,7 +20,7 @@ public:
     virtual AActor* GetInteractableActor() override;
 
     UPROPERTY(EditAnywhere, Category = CollisionChannel)
-    TEnumAsByte<ECollisionChannel> Channel = ECollisionChannel::ECC_Visibility;
+    TEnumAsByte<ECollisionChannel> GroundChannel = ECollisionChannel::ECC_Visibility;
 
     UPROPERTY(EditAnywhere, Category = Ground)
     TSubclassOf<AActor> GroundActorClass;
@@ -29,7 +29,7 @@ public:
     float GridRange = 100.0f;
 
     UPROPERTY(EditAnywhere, Category = Ground)
-    FGameplayTag bIgnoreDestroyTag;
+    FGameplayTag IgnoreDestroyTag;
 
 
 public:
