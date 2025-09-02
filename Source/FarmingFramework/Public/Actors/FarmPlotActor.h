@@ -20,10 +20,11 @@ public:
 protected:
     virtual void BeginPlay() override;
     virtual void OnConstruction(const FTransform& Transform) override;
-    virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;
 #if WITH_EDITOR
+    virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;
     virtual void PostEditMove(bool bFinished) override;
 #endif
+
 private:
 
     UPROPERTY(EditAnywhere, Category = "Navigation")

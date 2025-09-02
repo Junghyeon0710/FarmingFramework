@@ -14,6 +14,7 @@ AFarmPlotActor::AFarmPlotActor()
     PrimaryActorTick.bCanEverTick = false;
 
     NavBoxBoundVolume = CreateDefaultSubobject<UBoxComponent>("NavBoxBoundVolume");
+    NavBoxBoundVolume->SetBoxExtent(FVector(500,500,32));
 
 }
 
