@@ -66,6 +66,7 @@ void UProgressionComponent::Interact()
     else
     {
         NewStaticMeshComp = NewObject<UStaticMeshComponent>(GetOwner(),UStaticMeshComponent::StaticClass());
+        NewStaticMeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
         NewStaticMeshComp->AttachToComponent(Owner->GetRootComponent(),FAttachmentTransformRules::KeepRelativeTransform);
         NewStaticMeshComp->CreationMethod = EComponentCreationMethod::Instance;
         NewStaticMeshComp->RegisterComponent();
