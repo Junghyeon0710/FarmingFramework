@@ -58,6 +58,16 @@ public:
 	 */
 	bool DetectFrontActor(float InTileDistance,AActor*& DetectedActor, const FGameplayTag& Tag, const TArray<AActor*>& InIgnoreActors = TArray<AActor*>{});
 
+    /**
+     * Owner 기준 아래 액터가 있는지 감지하는 함수
+     * @param InTileDistance    캐릭터 방향 기준 거리
+     * @param DetectedActor   감지된 액터
+     * @param Tag			감지 테그
+     * @param InIgnoreActors 무시할 엑터
+     * @return
+     */
+    bool DetectDownActor(float InTileDistance,AActor*& DetectedActor, const FGameplayTag& Tag, const TArray<AActor*>& InIgnoreActors = TArray<AActor*>{});
+
 	/**
 	 * Owner 기준 앞에 액터의 태그가 일치하는지 체크 함수
 	 * @param InTileDistance 캐릭터 앞 방향 기준 거리
@@ -73,6 +83,13 @@ public:
      * @return 상요작용이 가능한 액터
      */
     virtual AActor* GetInteractableActor();
+
+    /**
+     * 특정 액터가 지정된 GameplayTag를 가지고 있는지 검사
+     * @param InActor - 검사할 Actor
+     * @param Tag - 검사할 GameplayTag
+     */
+    bool DoesActorHaveTag(AActor* InActor, const FGameplayTag& InTag);
 
 	bool operator==(const FGameplayTag& Other) const {return  this->FunctionTag.MatchesTagExact(Other);}
 	//bool operator!=(const FGameplayTag& Other) const {return !operator==(Other);}

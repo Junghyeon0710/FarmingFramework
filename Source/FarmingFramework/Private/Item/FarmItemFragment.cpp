@@ -60,19 +60,58 @@ bool UFarmItemFragment::DetectFrontActor(float InTileDistance, AActor*& Detected
 	DrawDebugLine(GetWorld(),Start,End,FColor::Red);
 #endif
 
+    if (DoesActorHaveTag(HitResult.GetActor(), Tag))
+    {
+        DetectedActor = HitResult.GetActor();
+        return true;
+    }
 
-	if (IGameplayTagAssetInterface* Interface = Cast<IGameplayTagAssetInterface>(HitResult.GetActor()))
-	{
-		FGameplayTagContainer TagContainer;
-		Interface->GetOwnedGameplayTags(TagContainer);
+    DetectedActor = nullptr;
 
-		if (TagContainer.HasTagExact(Tag))
-		{
-			DetectedActor = HitResult.GetActor();
-		}
-	}
+	return false;
+}
 
-	return bHit;
+bool UFarmItemFragment::DetectDownActor(float InTileDistance, AActor*& DetectedActor, const FGameplayTag& Tag, const TArray<AActor*>& InIgnoreActors)
+{
+    AActor* OwnerCharacter = GetOwnerCharacter();
+
+    if (!OwnerCharacter)
+    {
+        UE_LOG(LogTemp, Error , TEXT("No OwenrActor"));
+        return false;
+    }
+
+    FVector Up = OwnerCharacter->GetActorUpVector();
+    FVector Start = OwnerCharacter->GetActorLocation() + Up * TileDistance;
+    FVector End = OwnerCharacter->GetActorLocation() - Up * TileDistance;
+
+    FHitResult HitResult;
+    FCollisionQueryParams Params;
+    Params.AddIgnoredActor(OwnerCharacter);
+    Params.AddIgnoredActors(InIgnoreActors);
+
+    bool bHit = GetWorld()->LineTraceSingleByChannel(
+        HitResult,
+        Start,
+        End,
+        ECC_Visibility,
+        Params
+    );
+
+#if 1
+    DrawDebugLine(GetWorld(),Start,End,FColor::Red);
+#endif
+
+
+    if (DoesActorHaveTag(HitResult.GetActor(), Tag))
+    {
+        DetectedActor = HitResult.GetActor();
+        return true;
+    }
+
+    DetectedActor = nullptr;
+
+    return false;
 }
 
 bool UFarmItemFragment::CheckFrontActorTagMatch(float InTileDistance, AActor*& DetectedActor, FGameplayTag InFunctionTag, const TArray<AActor*>& InIgnoreActors)
@@ -103,19 +142,10 @@ bool UFarmItemFragment::CheckFrontActorTagMatch(float InTileDistance, AActor*& D
 		return false;
 	}
 
-	if(IGameplayTagAssetInterface* TagInterface = Cast<IGameplayTagAssetInterface>(Actor))
-	{
-		FGameplayTagContainer ActorTag;
-		TagInterface->GetOwnedGameplayTags(ActorTag);
-
-		for(const FGameplayTag Tag : ActorTag)
-		{
-			if(Tag.MatchesTagExact(InFunctionTag))
-			{
-				return true;
-			}
-		}
-	}
+    if (DoesActorHaveTag(Actor,InFunctionTag))
+    {
+        return true;
+    }
 
 	return false;
 }
@@ -129,6 +159,25 @@ AActor* UFarmItemFragment::GetInteractableActor()
     }
 
     return nullptr;
+}
+
+bool UFarmItemFragment::DoesActorHaveTag(AActor* InActor, const FGameplayTag& InTag)
+{
+    if(IGameplayTagAssetInterface* TagInterface = Cast<IGameplayTagAssetInterface>(InActor))
+    {
+        FGameplayTagContainer ActorTag;
+        TagInterface->GetOwnedGameplayTags(ActorTag);
+
+        for(const FGameplayTag Tag : ActorTag)
+        {
+            if(Tag.MatchesTagExact(InTag))
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 FGameplayTagContainer UFarmItemStatics::TraceForwardForActorTagContainer(AActor* SourceActor, float TraceDistance , ECollisionChannel Channel)
