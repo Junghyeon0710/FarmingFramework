@@ -46,9 +46,9 @@ AActor* UItemFragment_GroundFlatten::GetInteractableActor()
         return nullptr;
     }
 
-    FVector Start = OwnerCharacter->GetActorLocation();
     FVector Up = OwnerCharacter->GetActorUpVector();
-    FVector End = (Start + Up * TileDistance) - (Start - Up * TileDistance);
+    FVector Start = OwnerCharacter->GetActorLocation() + Up * TileDistance;
+    FVector End = OwnerCharacter->GetActorLocation() - Up * TileDistance;
 
     FHitResult HitResult;
     GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, Channel, FCollisionQueryParams());
@@ -63,7 +63,23 @@ void UItemFragment_GroundFlatten::SpawnGroundActor()
         return;
     }
 
-    GetWorld()->SpawnActor<AActor>(GroundActorClass, GetOwner()->GetActorLocation(), FRotator::ZeroRotator);
+    FVector OwnerLocation = GetOwner()->GetActorLocation();
+
+    // 100 단위 그리드로 스냅
+    FVector SnappedLocation;
+    SnappedLocation.X = FMath::GridSnap(OwnerLocation.X, 100.f);
+    SnappedLocation.Y = FMath::GridSnap(OwnerLocation.Y, 100.f);
+    SnappedLocation.Z = OwnerLocation.Z; // Z는 그대로 두거나, 필요하면 따로 스냅
+
+    FActorSpawnParameters SpawnParameters;
+    SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+    GetWorld()->SpawnActor<AActor>(
+        GroundActorClass,
+        SnappedLocation,
+        FRotator::ZeroRotator,
+        SpawnParameters
+    );
 }
 
 
