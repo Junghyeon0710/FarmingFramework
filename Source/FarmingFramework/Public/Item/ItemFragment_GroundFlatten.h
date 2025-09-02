@@ -16,7 +16,6 @@ class FARMINGFRAMEWORK_API UItemFragment_GroundFlatten : public UFarmItemFragmen
 
 public:
     virtual void OnInteract() override;
-	virtual void OnInteractWithActor(FGameplayTag InFunctionTag, AActor* DetectedActor) override;
 	virtual FGameplayTag GetFunctionTag() const override;
     virtual AActor* GetInteractableActor() override;
 
@@ -25,6 +24,10 @@ public:
 
     UPROPERTY(EditAnywhere, Category = Ground)
     TSubclassOf<AActor> GroundActorClass;
+
+    UPROPERTY(EditAnywhere, Category = Ground)
+    float GridRange = 100.0f;
+
 
 public:
     void SpawnGroundActor();

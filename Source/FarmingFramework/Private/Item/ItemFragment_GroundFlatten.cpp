@@ -15,20 +15,13 @@ void UItemFragment_GroundFlatten::OnInteract()
     }
     else
     {
-        UE_LOG(LogTemp, Warning, TEXT("No Ground Actor"));
+        GEngine->AddOnScreenDebugMessage(
+        -1,
+        5.0f,
+        FColor::Red,
+        TEXT("No Ground Actor")
+    );
     }
-}
-
-void UItemFragment_GroundFlatten::OnInteractWithActor(FGameplayTag InFunctionTag, AActor* DetectedActor)
-{
-	if(InFunctionTag.MatchesTagExact(GetFunctionTag()))
-	{
-		// 애니메이션
-
-		//땅 고르기 행동
-		UE_LOG(LogTemp,Warning,TEXT("%s"),*GetFunctionTag().ToString());
-
-	}
 }
 
 FGameplayTag UItemFragment_GroundFlatten::GetFunctionTag() const
@@ -64,22 +57,15 @@ void UItemFragment_GroundFlatten::SpawnGroundActor()
     }
 
     FVector OwnerLocation = GetOwner()->GetActorLocation();
-
-    // 100 단위 그리드로 스냅
     FVector SnappedLocation;
-    SnappedLocation.X = FMath::GridSnap(OwnerLocation.X, 100.f);
-    SnappedLocation.Y = FMath::GridSnap(OwnerLocation.Y, 100.f);
-    SnappedLocation.Z = OwnerLocation.Z; // Z는 그대로 두거나, 필요하면 따로 스냅
+    SnappedLocation.X = FMath::GridSnap(OwnerLocation.X, GridRange);
+    SnappedLocation.Y = FMath::GridSnap(OwnerLocation.Y, GridRange);
+    SnappedLocation.Z = OwnerLocation.Z;
 
     FActorSpawnParameters SpawnParameters;
     SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
-    GetWorld()->SpawnActor<AActor>(
-        GroundActorClass,
-        SnappedLocation,
-        FRotator::ZeroRotator,
-        SpawnParameters
-    );
+    GetWorld()->SpawnActor<AActor>(GroundActorClass, SnappedLocation, FRotator::ZeroRotator, SpawnParameters);
 }
 
 
