@@ -9,19 +9,28 @@ UE_DEFINE_GAMEPLAY_TAG_STATIC(Interact_Ground_Flatten, "Interact.Ground.Flatten"
 
 void UItemFragment_GroundFlatten::OnInteract()
 {
-    if (GetInteractableActor())
+    if (!GetInteractableActor())
     {
-        SpawnGroundActor();
+        return;
+    }
+
+    AActor* DetectedActor;
+    if (DetectDownActor(TileDistance, DetectedActor, GetFunctionTag()))
+    {
+        if (DoesActorHaveTag(DetectedActor, bIgnoreDestroyTag))
+        {
+            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Placed Seed"));
+        }
+        else
+        {
+            DetectedActor->Destroy();
+        }
     }
     else
     {
-        GEngine->AddOnScreenDebugMessage(
-        -1,
-        5.0f,
-        FColor::Red,
-        TEXT("No Ground Actor")
-    );
+        SpawnGroundActor();
     }
+
 }
 
 FGameplayTag UItemFragment_GroundFlatten::GetFunctionTag() const

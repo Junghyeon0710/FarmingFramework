@@ -28,6 +28,9 @@ public:
     UPROPERTY(EditAnywhere, Category = Ground)
     float GridRange = 100.0f;
 
+    UPROPERTY(EditAnywhere, Category = Ground)
+    FGameplayTag bIgnoreDestroyTag;
+
 
 public:
     void SpawnGroundActor();
