@@ -4,7 +4,6 @@
 #include "Actors/InteractableActors/Tiles/Farm_TileActor.h"
 #include "NativeGameplayTags.h"
 #include "DynamicWeatherSubsystem.h"
-#include "Components/BoxComponent.h"
 
 UE_DEFINE_GAMEPLAY_TAG_STATIC(Ignore_Received_Water, "Ignore.Received.Water");
 UE_DEFINE_GAMEPLAY_TAG_STATIC(Ignore_Placed_Seed, "Ignore.Placed.Seed");
