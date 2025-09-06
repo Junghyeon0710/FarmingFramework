@@ -123,20 +123,22 @@ AFarm_TileActor* AFarm_TileActor::CheckAdjacentTile(const FVector& Direction) co
 
     bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, GetActorLocation(), GetActorLocation() + Direction * 50, ECC_Visibility, Params);
 
-    return bHit ? Cast<AFarm_TileActor>(HitResult.GetActor()) : nullptr;
+    AFarm_TileActor* Tile = Cast<AFarm_TileActor>(HitResult.GetActor());
+
+    return bHit && IsValid(Tile) && !Tile->IsPendingKillPending() ? Tile : nullptr;
 }
 
 bool AFarm_TileActor::CheckLeftTile()
 {
    LeftTile = CheckAdjacentTile(-GetActorRightVector());
 
-   return IsValid(LeftTile.Get()) && !LeftTile->IsPendingKillPending();
+   return IsValid(LeftTile.Get());
 }
 
 bool AFarm_TileActor::CheckRightTile()
 {
     RightTile = CheckAdjacentTile(GetActorRightVector());
-    return IsValid(RightTile.Get()) && !RightTile->IsPendingKillPending();
+    return IsValid(RightTile.Get());
 }
 
 void AFarm_TileActor::ConnectRidgeWithNeighbors()
