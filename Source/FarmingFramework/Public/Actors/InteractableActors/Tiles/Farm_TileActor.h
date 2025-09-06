@@ -37,11 +37,9 @@ protected:
 	void OnDayChange( int32 Year, int32 Day,const FString& Season,  EWeatherType Weather);
 
 protected:
-
 	void ApplyWetSoilVisual();
 
 private:
-
 	UPROPERTY()
 	TObjectPtr<class UMaterialInstanceDynamic> DynMaterial;
 
@@ -55,4 +53,21 @@ private:
 	TObjectPtr<AActor> Seed = nullptr;
 
 	void InitializeDynamicMaterial();
+
+private:
+    UPROPERTY(EditAnywhere, Category = "Tile")
+    TObjectPtr<UStaticMesh> TileMesh;
+
+    UPROPERTY(EditAnywhere, Category = "Tile")
+    TObjectPtr<UStaticMesh> TileMesh_L;
+
+    UPROPERTY(EditAnywhere, Category = "Tile")
+    TObjectPtr<UStaticMesh> TileMesh_M;
+
+    UPROPERTY(EditAnywhere, Category = "Tile")
+    TObjectPtr<UStaticMesh> TileMesh_R;
+
+
+    TWeakObjectPtr<AFarm_TileActor> LeftTile;
+    TWeakObjectPtr<AFarm_TileActor> RightTile;
 };
