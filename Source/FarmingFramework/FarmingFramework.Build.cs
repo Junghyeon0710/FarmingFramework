@@ -44,6 +44,7 @@ public class FarmingFramework : ModuleRules
 				"Slate",
 				"SlateCore",
 				"UMG",
+                "UnrealEd"
 			}
 			);
 

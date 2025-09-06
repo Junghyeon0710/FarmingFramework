@@ -7,7 +7,7 @@
 #include "ItemFragment_GroundFlatten.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class FARMINGFRAMEWORK_API UItemFragment_GroundFlatten : public UFarmItemFragment
@@ -15,6 +15,23 @@ class FARMINGFRAMEWORK_API UItemFragment_GroundFlatten : public UFarmItemFragmen
 	GENERATED_BODY()
 
 public:
-	virtual void OnInteractWithActor(FGameplayTag InFunctionTag, AActor* DetectedActor) override;
+    virtual void OnInteract() override;
 	virtual FGameplayTag GetFunctionTag() const override;
+    virtual AActor* GetInteractableActor() override;
+
+    UPROPERTY(EditAnywhere, Category = CollisionChannel)
+    TEnumAsByte<ECollisionChannel> GroundChannel = ECollisionChannel::ECC_Visibility;
+
+    UPROPERTY(EditAnywhere, Category = Ground)
+    TSubclassOf<AActor> GroundActorClass;
+
+    UPROPERTY(EditAnywhere, Category = Ground)
+    float GridRange = 100.0f;
+
+    UPROPERTY(EditAnywhere, Category = Ground)
+    FGameplayTag IgnoreDestroyTag;
+
+
+public:
+    void SpawnGroundActor();
 };
