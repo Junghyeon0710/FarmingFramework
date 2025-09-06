@@ -20,6 +20,7 @@ public:
 	void SetSeed(AActor* InSeed) { Seed = InSeed; };
     AActor* GetSeed() const { return Seed; }
     bool TryCropHarvest(float LifeSpan);
+    virtual void OnCropHarvest() {};
 
 	/** IBuildTargetInterface */
 	virtual void OnBuildingPlaced_Implementation(AActor* PlacedActor) override;

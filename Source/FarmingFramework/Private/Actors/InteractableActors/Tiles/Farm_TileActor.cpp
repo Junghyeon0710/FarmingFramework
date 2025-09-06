@@ -51,7 +51,7 @@ bool AFarm_TileActor::TryCropHarvest(float LifeSpan)
 
     RemoveStaticGameplayTag(Ignore_Placed_Seed);
     GetSeed()->SetLifeSpan(LifeSpan);
-
+    OnCropHarvest();
     return true;
 }
 
