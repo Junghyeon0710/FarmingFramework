@@ -55,6 +55,10 @@ private:
 	void InitializeDynamicMaterial();
 
 private:
+    AActor* CheckAdjacentTile(const FVector& Direction) const;
+    bool CheckLeftTile();
+    bool CheckRightTile();
+
     UPROPERTY(EditAnywhere, Category = "Tile")
     TObjectPtr<UStaticMesh> TileMesh;
 

@@ -93,4 +93,25 @@ void AFarm_TileActor::InitializeDynamicMaterial()
 	}
 }
 
+AActor* AFarm_TileActor::CheckAdjacentTile(const FVector& Direction) const
+{
+    FHitResult HitResult;
+
+    bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, GetActorLocation(), GetActorLocation() + Direction * 100, ECC_Visibility);
+    return bHit ? HitResult.GetActor() : nullptr;
+}
+
+bool AFarm_TileActor::CheckLeftTile()
+{
+   LeftTile = CheckAdjacentTile(-GetActorRightVector());
+
+   return LeftTile ? true : false;
+}
+
+bool AFarm_TileActor::CheckRightTile()
+{
+    RightTile = CheckAdjacentTile(GetActorRightVector());
+    return RightTile ? true : false;
+}
+
 
