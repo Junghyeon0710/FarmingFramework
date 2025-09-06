@@ -152,11 +152,11 @@ void AFarm_TileActor::RefreshAdjacentRidges()
     }
     else if (bHasLeft)
     {
-        SelectedMesh = TileMesh_L;
+        SelectedMesh = TileMesh_R;
     }
     else if (bHasRight)
     {
-        SelectedMesh = TileMesh_R;
+        SelectedMesh = TileMesh_L;
     }
 
     Mesh->SetStaticMesh(SelectedMesh);
