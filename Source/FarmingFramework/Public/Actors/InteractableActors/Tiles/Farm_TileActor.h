@@ -30,6 +30,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
     virtual void OnConstruction(const FTransform& Transform) override;
+    virtual void Destroyed() override;
 
 protected:
 	/** Dynamic Weather*/
@@ -55,7 +56,13 @@ private:
 	void InitializeDynamicMaterial();
 
 private:
+    /**
+    * 지정된 방향으로 인접한 타일을 확인합니다.
+    * @param Direction 탐색할 방향 벡터 (예: 좌/우 방향)
+    * @return 해당 방향에 존재하는 AFarm_TileActor 포인터, 없으면 nullptr
+    */
     AFarm_TileActor* CheckAdjacentTile(const FVector& Direction) const;
+
     bool CheckLeftTile();
     bool CheckRightTile();
 

@@ -37,6 +37,22 @@ void AFarm_TileActor::OnConstruction(const FTransform& Transform)
 
 }
 
+void AFarm_TileActor::Destroyed()
+{
+    if (LeftTile.IsValid())
+    {
+        LeftTile->RightTile = nullptr;
+        LeftTile->RefreshAdjacentRidges();
+    }
+    if (RightTile.IsValid())
+    {
+        RightTile->LeftTile = nullptr;
+        RightTile->RefreshAdjacentRidges();
+    }
+
+    Super::Destroyed();
+}
+
 void AFarm_TileActor::OnDayChange(int32 Year, int32 Day, const FString& Season, EWeatherType Weather)
 {
 	if (Weather == EWeatherType::Rain || Weather == EWeatherType::Snow)
