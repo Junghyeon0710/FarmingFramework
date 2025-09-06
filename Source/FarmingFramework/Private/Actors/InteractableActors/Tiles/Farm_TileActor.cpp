@@ -33,22 +33,7 @@ void AFarm_TileActor::OnConstruction(const FTransform& Transform)
 {
     Super::OnConstruction(Transform);
 
-    if (CheckLeftTile() && CheckRightTile())
-    {
-        Mesh->SetStaticMesh(TileMesh_M);
-    }
-    if (CheckRightTile() && !CheckLeftTile())
-    {
-        Mesh->SetStaticMesh(TileMesh_L);
-    }
-    if (!CheckRightTile() && CheckLeftTile())
-    {
-        Mesh->SetStaticMesh(TileMesh_R);
-    }
-    if (!CheckRightTile() && !CheckLeftTile())
-    {
-        Mesh->SetStaticMesh(TileMesh);
-    }
+    ConnectRidgeWithNeighbors();
 
 }
 
@@ -138,6 +123,29 @@ bool AFarm_TileActor::CheckRightTile()
 {
     RightTile = CheckAdjacentTile(GetActorRightVector());
     return RightTile.Get() ? true : false;
+}
+
+void AFarm_TileActor::ConnectRidgeWithNeighbors()
+{
+    const bool bHasLeft  = CheckLeftTile();
+    const bool bHasRight = CheckRightTile();
+
+    UStaticMesh* SelectedMesh = TileMesh;
+
+    if (bHasLeft && bHasRight)
+    {
+        SelectedMesh = TileMesh_M;
+    }
+    else if (bHasLeft)
+    {
+        SelectedMesh = TileMesh_L;
+    }
+    else if (bHasRight)
+    {
+        SelectedMesh = TileMesh_R;
+    }
+
+    Mesh->SetStaticMesh(SelectedMesh);
 }
 
 

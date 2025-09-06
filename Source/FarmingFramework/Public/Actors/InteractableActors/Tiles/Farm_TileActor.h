@@ -58,6 +58,7 @@ private:
     AFarm_TileActor* CheckAdjacentTile(const FVector& Direction) const;
     bool CheckLeftTile();
     bool CheckRightTile();
+    void ConnectRidgeWithNeighbors();
 
     UPROPERTY(EditAnywhere, Category = "Tile")
     TObjectPtr<UStaticMesh> TileMesh;
