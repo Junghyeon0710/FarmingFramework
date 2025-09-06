@@ -29,6 +29,16 @@ void AFarm_TileActor::BeginPlay()
 	}
 }
 
+void AFarm_TileActor::OnConstruction(const FTransform& Transform)
+{
+    Super::OnConstruction(Transform);
+
+    if (CheckLeftTile())
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Left Tile"));
+    CheckRightTile();
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Right Tile"));
+}
+
 void AFarm_TileActor::OnDayChange(int32 Year, int32 Day, const FString& Season, EWeatherType Weather)
 {
 	if (Weather == EWeatherType::Rain || Weather == EWeatherType::Snow)
