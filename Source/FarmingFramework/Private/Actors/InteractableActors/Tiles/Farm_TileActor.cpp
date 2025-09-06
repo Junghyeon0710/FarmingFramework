@@ -41,12 +41,10 @@ void AFarm_TileActor::Destroyed()
 {
     if (LeftTile.IsValid())
     {
-        LeftTile->RightTile = nullptr;
         LeftTile->RefreshAdjacentRidges();
     }
     if (RightTile.IsValid())
     {
-        RightTile->LeftTile = nullptr;
         RightTile->RefreshAdjacentRidges();
     }
 
@@ -132,13 +130,13 @@ bool AFarm_TileActor::CheckLeftTile()
 {
    LeftTile = CheckAdjacentTile(-GetActorRightVector());
 
-   return LeftTile.Get() ? true : false;
+   return IsValid(LeftTile.Get()) ? true : false;
 }
 
 bool AFarm_TileActor::CheckRightTile()
 {
     RightTile = CheckAdjacentTile(GetActorRightVector());
-    return RightTile.Get() ? true : false;
+    return IsValid(RightTile.Get()) ? true : false;
 }
 
 void AFarm_TileActor::ConnectRidgeWithNeighbors()
