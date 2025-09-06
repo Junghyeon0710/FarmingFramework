@@ -103,7 +103,6 @@ void AFarm_TileActor::ApplyWetSoilVisual()
 	}
 
 	AddStaticGameplayTag(Ignore_Received_Water);
-//	Box->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility,ECR_Overlap);
 }
 
 void AFarm_TileActor::InitializeDynamicMaterial()
@@ -120,7 +119,7 @@ AFarm_TileActor* AFarm_TileActor::CheckAdjacentTile(const FVector& Direction) co
     FCollisionQueryParams Params;
     Params.AddIgnoredActor(this);
 
-    bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, GetActorLocation(), GetActorLocation() + Direction * TraceLength, ECC_Visibility, Params);
+    const bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, GetActorLocation(), GetActorLocation() + Direction * TraceLength, ECC_Visibility, Params);
 
     AFarm_TileActor* Tile = Cast<AFarm_TileActor>(HitResult.GetActor());
 
