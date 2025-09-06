@@ -87,4 +87,7 @@ private:
 
     TWeakObjectPtr<AFarm_TileActor> LeftTile;
     TWeakObjectPtr<AFarm_TileActor> RightTile;
+
+    UPROPERTY(EditAnywhere, Category = "Tile")
+    float TraceLength = 50.0f;
 };

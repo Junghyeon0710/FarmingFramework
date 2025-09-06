@@ -120,7 +120,7 @@ AFarm_TileActor* AFarm_TileActor::CheckAdjacentTile(const FVector& Direction) co
     FCollisionQueryParams Params;
     Params.AddIgnoredActor(this);
 
-    bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, GetActorLocation(), GetActorLocation() + Direction * 50, ECC_Visibility, Params);
+    bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, GetActorLocation(), GetActorLocation() + Direction * TraceLength, ECC_Visibility, Params);
 
     AFarm_TileActor* Tile = Cast<AFarm_TileActor>(HitResult.GetActor());
 
