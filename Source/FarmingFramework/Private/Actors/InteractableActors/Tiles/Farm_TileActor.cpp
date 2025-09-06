@@ -35,7 +35,7 @@ void AFarm_TileActor::OnConstruction(const FTransform& Transform)
 
     if (CheckLeftTile())
         GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Left Tile"));
-    CheckRightTile();
+    if (CheckRightTile())
         GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Right Tile"));
 }
 
