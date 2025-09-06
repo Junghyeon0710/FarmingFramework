@@ -113,15 +113,15 @@ AActor* AFarm_TileActor::CheckAdjacentTile(const FVector& Direction) const
 
 bool AFarm_TileActor::CheckLeftTile()
 {
-   LeftTile = CheckAdjacentTile(-GetActorRightVector());
+   LeftTile = Cast<AFarm_TileActor>(CheckAdjacentTile(-GetActorRightVector()));
 
-   return LeftTile ? true : false;
+   return LeftTile.Get() ? true : false;
 }
 
 bool AFarm_TileActor::CheckRightTile()
 {
-    RightTile = CheckAdjacentTile(GetActorRightVector());
-    return RightTile ? true : false;
+    RightTile = Cast<AFarm_TileActor>(CheckAdjacentTile(GetActorRightVector()));
+    return RightTile.Get() ? true : false;
 }
 
 
