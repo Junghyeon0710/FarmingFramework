@@ -58,7 +58,12 @@ private:
     AFarm_TileActor* CheckAdjacentTile(const FVector& Direction) const;
     bool CheckLeftTile();
     bool CheckRightTile();
+
+    /** 둔덕을 연결합니다. */
     void ConnectRidgeWithNeighbors();
+
+    /** 다시 인접 타일의 둔덕 상태를 갱신합니다.*/
+    void RefreshAdjacentRidges();
 
     UPROPERTY(EditAnywhere, Category = "Tile")
     TObjectPtr<UStaticMesh> TileMesh;

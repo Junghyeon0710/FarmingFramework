@@ -135,17 +135,26 @@ void AFarm_TileActor::ConnectRidgeWithNeighbors()
     if (bHasLeft && bHasRight)
     {
         SelectedMesh = TileMesh_M;
+        LeftTile->RefreshAdjacentRidges();
+        RightTile->RefreshAdjacentRidges();
     }
     else if (bHasLeft)
     {
         SelectedMesh = TileMesh_L;
+        LeftTile->RefreshAdjacentRidges();
     }
     else if (bHasRight)
     {
         SelectedMesh = TileMesh_R;
+        RightTile->RefreshAdjacentRidges();
     }
 
     Mesh->SetStaticMesh(SelectedMesh);
+}
+
+void AFarm_TileActor::RefreshAdjacentRidges()
+{
+
 }
 
 
