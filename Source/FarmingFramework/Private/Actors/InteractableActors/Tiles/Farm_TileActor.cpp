@@ -130,13 +130,13 @@ bool AFarm_TileActor::CheckLeftTile()
 {
    LeftTile = CheckAdjacentTile(-GetActorRightVector());
 
-   return IsValid(LeftTile.Get()) ? true : false;
+   return IsValid(LeftTile.Get()) && !LeftTile->IsPendingKillPending();
 }
 
 bool AFarm_TileActor::CheckRightTile()
 {
     RightTile = CheckAdjacentTile(GetActorRightVector());
-    return IsValid(RightTile.Get()) ? true : false;
+    return IsValid(RightTile.Get()) && !RightTile->IsPendingKillPending();
 }
 
 void AFarm_TileActor::ConnectRidgeWithNeighbors()
