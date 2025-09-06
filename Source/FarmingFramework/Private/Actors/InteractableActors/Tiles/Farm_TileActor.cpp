@@ -122,10 +122,10 @@ AFarm_TileActor* AFarm_TileActor::CheckAdjacentTile(const FVector& Direction) co
     FCollisionQueryParams Params;
     Params.AddIgnoredActor(this);
 
-    bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, GetActorLocation(), GetActorLocation() + Direction * 100, ECC_Visibility, Params);
+    bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, GetActorLocation(), GetActorLocation() + Direction * 50, ECC_Visibility, Params);
 
     FColor DebugColor = bHit ? FColor::Green : FColor::Red;
-    DrawDebugLine(GetWorld(), GetActorLocation(), GetActorLocation() + Direction * 100, DebugColor, false, 2.0f, 0, 2.0f);
+    DrawDebugLine(GetWorld(), GetActorLocation(), GetActorLocation() + Direction * 50, DebugColor, false, 2.0f, 0, 2.0f);
 
 
     return bHit ? Cast<AFarm_TileActor>(HitResult.GetActor()) : nullptr;
