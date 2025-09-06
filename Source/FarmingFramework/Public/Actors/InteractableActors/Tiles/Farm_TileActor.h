@@ -55,7 +55,7 @@ private:
 	void InitializeDynamicMaterial();
 
 private:
-    AActor* CheckAdjacentTile(const FVector& Direction) const;
+    AFarm_TileActor* CheckAdjacentTile(const FVector& Direction) const;
     bool CheckLeftTile();
     bool CheckRightTile();
 

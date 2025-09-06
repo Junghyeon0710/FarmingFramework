@@ -33,10 +33,23 @@ void AFarm_TileActor::OnConstruction(const FTransform& Transform)
 {
     Super::OnConstruction(Transform);
 
-    if (CheckLeftTile())
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Left Tile"));
-    if (CheckRightTile())
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Right Tile"));
+    if (CheckLeftTile() && CheckRightTile())
+    {
+        Mesh->SetStaticMesh(TileMesh_M);
+    }
+    if (CheckRightTile() && !CheckLeftTile())
+    {
+        Mesh->SetStaticMesh(TileMesh_L);
+    }
+    if (!CheckRightTile() && CheckLeftTile())
+    {
+        Mesh->SetStaticMesh(TileMesh_R);
+    }
+    if (!CheckRightTile() && !CheckLeftTile())
+    {
+        Mesh->SetStaticMesh(TileMesh);
+    }
+
 }
 
 void AFarm_TileActor::OnDayChange(int32 Year, int32 Day, const FString& Season, EWeatherType Weather)
@@ -103,24 +116,31 @@ void AFarm_TileActor::InitializeDynamicMaterial()
 	}
 }
 
-AActor* AFarm_TileActor::CheckAdjacentTile(const FVector& Direction) const
+AFarm_TileActor* AFarm_TileActor::CheckAdjacentTile(const FVector& Direction) const
 {
     FHitResult HitResult;
+    FCollisionQueryParams Params;
+    Params.AddIgnoredActor(this);
 
-    bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, GetActorLocation(), GetActorLocation() + Direction * 100, ECC_Visibility);
-    return bHit ? HitResult.GetActor() : nullptr;
+    bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, GetActorLocation(), GetActorLocation() + Direction * 100, ECC_Visibility, Params);
+
+    FColor DebugColor = bHit ? FColor::Green : FColor::Red;
+    DrawDebugLine(GetWorld(), GetActorLocation(), GetActorLocation() + Direction * 100, DebugColor, false, 2.0f, 0, 2.0f);
+
+
+    return bHit ? Cast<AFarm_TileActor>(HitResult.GetActor()) : nullptr;
 }
 
 bool AFarm_TileActor::CheckLeftTile()
 {
-   LeftTile = Cast<AFarm_TileActor>(CheckAdjacentTile(-GetActorRightVector()));
+   LeftTile = CheckAdjacentTile(-GetActorRightVector());
 
    return LeftTile.Get() ? true : false;
 }
 
 bool AFarm_TileActor::CheckRightTile()
 {
-    RightTile = Cast<AFarm_TileActor>(CheckAdjacentTile(GetActorRightVector()));
+    RightTile = CheckAdjacentTile(GetActorRightVector());
     return RightTile.Get() ? true : false;
 }
 
