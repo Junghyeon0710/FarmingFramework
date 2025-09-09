@@ -6,7 +6,7 @@
 
 
 - 지원 버전 5.4
-- [업데이트 노트](https://github.com/Junghyeon0710/DynamicWeather/wiki/%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8-%EB%85%B8%ED%8A%B8)
+- [업데이트 노트](https://github.com/Junghyeon0710/FarmingFramework/wiki/%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8-%EB%85%B8%ED%8A%B8)
 
 <br>
 
