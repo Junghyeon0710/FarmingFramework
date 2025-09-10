@@ -34,4 +34,7 @@ protected:
 	int32 ZScale{1};
 
 
+public:
+    UPROPERTY()
+    TScriptInterface<IInterface> ItemInterface;
 };
