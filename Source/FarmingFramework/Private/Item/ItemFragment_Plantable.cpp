@@ -99,7 +99,7 @@
 // }
 void UItemFragment_Plantable::OnInteractSuccess(AActor* DetectedActor)
 {
-    if (!IsValid(SeedActorClass))
+    if (!IsValid(GetOwner()))
     {
         return;
     }
