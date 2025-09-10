@@ -17,8 +17,10 @@ public:
 	AFarm_TileActor(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	virtual void OnInteract() override;
-	void SetSeed(AActor* InSeed) { Seed = InSeed; };
+
+	void SetSeed(AActor* InSeed) { Seed = InSeed; }
     AActor* GetSeed() const { return Seed; }
+
     bool TryCropHarvest(float LifeSpan);
     virtual void OnCropHarvest() {};
 
@@ -83,7 +85,6 @@ private:
 
     UPROPERTY(EditAnywhere, Category = "Tile")
     TObjectPtr<UStaticMesh> TileMesh_R;
-
 
     TWeakObjectPtr<AFarm_TileActor> LeftTile;
     TWeakObjectPtr<AFarm_TileActor> RightTile;
