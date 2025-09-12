@@ -11,21 +11,23 @@ UProgressionComponent::UProgressionComponent()
 	PrimaryComponentTick.bStartWithTickEnabled = false;
 	PrimaryComponentTick.bCanEverTick = false;
 
+
+
 }
 
 void UProgressionComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if(IProgressionStateInterface* Interface = Cast<IProgressionStateInterface>(this); Interface && !MeshList.IsEmpty())
-	{
-		TArray<FGameplayTag> Tags;
-		for(const auto& List : MeshList)
-		{
-			Tags.Add(List.ProgressionState);
-		}
-		RegisterInitTags(Tags);
-	}
+    if(IProgressionStateInterface* Interface = Cast<IProgressionStateInterface>(this); Interface && !MeshList.IsEmpty())
+    {
+        TArray<FGameplayTag> Tags;
+        for(const auto& List : MeshList)
+        {
+            Tags.Add(List.ProgressionState);
+        }
+        RegisterInitTags(Tags);
+    }
 }
 
 
@@ -82,8 +84,9 @@ void UProgressionComponent::Interact()
 				return;
 			}
 		}
+	    InitState++;
 	}
-    InitState++;
+
 
 	//NewStaticMeshComp->SetSkeletalMesh(MeshList[ProgressState].Mesh);
 	NewStaticMeshComp->SetStaticMesh(MeshList[ProgressState].Mesh);

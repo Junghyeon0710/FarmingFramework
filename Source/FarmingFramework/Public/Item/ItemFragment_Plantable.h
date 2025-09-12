@@ -26,15 +26,15 @@ public:
     EActorPivotPosition GetActorPivotPosition(const AActor* Actor);
     EActorPivotPosition GetStaticMeshPivotPosition(const UStaticMeshComponent* MeshComp);
     EActorPivotPosition GetSkeletalMeshPivotPosition(const USkeletalMeshComponent* MeshComp);
-    UFUNCTION(BlueprintCallable)
-    void SetSeedActorClass(const TSubclassOf<AActor>& NewSeedActorClass) {SeedActorClass = NewSeedActorClass; }
+    // UFUNCTION(BlueprintCallable)
+    // void SetSeedActorClass(const TSubclassOf<AActor>& NewSeedActorClass) {SeedActorClass = NewSeedActorClass; }
 private:
 
 	// UFUNCTION()
 	// void StartProgression(AActor* Actor);
 
-	UPROPERTY(EditAnywhere, Category="FarmingProgression")
-	TSubclassOf<AActor> SeedActorClass;
+	// UPROPERTY(EditAnywhere, Category="FarmingProgression")
+	// TSubclassOf<AActor> SeedActorClass;
 
 	//TWeakObjectPtr<AActor> SeedActor;
 };

@@ -99,7 +99,7 @@
 // }
 void UItemFragment_Plantable::OnInteractSuccess(AActor* DetectedActor)
 {
-    if (!IsValid(SeedActorClass))
+    if (!IsValid(GetOwner()))
     {
         return;
     }
@@ -137,7 +137,7 @@ void UItemFragment_Plantable::OnInteractSuccess(AActor* DetectedActor)
 
     FActorSpawnParameters Params;
     Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-    AActor* Seed = GetWorld()->SpawnActor<AActor>(SeedActorClass, SpawnLocation, DetectedActor->GetActorRotation() ,Params);
+    AActor* Seed = GetWorld()->SpawnActor<AActor>(GetOwner()->GetClass(), SpawnLocation, DetectedActor->GetActorRotation(), Params);
 
 
     if (!Seed)

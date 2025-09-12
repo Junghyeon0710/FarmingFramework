@@ -22,7 +22,7 @@ public:
 	virtual void HandleFailedInitStateChange(FGameplayTag CurrentState, FGameplayTag DesiredState) const override;
 	/** ~IProgressionStateInterface */
 
-
+protected:
 
 public:
 
