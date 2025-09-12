@@ -84,8 +84,9 @@ void UProgressionComponent::Interact()
 				return;
 			}
 		}
+	    InitState++;
 	}
-    InitState++;
+
 
 	//NewStaticMeshComp->SetSkeletalMesh(MeshList[ProgressState].Mesh);
 	NewStaticMeshComp->SetStaticMesh(MeshList[ProgressState].Mesh);
