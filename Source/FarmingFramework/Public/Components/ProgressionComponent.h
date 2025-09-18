@@ -16,6 +16,12 @@ USTRUCT(BlueprintType)
 struct FMeshList
 {
 	GENERATED_BODY()
+    FMeshList() :Mesh(nullptr), TransitionTime(0.f), ProgressionState(){}
+
+    FMeshList(UStaticMesh* InMesh, float InTransitionTime, const FGameplayTag& InProgressionState)
+        : Mesh(InMesh)
+        , TransitionTime(InTransitionTime)
+        , ProgressionState(InProgressionState){}
 
 	// UPROPERTY(EditAnywhere)
 	// TObjectPtr<USkeletalMesh> Mesh;
@@ -72,5 +78,8 @@ protected:
 
 	/** Tag 상태*/
 	int32 InitState = 0;
+
+public:
+    FORCEINLINE void SetMeshLists(const TArray<FMeshList>& InMeshLists) { MeshList = InMeshLists; }
 
 };
