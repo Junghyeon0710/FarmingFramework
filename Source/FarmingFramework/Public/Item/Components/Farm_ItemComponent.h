@@ -19,12 +19,13 @@ public:
 
 	static UFarm_ItemComponent* FindItemComponent(const AActor* OwnerActor) {return OwnerActor->FindComponentByClass<UFarm_ItemComponent>();}
 
-    const TArray<UFarmItemFragment*>& GetFragments() const {return Fragments ;}
+    const TArray<UFarmItemFragment*>& GetFragments() const {return Fragments;}
+    void SetFragments(const TArray<UFarmItemFragment*>& InFragments) {Fragments = InFragments;}
 
     UFUNCTION(BlueprintCallable)
-    UFarmItemFragment* GetFarmItemFragment(TSubclassOf<UFarmItemFragment> FragmentClass) const ;
+    UFarmItemFragment* GetFarmItemFragment(TSubclassOf<UFarmItemFragment> FragmentClass) const;
 
-	template< typename FragmentType> requires std::derived_from<FragmentType, UFarmItemFragment>
+	template<typename FragmentType> requires std::derived_from<FragmentType, UFarmItemFragment>
 	const FragmentType* GetFragment();
 
 	template<typename FragmentType> requires std::derived_from<FragmentType, UFarmItemFragment>
