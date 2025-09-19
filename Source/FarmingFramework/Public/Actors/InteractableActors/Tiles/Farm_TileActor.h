@@ -6,10 +6,11 @@
 #include "SeasonWeatherData.h"
 #include "Actors/InteractableActors/FarmInteractableActor.h"
 #include "Components/Building/BuildTargetInterface.h"
+#include "Interface/ProgressionCompletionInterface.h"
 #include "Farm_TileActor.generated.h"
 
 UCLASS()
-class FARMINGFRAMEWORK_API AFarm_TileActor : public AFarmInteractableActor, public IBuildTargetInterface
+class FARMINGFRAMEWORK_API AFarm_TileActor : public AFarmInteractableActor, public IBuildTargetInterface, public IProgressionCompletionInterface
 {
 	GENERATED_BODY()
 
@@ -31,6 +32,11 @@ public:
 	virtual void OnBuildingPlaced_Implementation(AActor* PlacedActor) override;
 	virtual bool CanBeBuiltOn_Implementation() override;
 	/** ~IBuildTargetInterface */
+
+    /** IProgressionCompletionInterface */
+    virtual void SetCompletedClass(TSoftClassPtr<AActor> CompletedClass) override {SetCropHarvestClass(CompletedClass);};
+    virtual TSoftClassPtr<AActor> GetCompletedClass() override { return GetCropHarvestClass();}
+    /** ~IProgressionCompletionInterface */
 
 protected:
 	virtual void BeginPlay() override;

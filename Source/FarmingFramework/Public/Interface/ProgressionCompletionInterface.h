@@ -23,6 +23,6 @@ class FARMINGFRAMEWORK_API IProgressionCompletionInterface
     // Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 
-    virtual void SetCompletedClass(TSoftClassPtr<AActor>) {};
+    virtual void SetCompletedClass(TSoftClassPtr<AActor> CompletedClassCompletedClass) {};
     virtual TSoftClassPtr<AActor> GetCompletedClass() {return nullptr;}
 };
