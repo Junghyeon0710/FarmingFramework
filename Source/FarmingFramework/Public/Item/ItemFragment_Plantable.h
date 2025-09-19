@@ -27,15 +27,15 @@ public:
     EActorPivotPosition GetStaticMeshPivotPosition(const UStaticMeshComponent* MeshComp);
     EActorPivotPosition GetSkeletalMeshPivotPosition(const USkeletalMeshComponent* MeshComp);
 
-    void SetCropHarvestClass(const TSubclassOf<AActor>& InCropHarvest) {CropHarvestClass = InCropHarvest;}
-    TSubclassOf<AActor> GetCropHarvestClass() const {return CropHarvestClass;}
+    // void SetCropHarvestClass(const TSubclassOf<AActor>& InCropHarvest) {CropHarvestClass = InCropHarvest;}
+    // TSubclassOf<AActor> GetCropHarvestClass() const {return CropHarvestClass;}
 private:
 
 	// UFUNCTION()
 	// void StartProgression(AActor* Actor);
 
-	UPROPERTY(EditAnywhere, Category="CropHarvest")
-	TSubclassOf<AActor> CropHarvestClass;
+	// UPROPERTY(EditAnywhere, Category="CropHarvest")
+	// TSubclassOf<AActor> CropHarvestClass;
 
 	//TWeakObjectPtr<AActor> SeedActor;
 };
