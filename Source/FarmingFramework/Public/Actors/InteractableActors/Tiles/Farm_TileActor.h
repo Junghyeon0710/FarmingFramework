@@ -21,8 +21,11 @@ public:
 	void SetSeed(AActor* InSeed) { Seed = InSeed; }
     AActor* GetSeed() const { return Seed; }
 
+    void SetCropHarvestClass(TSoftClassPtr<AActor> InCropHarvestClass) { CropHarvestClass = InCropHarvestClass; }
+    TSoftClassPtr<AActor> GetCropHarvestClass() { return CropHarvestClass; }
+
     bool TryCropHarvest(float LifeSpan);
-    virtual void OnCropHarvest() {};
+    virtual void OnCropHarvest(TSoftClassPtr<AActor>) {};
 
 	/** IBuildTargetInterface */
 	virtual void OnBuildingPlaced_Implementation(AActor* PlacedActor) override;
@@ -54,6 +57,9 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<AActor> Seed = nullptr;
+
+    UPROPERTY()
+    TSoftClassPtr<AActor> CropHarvestClass = nullptr;
 
 	void InitializeDynamicMaterial();
 

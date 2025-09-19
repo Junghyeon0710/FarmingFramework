@@ -65,14 +65,14 @@ void AFarm_TileActor::OnInteract()
 
 bool AFarm_TileActor::TryCropHarvest(float LifeSpan)
 {
-    if (!GetSeed())
+    if (!GetSeed() && !CropHarvestClass.IsValid())
     {
         return false;
     }
 
     RemoveStaticGameplayTag(Ignore_Placed_Seed);
     GetSeed()->SetLifeSpan(LifeSpan);
-    OnCropHarvest();
+    OnCropHarvest(CropHarvestClass);
     return true;
 }
 
