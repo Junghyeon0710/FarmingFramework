@@ -64,6 +64,9 @@ protected:
 	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = List)
 	TArray<FMeshList> MeshList;
 
+	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = List)
+    TSoftClassPtr<AActor> CompletedClass;
+
 	/** 진행 상태*/
 	int32 ProgressState = 0;
 
@@ -81,5 +84,7 @@ protected:
 
 public:
     FORCEINLINE void SetMeshLists(const TArray<FMeshList>& InMeshLists) { MeshList = InMeshLists; }
-
+    FORCEINLINE const TArray<FMeshList>& GetMeshLists() { return MeshList; }
+    FORCEINLINE void SetCompletedClass(const TSoftClassPtr<AActor>& InCompletedClass) { CompletedClass = InCompletedClass; }
+    FORCEINLINE TSoftClassPtr<AActor> GetCompletedClass() { return CompletedClass; }
 };
