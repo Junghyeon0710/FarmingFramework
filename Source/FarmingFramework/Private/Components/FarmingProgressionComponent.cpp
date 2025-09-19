@@ -93,6 +93,11 @@ void UFarmingProgressionComponent::HandleChangeInitState(FGameplayTag CurrentSta
         {
             TaggedActor->AddStaticGameplayTag(Interact_Crop_Harvest);
         }
+
+        if (IProgressionCompletionInterface* CompletionInterface = Cast<IProgressionCompletionInterface>(Tile))
+        {
+            CompletionInterface->SetCompletedClass(CompletedClass);
+        }
     }
 }
 
