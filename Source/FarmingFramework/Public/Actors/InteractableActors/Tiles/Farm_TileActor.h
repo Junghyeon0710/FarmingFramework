@@ -26,8 +26,9 @@ public:
     TSoftClassPtr<AActor> GetCropHarvestClass() { return CropHarvestClass; }
 
     bool TryCropHarvest(float LifeSpan);
-    virtual void OnCropHarvest(TSoftClassPtr<AActor>) {};
+    virtual void OnCropHarvest(TSoftClassPtr<AActor> CropCropHarvestClass) {};
 
+public:
 	/** IBuildTargetInterface */
 	virtual void OnBuildingPlaced_Implementation(AActor* PlacedActor) override;
 	virtual bool CanBeBuiltOn_Implementation() override;
