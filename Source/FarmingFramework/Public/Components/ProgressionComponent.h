@@ -16,6 +16,12 @@ USTRUCT(BlueprintType)
 struct FMeshList
 {
 	GENERATED_BODY()
+    FMeshList() :Mesh(nullptr), TransitionTime(0.f), ProgressionState(){}
+
+    FMeshList(UStaticMesh* InMesh, float InTransitionTime, const FGameplayTag& InProgressionState)
+        : Mesh(InMesh)
+        , TransitionTime(InTransitionTime)
+        , ProgressionState(InProgressionState){}
 
 	// UPROPERTY(EditAnywhere)
 	// TObjectPtr<USkeletalMesh> Mesh;
@@ -58,6 +64,9 @@ protected:
 	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = List)
 	TArray<FMeshList> MeshList;
 
+	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = Config)
+    TSoftClassPtr<AActor> CompletedClass;
+
 	/** 진행 상태*/
 	int32 ProgressState = 0;
 
@@ -73,4 +82,9 @@ protected:
 	/** Tag 상태*/
 	int32 InitState = 0;
 
+public:
+    FORCEINLINE void SetMeshLists(const TArray<FMeshList>& InMeshLists) { MeshList = InMeshLists; }
+    FORCEINLINE const TArray<FMeshList>& GetMeshLists() { return MeshList; }
+    FORCEINLINE void SetCompletedClass(const TSoftClassPtr<AActor>& InCompletedClass) { CompletedClass = InCompletedClass; }
+    FORCEINLINE TSoftClassPtr<AActor> GetCompletedClass() { return CompletedClass; }
 };

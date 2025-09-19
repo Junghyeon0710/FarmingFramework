@@ -29,7 +29,7 @@ void UItemFragment_GroundFlatten::OnInteract()
     }
     else
     {
-        SpawnGroundActor();
+        PlayMontage();
     }
 
 }
@@ -57,6 +57,12 @@ AActor* UItemFragment_GroundFlatten::GetInteractableActor()
     bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, GroundChannel, FCollisionQueryParams());
 
     return bHit ? HitResult.GetActor() : nullptr;
+}
+
+void UItemFragment_GroundFlatten::OnMontageEnd()
+{
+    Super::OnMontageEnd();
+    SpawnGroundActor();
 }
 
 void UItemFragment_GroundFlatten::SpawnGroundActor()

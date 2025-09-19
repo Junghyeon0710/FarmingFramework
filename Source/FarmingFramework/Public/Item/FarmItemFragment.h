@@ -102,7 +102,7 @@ protected:
     float TileDistance = 100.f;
 
 	// UPROPERTY(EditAnywhere)
- //    TObjectPtr<UAnimMontage> FuncTObjectionTag;
+    // TObjectPtr<UAnimMontage> FuncTObjectionTag;
 
 private:
    static bool bIsInteractBlocked;

@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "FarmItemFragment.h"
+#include "Montage/MontageFragment.h"
 #include "ItemFragment_GroundFlatten.generated.h"
 
 /**
  *
  */
 UCLASS()
-class FARMINGFRAMEWORK_API UItemFragment_GroundFlatten : public UFarmItemFragment
+class FARMINGFRAMEWORK_API UItemFragment_GroundFlatten : public UMontageFragment
 {
 	GENERATED_BODY()
 
@@ -31,6 +32,7 @@ public:
     UPROPERTY(EditAnywhere, Category = Ground)
     FGameplayTag IgnoreDestroyTag;
 
+    virtual void OnMontageEnd() override;
 
 public:
     void SpawnGroundActor();

@@ -22,38 +22,12 @@ public:
 	virtual void HandleFailedInitStateChange(FGameplayTag CurrentState, FGameplayTag DesiredState) const override;
 	/** ~IProgressionStateInterface */
 
-protected:
+private:
+
+    UPROPERTY(EditAnywhere, Category = Config)
+    TSoftObjectPtr<UStaticMesh> FailedMesh;
 
 public:
-
-
-
-	//Field 레벨 관리
-	UPROPERTY(EditAnywhere, Category = Filed)
-	int32 FieldLevel;
-
-	//Field 등급 관리
-	UPROPERTY(EditAnywhere, Category = Filed)
-	int32 FieldGrade;
-
-	//물뿌리개 사용 여부 관리
-	UPROPERTY(EditAnywhere, Category = "Field")
-	bool bIsWatered;
-
-	//시들어가는 식물 단계 관리
-	UPROPERTY(EditAnywhere, Category = "Field")
-	int32 WitheredStage;
-
-	// Plane액터의 텍스처 관리
-	UPROPERTY(EditAnywhere, Category = "Field")
-	UTexture2D* FieldPlaneTexture;
-
-	//seed/ 심은 작물 관리
-
-	// 파종 여부 관리
-	UPROPERTY(EditAnywhere, Category = "Field")
-	bool bIsSown;
-
-    UPROPERTY(EditAnywhere)
-    TSoftObjectPtr<UStaticMesh> FailedMesh;
+    FORCEINLINE TSoftObjectPtr<UStaticMesh> GetFailedMesh() const { return FailedMesh; }
+    FORCEINLINE void SetFailedMesh(TSoftObjectPtr<UStaticMesh> InFailedMesh) { FailedMesh = InFailedMesh; }
 };
