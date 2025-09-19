@@ -20,6 +20,7 @@ public:
     virtual AActor* GetInteractableActor() override;
 
     virtual void OnInteractSuccess(AActor* DetectedActor) {};
+    void SetIgnoreTag(const FGameplayTag& Tag) { IgnoreTag = Tag; };
 protected:
     bool HasIgnoreTag(AActor* InActor);
 

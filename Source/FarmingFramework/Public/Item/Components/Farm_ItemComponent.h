@@ -20,6 +20,7 @@ public:
 	static UFarm_ItemComponent* FindItemComponent(const AActor* OwnerActor) {return OwnerActor->FindComponentByClass<UFarm_ItemComponent>();}
 
     const TArray<UFarmItemFragment*>& GetFragments() const {return Fragments;}
+    TArray<TObjectPtr<UFarmItemFragment>>& GetFragments() { return Fragments; }
     void SetFragments(const TArray<UFarmItemFragment*>& InFragments) {Fragments = InFragments;}
 
     UFUNCTION(BlueprintCallable)

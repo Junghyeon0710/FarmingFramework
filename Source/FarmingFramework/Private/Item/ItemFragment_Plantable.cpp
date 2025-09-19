@@ -138,18 +138,22 @@ void UItemFragment_Plantable::OnInteractSuccess(AActor* DetectedActor)
     FActorSpawnParameters Params;
     Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
     AActor* Seed = GetWorld()->SpawnActor<AActor>(GetOwner()->GetClass(), SpawnLocation, DetectedActor->GetActorRotation(), Params);
-
-
+    if (UProgressionComponent* OwnerProgressionComponent = GetOwner()->FindComponentByClass<UProgressionComponent>())
+    {
+        // 진행
+        if (UProgressionComponent* ProgressionComponent = Seed->FindComponentByClass<UProgressionComponent>())
+        {
+            ProgressionComponent->SetMeshLists(OwnerProgressionComponent->GetMeshLists());
+            ProgressionComponent->RegisterProgressionMeshTags();
+            ProgressionComponent->Interact();
+        }
+    }
     if (!Seed)
     {
         return;
     }
 
-    // 진행
-    if (UProgressionComponent* ProgressionComponent = Seed->FindComponentByClass<UProgressionComponent>())
-    {
-        ProgressionComponent->Interact();
-    }
+
 
     //감지 액터에 배치 알림
     if (DetectedActor->Implements<UBuildTargetInterface>())
