@@ -64,7 +64,7 @@ protected:
 	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = List)
 	TArray<FMeshList> MeshList;
 
-	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = List)
+	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = Config)
     TSoftClassPtr<AActor> CompletedClass;
 
 	/** 진행 상태*/
