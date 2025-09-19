@@ -7,6 +7,7 @@
 #include "../FarmingGameplayTag.h"
 #include "NativeGameplayTags.h"
 #include "Actors/FarmTaggedActor.h"
+#include "Actors/InteractableActors/Tiles/Farm_TileActor.h"
 
 UE_DEFINE_GAMEPLAY_TAG_STATIC(Progress_01, "Progress.01");
 UE_DEFINE_GAMEPLAY_TAG_STATIC(Progress_02, "Progress.02");
