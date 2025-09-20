@@ -137,7 +137,9 @@ void UItemFragment_Plantable::OnInteractSuccess(AActor* DetectedActor)
 
     FActorSpawnParameters Params;
     Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-    AActor* Seed = GetWorld()->SpawnActor<AActor>(GetOwner()->GetClass(), SpawnLocation, DetectedActor->GetActorRotation(), Params);
+
+
+   AActor* Seed = GetWorld()->SpawnActor<AActor>(GetOwner()->GetClass(), SpawnLocation, DetectedActor->GetActorRotation(), Params);
     if (UProgressionComponent* OwnerProgressionComponent = GetOwner()->FindComponentByClass<UProgressionComponent>())
     {
         // 진행
@@ -154,6 +156,11 @@ void UItemFragment_Plantable::OnInteractSuccess(AActor* DetectedActor)
     }
 
 
+    AFarm_TileActor* TileActor = Cast<AFarm_TileActor>(DetectedActor);
+    if (TileActor)
+    {
+        TileActor->SetTempSeed(GetOwner());
+    }
 
     //감지 액터에 배치 알림
     if (DetectedActor->Implements<UBuildTargetInterface>())
