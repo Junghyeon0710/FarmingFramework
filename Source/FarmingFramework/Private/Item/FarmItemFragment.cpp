@@ -3,6 +3,7 @@
 
 #include "..\..\Public\Item\FarmItemFragment.h"
 
+#include "EngineUtils.h"
 #include "GameplayTagAssetInterface.h"
 #include "GameFramework/Character.h"
 #include "Interface/FarmItemFragmentInterface.h"
@@ -25,7 +26,7 @@ AActor* UFarmItemFragment::GetOwner() const
 
 ACharacter* UFarmItemFragment::GetOwnerCharacter() const
 {
-	//임시
+
 	return UGameplayStatics::GetPlayerCharacter(this,0);
 }
 

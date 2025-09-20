@@ -11,14 +11,10 @@ UProgressionComponent::UProgressionComponent()
 	PrimaryComponentTick.bStartWithTickEnabled = false;
 	PrimaryComponentTick.bCanEverTick = false;
 
-
-
 }
 
-void UProgressionComponent::BeginPlay()
+void UProgressionComponent::RegisterProgressionMeshTags()
 {
-	Super::BeginPlay();
-
     if(IProgressionStateInterface* Interface = Cast<IProgressionStateInterface>(this); Interface && !MeshList.IsEmpty())
     {
         TArray<FGameplayTag> Tags;
@@ -28,6 +24,13 @@ void UProgressionComponent::BeginPlay()
         }
         RegisterInitTags(Tags);
     }
+}
+
+void UProgressionComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+    RegisterProgressionMeshTags();
 }
 
 

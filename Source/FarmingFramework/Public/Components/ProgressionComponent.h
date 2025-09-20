@@ -44,8 +44,9 @@ class FARMINGFRAMEWORK_API UProgressionComponent : public UActorComponent
 
 public:
 	UProgressionComponent();
+    void RegisterProgressionMeshTags();
 
-	UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable)
 	virtual void Interact();
 
 	FTimerHandle ProgressTimer;

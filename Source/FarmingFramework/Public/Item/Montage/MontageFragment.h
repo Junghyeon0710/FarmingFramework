@@ -17,6 +17,7 @@ class FARMINGFRAMEWORK_API UMontageFragment : public UFarmItemFragment
     GENERATED_BODY()
 public:
     virtual void PlayMontage();
+    void SetMontage(UAnimMontage* InMontage) { AnimMontage = InMontage; }
 
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Montage")

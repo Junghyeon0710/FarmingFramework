@@ -22,6 +22,9 @@ public:
 	void SetSeed(AActor* InSeed) { Seed = InSeed; }
     AActor* GetSeed() const { return Seed; }
 
+    void SetTempSeed(AActor* InSeed) { TempSeed = InSeed; }
+    AActor* GetTempSeed() const { return TempSeed; }
+
     void SetCropHarvestClass(TSoftClassPtr<AActor> InCropHarvestClass) { CropHarvestClass = InCropHarvestClass; }
     TSoftClassPtr<AActor> GetCropHarvestClass() { return CropHarvestClass; }
 
@@ -64,6 +67,9 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<AActor> Seed = nullptr;
+
+    UPROPERTY()
+    TObjectPtr<AActor> TempSeed = nullptr;
 
     UPROPERTY()
     TSoftClassPtr<AActor> CropHarvestClass = nullptr;
