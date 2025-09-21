@@ -57,7 +57,7 @@ bool UFarmItemFragment::DetectFrontActor(float InTileDistance, AActor*& Detected
 		Params
 	);
 
-#if 1
+#if 0
 	DrawDebugLine(GetWorld(),Start,End,FColor::Red);
 #endif
 
@@ -99,7 +99,7 @@ bool UFarmItemFragment::DetectDownActor(float InTileDistance, AActor*& DetectedA
         Params
     );
 
-#if 1
+#if 0
     DrawDebugLine(GetWorld(),Start,End,FColor::Red);
 #endif
 
@@ -206,7 +206,7 @@ FGameplayTagContainer UFarmItemStatics::TraceForwardForActorTagContainer(AActor*
 		Params
 	);
 
-#if 1
+#if 0
 	DrawDebugLine(SourceActor->GetWorld(),Start,End,FColor::Red,false,5.f);
 #endif
 

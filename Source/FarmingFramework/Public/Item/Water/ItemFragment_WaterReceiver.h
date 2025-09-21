@@ -16,5 +16,5 @@ class FARMINGFRAMEWORK_API UItemFragment_WaterReceiver : public UFarmItemFragmen
 	GENERATED_BODY()
 
 public:
-	virtual void OnInteract() override;
+	virtual bool OnInteract() override;
 };

@@ -23,7 +23,7 @@ public:
 	virtual void OnFragmentCreated() {};
 
 	UFUNCTION(BlueprintCallable)
-	virtual void OnInteract() {};
+	virtual bool OnInteract() {return false;}
 	// UFUNCTION(BlueprintCallable)
 	// virtual void OnInteract(APlayerController* PC) {};
 	UFUNCTION(BlueprintCallable)
