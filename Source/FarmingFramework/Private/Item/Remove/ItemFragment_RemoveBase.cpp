@@ -5,18 +5,19 @@
 
 #include "Interface/FarmInteractableInterface.h"
 
-void UItemFragment_RemoveBase::OnInteract()
+bool UItemFragment_RemoveBase::OnInteract()
 {
     AActor* DetectedActor;
 	if(CheckFrontActorTagMatch(TileDistance,DetectedActor, GetFunctionTag()))
 	{
-        PlayMontage();
-
         if (IFarmInteractableInterface* FarmInteractableInterface = Cast<IFarmInteractableInterface>(DetectedActor))
         {
+            PlayMontage();
             FarmInteractableInterface->Interact(GetOwner());
+            return true;
         }
 	}
+    return false;
 }
 
 void UItemFragment_RemoveBase::OnInteractWithTag(FGameplayTag InFunctionTag)

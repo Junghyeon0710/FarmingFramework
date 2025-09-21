@@ -16,7 +16,7 @@ class FARMINGFRAMEWORK_API UItemFragment_RemoveBase : public UMontageFragment
 	GENERATED_BODY()
 
 public:
-	virtual void OnInteract() override;
+	virtual bool OnInteract() override;
 	virtual void OnInteractWithTag(FGameplayTag InFunctionTag) override;
 	virtual void OnInteractWithActor(FGameplayTag InFunctionTag, AActor* DetectedActor) override;
 };

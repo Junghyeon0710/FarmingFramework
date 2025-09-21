@@ -3,7 +3,7 @@
 
 #include "Item/Water/ItemFragment_WaterReceiver.h"
 
-void UItemFragment_WaterReceiver::OnInteract()
+bool UItemFragment_WaterReceiver::OnInteract()
 {
-	
+	return false;
 }

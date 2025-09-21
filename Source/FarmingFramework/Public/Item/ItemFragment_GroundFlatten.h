@@ -16,7 +16,7 @@ class FARMINGFRAMEWORK_API UItemFragment_GroundFlatten : public UMontageFragment
 	GENERATED_BODY()
 
 public:
-    virtual void OnInteract() override;
+    virtual bool OnInteract() override;
 	virtual FGameplayTag GetFunctionTag() const override;
     virtual AActor* GetInteractableActor() override;
 

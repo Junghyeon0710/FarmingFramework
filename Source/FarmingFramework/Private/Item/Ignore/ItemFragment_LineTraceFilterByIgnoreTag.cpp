@@ -7,7 +7,7 @@
 
 class IGameplayTagAssetInterface;
 
-void UItemFragment_LineTraceFilterByIgnoreTag::OnInteract()
+bool UItemFragment_LineTraceFilterByIgnoreTag::OnInteract()
 {
     AActor* DetectedActor;
     TArray<AActor*> TempIgnoreActors;
@@ -16,17 +16,22 @@ void UItemFragment_LineTraceFilterByIgnoreTag::OnInteract()
         TempIgnoreActors.Add(Actor.Get());
     }
 
-    if (CheckFrontActorTagMatch(TileDistance,DetectedActor, GetFunctionTag(), TempIgnoreActors))
+    if (CheckFrontActorTagMatch(TileDistance, DetectedActor, GetFunctionTag(), TempIgnoreActors))
     {
         if (HasIgnoreTag(DetectedActor))
         {
-            OnInteract();
-            return;
+            return OnInteract();
         }
+
         OnInteractSuccess(DetectedActor);
+        IgnoreActors.Reset();
+        return true;
     }
+
     IgnoreActors.Reset();
+    return false;
 }
+
 
 AActor* UItemFragment_LineTraceFilterByIgnoreTag::GetInteractableActor()
 {

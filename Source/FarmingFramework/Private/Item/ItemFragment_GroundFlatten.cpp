@@ -7,31 +7,29 @@
 
 UE_DEFINE_GAMEPLAY_TAG_STATIC(Interact_Ground_Flatten, "Interact.Ground.Flatten");
 
-void UItemFragment_GroundFlatten::OnInteract()
+bool UItemFragment_GroundFlatten::OnInteract()
 {
     if (!GetInteractableActor())
     {
         GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("This is not a farmland area"));
-        return;
+        return false;
     }
 
-    AActor* DetectedActor;
+    AActor* DetectedActor = nullptr;
     if (DetectDownActor(TileDistance, DetectedActor, GetFunctionTag()))
     {
         if (DoesActorHaveTag(DetectedActor, IgnoreDestroyTag))
         {
             GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Placed Seed"));
+            return false;
         }
-        else
-        {
-            DetectedActor->Destroy();
-        }
-    }
-    else
-    {
-        PlayMontage();
+
+        DetectedActor->Destroy();
+        return true;
     }
 
+    PlayMontage();
+    return true;
 }
 
 FGameplayTag UItemFragment_GroundFlatten::GetFunctionTag() const

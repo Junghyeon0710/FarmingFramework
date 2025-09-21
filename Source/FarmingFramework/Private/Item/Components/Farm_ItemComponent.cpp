@@ -40,15 +40,19 @@ void UFarm_ItemComponent::BeginPlay()
 	}
 }
 
-void UFarm_ItemComponent::TryUseItem()
+bool UFarm_ItemComponent::TryUseItem()
 {
-	for (UFarmItemFragment* Fragment : Fragments)
-	{
-	    if (!UFarmItemFragment::IsInteractBlocked())
-	    {
-		    Fragment->OnInteract();
-	    }
-	}
+    bool bSuccess = false;
+
+    for (UFarmItemFragment* Fragment : Fragments)
+    {
+        if (!UFarmItemFragment::IsInteractBlocked())
+        {
+            bSuccess |= Fragment->OnInteract();
+        }
+    }
+
+    return bSuccess;
 }
 
 AActor* UFarm_ItemComponent::FindInteractableActorFromItems() const

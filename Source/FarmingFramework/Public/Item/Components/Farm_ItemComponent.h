@@ -33,7 +33,7 @@ public:
 	FragmentType* GetFragmentOfTypeMutable();
 
 	UFUNCTION(BlueprintCallable)
-	void TryUseItem();
+	bool TryUseItem();
 
     UFUNCTION(BlueprintCallable)
     AActor* FindInteractableActorFromItems() const;
