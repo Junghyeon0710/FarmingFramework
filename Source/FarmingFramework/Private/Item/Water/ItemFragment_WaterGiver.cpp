@@ -9,6 +9,11 @@
 UE_DEFINE_GAMEPLAY_TAG_STATIC(Interact_Giver_Water, "Interact.Giver.Water");
 
 
+UItemFragment_WaterGiver::UItemFragment_WaterGiver()
+{
+    IgnoreTag = FGameplayTag::RequestGameplayTag("Ignore.Received.Water");
+    FunctionTag = Interact_Giver_Water;
+}
 
 void UItemFragment_WaterGiver::OnInteractSuccess(AActor* DetectedActor)
 {
