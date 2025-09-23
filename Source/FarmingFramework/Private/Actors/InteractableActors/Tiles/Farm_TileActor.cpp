@@ -65,7 +65,7 @@ void AFarm_TileActor::OnInteract()
 
 bool AFarm_TileActor::TryCropHarvest(float LifeSpan)
 {
-    if (!GetSeed() && !CropHarvestClass.IsValid())
+    if (!GetSeed())
     {
         return false;
     }
