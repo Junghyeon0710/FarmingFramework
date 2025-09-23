@@ -5,6 +5,11 @@
 #include "NativeGameplayTags.h"
 #include "Actors/InteractableActors/Tiles/Farm_TileActor.h"
 
+UCharacterFragment_CropHarvest::UCharacterFragment_CropHarvest()
+{
+    FunctionTag = FGameplayTag::RequestGameplayTag("Interact.Crop.Harvest");
+}
+
 void UCharacterFragment_CropHarvest::OnInteractSuccess(AActor* DetectedActor)
 {
     if (!DetectedActor)

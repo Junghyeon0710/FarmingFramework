@@ -15,6 +15,8 @@ class FARMINGFRAMEWORK_API UCharacterFragment_CropHarvest : public UItemFragment
 	GENERATED_BODY()
 
 public:
+    UCharacterFragment_CropHarvest();
+
     virtual void OnInteractSuccess(AActor* DetectedActor);
 
 };

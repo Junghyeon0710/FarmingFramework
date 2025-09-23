@@ -5,13 +5,13 @@
 #include "CoreMinimal.h"
 #include "FarmItemFragment.h"
 #include "Montage/MontageFragment.h"
-#include "ItemFragment_GroundFlatten.generated.h"
+#include "ItemFragment_GroundLeveling.generated.h"
 
 /**
  *
  */
 UCLASS()
-class FARMINGFRAMEWORK_API UItemFragment_GroundFlatten : public UMontageFragment
+class FARMINGFRAMEWORK_API UItemFragment_GroundLeveling : public UMontageFragment
 {
 	GENERATED_BODY()
 
@@ -36,4 +36,12 @@ public:
 
 public:
     void SpawnGroundActor();
+public:
+    void SetIgnoreDestroyTag(const FGameplayTag& InTag) {IgnoreDestroyTag = InTag;}
+    void SetGirdRange(float InRange) {GridRange = InRange;}
+    void SetGroundActorClass(TSubclassOf<AActor> InClass) {GroundActorClass = InClass;}
+    void SetGroundChannel(ECollisionChannel InChannel) {GroundChannel = InChannel;}
+
+private:
+    TWeakObjectPtr<AActor> CachedDetectedActor = nullptr;
 };
