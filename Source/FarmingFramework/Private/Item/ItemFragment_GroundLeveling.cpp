@@ -10,7 +10,8 @@ UE_DEFINE_GAMEPLAY_TAG_STATIC(Interact_Ground_Flatten, "Interact.Ground.Leveling
 
 bool UItemFragment_GroundLeveling::OnInteract()
 {
-    if (!GetInteractableActor())
+    CachedDetectedActor = GetInteractableActor();
+    if (!CachedDetectedActor.Get())
     {
         GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("This is not a farmland area"));
         return false;
@@ -71,11 +72,11 @@ void UItemFragment_GroundLeveling::SpawnGroundActor()
         return;
     }
 
-    FVector OwnerLocation = GetOwner()->GetActorLocation();
+    FVector OwnerLocation = GetOwnerCharacter()->GetActorLocation();
     FVector SnappedLocation;
     SnappedLocation.X = FMath::GridSnap(OwnerLocation.X, GridRange);
     SnappedLocation.Y = FMath::GridSnap(OwnerLocation.Y, GridRange);
-    SnappedLocation.Z = OwnerLocation.Z;
+    SnappedLocation.Z = CachedDetectedActor->GetActorLocation().Z;
 
     FActorSpawnParameters SpawnParameters;
     SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;

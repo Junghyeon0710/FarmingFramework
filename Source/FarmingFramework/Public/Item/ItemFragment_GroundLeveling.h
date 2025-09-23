@@ -36,4 +36,12 @@ public:
 
 public:
     void SpawnGroundActor();
+public:
+    void SetIgnoreDestroyTag(const FGameplayTag& InTag) {IgnoreDestroyTag = InTag;}
+    void SetGirdRange(float InRange) {GridRange = InRange;}
+    void SetGroundActorClass(TSubclassOf<AActor> InClass) {GroundActorClass = InClass;}
+    void SetGroundChannel(ECollisionChannel InChannel) {GroundChannel = InChannel;}
+
+private:
+    TWeakObjectPtr<AActor> CachedDetectedActor = nullptr;
 };
