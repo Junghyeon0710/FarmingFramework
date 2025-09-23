@@ -1,13 +1,14 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Item/ItemFragment_GroundFlatten.h"
+#include "Item/ItemFragment_GroundLeveling.h"
+
 #include "NativeGameplayTags.h"
 #include "GameFramework/Character.h"
 
-UE_DEFINE_GAMEPLAY_TAG_STATIC(Interact_Ground_Flatten, "Interact.Ground.Flatten");
+UE_DEFINE_GAMEPLAY_TAG_STATIC(Interact_Ground_Flatten, "Interact.Ground.Leveling");
 
-bool UItemFragment_GroundFlatten::OnInteract()
+bool UItemFragment_GroundLeveling::OnInteract()
 {
     if (!GetInteractableActor())
     {
@@ -32,12 +33,12 @@ bool UItemFragment_GroundFlatten::OnInteract()
     return true;
 }
 
-FGameplayTag UItemFragment_GroundFlatten::GetFunctionTag() const
+FGameplayTag UItemFragment_GroundLeveling::GetFunctionTag() const
 {
 	return Interact_Ground_Flatten;
 }
 
-AActor* UItemFragment_GroundFlatten::GetInteractableActor()
+AActor* UItemFragment_GroundLeveling::GetInteractableActor()
 {
     AActor* OwnerCharacter = GetOwnerCharacter();
 
@@ -57,13 +58,13 @@ AActor* UItemFragment_GroundFlatten::GetInteractableActor()
     return bHit ? HitResult.GetActor() : nullptr;
 }
 
-void UItemFragment_GroundFlatten::OnMontageEnd()
+void UItemFragment_GroundLeveling::OnMontageEnd()
 {
     Super::OnMontageEnd();
     SpawnGroundActor();
 }
 
-void UItemFragment_GroundFlatten::SpawnGroundActor()
+void UItemFragment_GroundLeveling::SpawnGroundActor()
 {
     if (!GroundActorClass)
     {
