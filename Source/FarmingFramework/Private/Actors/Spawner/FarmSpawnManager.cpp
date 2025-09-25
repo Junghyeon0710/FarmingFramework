@@ -2,6 +2,7 @@
 #include "Actors/Spawner/FarmSpawnManager.h"
 
 #include "NavigationSystem.h"
+#include "Actors/ObstacleActor/FarmObstacleActor.h"
 #include "Engine/AssetManager.h"
 #include "NavMesh/NavMeshBoundsVolume.h"
 
@@ -148,6 +149,14 @@ void AFarmSpawnManager::SpawnAssets(FSpawnData& InSpawnData)
 
                 if (AActor* SpawnedActor = GetWorld()->SpawnActor<AActor>(InSpawnData.ClassRef.Get(), RandomLocation.Location,FRotator::ZeroRotator, SpawnParam))
                 {
+                    TArray<AActor*> SpawnedActors;
+                    SpawnedActor->GetOverlappingActors(SpawnedActors,AFarmObstacleActor::StaticClass());
+                    if (SpawnedActors.Num() > 0)
+                    {
+                        SpawnedActor->Destroy();
+                        SpawnIndex++;
+                        continue;
+                    }
                     InSpawnData.IncrementSpawnCount();
                 }
             }

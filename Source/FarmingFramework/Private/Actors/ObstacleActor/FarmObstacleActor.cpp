@@ -14,21 +14,22 @@ AFarmObstacleActor::AFarmObstacleActor()
 	PrimaryActorTick.bStartWithTickEnabled = false;
 
 
-	{
-		Collision = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision"));
-		SetRootComponent(Collision);
-
-	    Collision->SetCollisionObjectType(ECC_Vehicle);
-	    Collision->SetCollisionResponseToChannel(ECC_WorldStatic,ECR_Overlap);
-	    Collision->SetCollisionResponseToChannel(ECC_Vehicle, ECR_Block);
-	    Collision->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
-
-		// Collision->OnComponentBeginOverlap.AddDynamic(this,&ThisClass::OnBeginOverlap);
-		// Collision->OnComponentEndOverlap.AddDynamic(this,&ThisClass::OnEndOverlap);
-	}
+	// {
+	// 	Collision = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision"));
+	// 	SetRootComponent(Collision);
+	//
+	//     Collision->SetCollisionObjectType(ECC_Vehicle);
+	//     Collision->SetCollisionResponseToChannel(ECC_WorldStatic,ECR_Overlap);
+	//     Collision->SetCollisionResponseToChannel(ECC_Vehicle, ECR_Block);
+	//     Collision->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+	//
+	// 	// Collision->OnComponentBeginOverlap.AddDynamic(this,&ThisClass::OnBeginOverlap);
+	// 	// Collision->OnComponentEndOverlap.AddDynamic(this,&ThisClass::OnEndOverlap);
+	// }
 
 	HighlightableMesh = CreateDefaultSubobject<UFarm_HighlightableStaticMesh>(TEXT("HighlightableMesh"));
-	HighlightableMesh->SetupAttachment(RootComponent);
+	// HighlightableMesh->SetupAttachment(RootComponent);
+    SetRootComponent(HighlightableMesh);
 }
 
 void AFarmObstacleActor::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
@@ -62,13 +63,13 @@ void AFarmObstacleActor::OnConstruction(const FTransform& Transform)
 
     HighlightableMesh->SetStaticMesh(RandomMeshList[FMath::RandRange(0,RandomMeshList.Num()-1)].LoadSynchronous());
 
-    if (!HighlightableMesh->GetStaticMesh() || !Collision)
+    if (!HighlightableMesh->GetStaticMesh())
     {
         return;
     }
 
     FBoxSphereBounds MeshBound = HighlightableMesh->GetStaticMesh()->GetBounds();
-    Collision->SetBoxExtent(MeshBound.BoxExtent * 2);
+  //  Collision->SetBoxExtent(MeshBound.BoxExtent * 2);
 
     UpdateRequiredInteractionsFromHighlightMesh();
 }

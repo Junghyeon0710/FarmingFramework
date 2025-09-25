@@ -46,8 +46,8 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UFarm_HighlightableStaticMesh> HighlightableMesh;
 
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UBoxComponent> Collision;
+	// UPROPERTY(VisibleAnywhere)
+	// TObjectPtr<UBoxComponent> Collision;
 
     UPROPERTY(EditAnywhere, Category = "RandomeMesh")
     bool bUseRandomMesh = false;
