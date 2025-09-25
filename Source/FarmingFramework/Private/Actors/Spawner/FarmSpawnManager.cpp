@@ -157,6 +157,7 @@ void AFarmSpawnManager::SpawnAssets(FSpawnData& InSpawnData)
                         SpawnIndex++;
                         continue;
                     }
+                    GEngine->AddOnScreenDebugMessage(-1,3.f,FColor::Red,FString::Printf(TEXT("Spawned Actor: %s"), *SpawnedActor->GetName()));
                     InSpawnData.IncrementSpawnCount();
                 }
             }
@@ -174,6 +175,13 @@ void AFarmSpawnManager::SpawnAssets(FSpawnData& InSpawnData)
 
 void AFarmSpawnManager::RecheckSpawnCompletion()
 {
+    if (RespawnCount > 5)
+    {
+        RespawnCount = 0;
+        OnSpawnCompleted();
+        return;
+    }
+
     for (FSpawnData& Data : SpawnTypes)
     {
         if (Data.bSpawnCompleted)
@@ -187,10 +195,11 @@ void AFarmSpawnManager::RecheckSpawnCompletion()
         if (UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(GetWorld()))
         {
             FNavLocation RandomLocation;
-            NavigationData->RebuildAll();
+           // NavigationData->RebuildAll();
             if (NavSystem->GetRandomPointInNavigableRadius(NavOrigin, NavRadius, RandomLocation, NavigationData))
             {
                 StartNavCheckTimer();
+                RespawnCount++;
                 return;
             }
         }
