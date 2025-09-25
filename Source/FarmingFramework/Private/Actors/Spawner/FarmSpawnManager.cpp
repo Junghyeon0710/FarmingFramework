@@ -145,20 +145,24 @@ void AFarmSpawnManager::SpawnAssets(FSpawnData& InSpawnData)
             if (InSpawnData.ClassRef.IsValid())
             {
                 FActorSpawnParameters SpawnParam;
-                SpawnParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+                SpawnParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
                 if (AActor* SpawnedActor = GetWorld()->SpawnActor<AActor>(InSpawnData.ClassRef.Get(), RandomLocation.Location,FRotator::ZeroRotator, SpawnParam))
                 {
-                    TArray<AActor*> SpawnedActors;
-                    SpawnedActor->GetOverlappingActors(SpawnedActors,AFarmObstacleActor::StaticClass());
-                    if (SpawnedActors.Num() > 0)
+                    FTimerHandle TimerHandle;
+                    GetWorld()->GetTimerManager().SetTimer(TimerHandle, [SpawnedActor, &InSpawnData]()
                     {
-                        SpawnedActor->Destroy();
-                        SpawnIndex++;
-                        continue;
-                    }
-                    GEngine->AddOnScreenDebugMessage(-1,3.f,FColor::Red,FString::Printf(TEXT("Spawned Actor: %s"), *SpawnedActor->GetName()));
-                    InSpawnData.IncrementSpawnCount();
+                        TArray<AActor*> Overlaps;
+                        SpawnedActor->GetOverlappingActors(Overlaps, AFarmObstacleActor::StaticClass());
+                        if (Overlaps.Num() > 0)
+                        {
+                            SpawnedActor->Destroy();
+                        }
+                        else
+                        {
+                            InSpawnData.IncrementSpawnCount();
+                        }
+                    }, 0.05f, false);
                 }
             }
             SpawnIndex++;

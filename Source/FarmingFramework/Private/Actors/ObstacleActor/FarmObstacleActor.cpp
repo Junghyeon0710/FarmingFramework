@@ -22,7 +22,6 @@ AFarmObstacleActor::AFarmObstacleActor()
 	    Collision->SetCollisionResponseToChannel(ECC_WorldStatic,ECR_Overlap);
 	    Collision->SetCollisionResponseToChannel(ECC_Vehicle, ECR_Block);
 	    Collision->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
-
 		// Collision->OnComponentBeginOverlap.AddDynamic(this,&ThisClass::OnBeginOverlap);
 		// Collision->OnComponentEndOverlap.AddDynamic(this,&ThisClass::OnEndOverlap);
 	}
@@ -70,8 +69,31 @@ void AFarmObstacleActor::OnConstruction(const FTransform& Transform)
 
     FBoxSphereBounds MeshBound = HighlightableMesh->GetStaticMesh()->GetBounds();
     Collision->SetBoxExtent(MeshBound.BoxExtent * 1.1);
-
     UpdateRequiredInteractionsFromHighlightMesh();
+
+    if (HighlightableMesh && HighlightableMesh->GetStaticMesh())
+    {
+        // 메쉬의 로컬 공간에서 AABB 중심 위치
+        const FBox LocalBounds = HighlightableMesh->GetStaticMesh()->GetBoundingBox();
+        const FVector Center = LocalBounds.GetCenter();
+        const FVector Min = LocalBounds.Min;
+
+        // 피벗 위치는 (0,0,0) 이므로 Center.Z 와 Min.Z 비교
+        float CenterZ = Center.Z;
+        float PivotZ = 0.f; // 피벗은 로컬 공간 기준 (0,0,0)
+        float MinZ = Min.Z;
+
+        // 어느 쪽에 가까운지 판단
+        float DistToCenter = FMath::Abs(PivotZ - CenterZ);
+        float DistToBottom = FMath::Abs(PivotZ - MinZ);
+
+        if (DistToCenter < DistToBottom)
+        {
+            FVector NewLocation = GetActorLocation();
+            NewLocation.Z += MeshBound.BoxExtent.Z;
+            SetActorLocation(NewLocation);
+        }
+    }
 }
 
 void AFarmObstacleActor::Interact(AActor* Interactor)
