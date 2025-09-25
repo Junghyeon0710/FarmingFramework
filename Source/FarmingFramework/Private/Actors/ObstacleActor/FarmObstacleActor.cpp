@@ -69,7 +69,7 @@ void AFarmObstacleActor::OnConstruction(const FTransform& Transform)
     }
 
     FBoxSphereBounds MeshBound = HighlightableMesh->GetStaticMesh()->GetBounds();
-    Collision->SetBoxExtent(MeshBound.BoxExtent * 1.25);
+    Collision->SetBoxExtent(MeshBound.BoxExtent * 1.1);
 
     UpdateRequiredInteractionsFromHighlightMesh();
 }
