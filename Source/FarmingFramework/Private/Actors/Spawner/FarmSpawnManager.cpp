@@ -5,6 +5,7 @@
 #include "Actors/ObstacleActor/FarmObstacleActor.h"
 #include "Engine/AssetManager.h"
 #include "NavMesh/NavMeshBoundsVolume.h"
+#include "Interface/FarmSpawnMangerInterface.h"
 
 
 AFarmSpawnManager::AFarmSpawnManager()
@@ -145,10 +146,18 @@ void AFarmSpawnManager::SpawnAssets(FSpawnData& InSpawnData)
             if (InSpawnData.ClassRef.IsValid())
             {
                 FActorSpawnParameters SpawnParam;
-                SpawnParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+                SpawnParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
                 if (AActor* SpawnedActor = GetWorld()->SpawnActor<AActor>(InSpawnData.ClassRef.Get(), RandomLocation.Location,FRotator::ZeroRotator, SpawnParam))
                 {
+                    if (SpawnedActor->IsPendingKillPending())
+                    {
+                        continue;
+                    }
+
+                    FVector Loc = SpawnedActor->GetActorLocation();
+                    Loc.Z = RandomLocation.Location.Z;
+                    SpawnedActor->SetActorLocation(Loc);
                     FTimerHandle TimerHandle;
                     GetWorld()->GetTimerManager().SetTimer(TimerHandle, [SpawnedActor, &InSpawnData]()
                     {
@@ -160,6 +169,10 @@ void AFarmSpawnManager::SpawnAssets(FSpawnData& InSpawnData)
                         }
                         else
                         {
+                            if (IFarmSpawnMangerInterface* Interface = Cast<IFarmSpawnMangerInterface>(SpawnedActor))
+                            {
+                                Interface->FinishSpawn();
+                            }
                             InSpawnData.IncrementSpawnCount();
                         }
                     }, 0.05f, false);
