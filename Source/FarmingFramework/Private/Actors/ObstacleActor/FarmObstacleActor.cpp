@@ -120,17 +120,14 @@ void AFarmObstacleActor::FinishSpawn()
     FBoxSphereBounds MeshBound = HighlightableMesh->GetStaticMesh()->GetBounds();
     if (HighlightableMesh && HighlightableMesh->GetStaticMesh())
     {
-        // 메쉬의 로컬 공간에서 AABB 중심 위치
         const FBox LocalBounds = HighlightableMesh->GetStaticMesh()->GetBoundingBox();
         const FVector Center = LocalBounds.GetCenter();
         const FVector Min = LocalBounds.Min;
 
-        // 피벗 위치는 (0,0,0) 이므로 Center.Z 와 Min.Z 비교
         float CenterZ = Center.Z;
-        float PivotZ = 0.f; // 피벗은 로컬 공간 기준 (0,0,0)
+        float PivotZ = 0.f;
         float MinZ = Min.Z;
 
-        // 어느 쪽에 가까운지 판단
         float DistToCenter = FMath::Abs(PivotZ - CenterZ);
         float DistToBottom = FMath::Abs(PivotZ - MinZ);
 
