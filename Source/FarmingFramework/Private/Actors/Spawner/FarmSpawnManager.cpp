@@ -2,8 +2,10 @@
 #include "Actors/Spawner/FarmSpawnManager.h"
 
 #include "NavigationSystem.h"
+#include "Actors/ObstacleActor/FarmObstacleActor.h"
 #include "Engine/AssetManager.h"
 #include "NavMesh/NavMeshBoundsVolume.h"
+#include "Interface/FarmSpawnMangerInterface.h"
 
 
 AFarmSpawnManager::AFarmSpawnManager()
@@ -148,7 +150,32 @@ void AFarmSpawnManager::SpawnAssets(FSpawnData& InSpawnData)
 
                 if (AActor* SpawnedActor = GetWorld()->SpawnActor<AActor>(InSpawnData.ClassRef.Get(), RandomLocation.Location,FRotator::ZeroRotator, SpawnParam))
                 {
-                    InSpawnData.IncrementSpawnCount();
+                    if (SpawnedActor->IsPendingKillPending())
+                    {
+                        continue;
+                    }
+
+                    FVector Loc = SpawnedActor->GetActorLocation();
+                    Loc.Z = RandomLocation.Location.Z;
+                    SpawnedActor->SetActorLocation(Loc);
+                    FTimerHandle TimerHandle;
+                    GetWorld()->GetTimerManager().SetTimer(TimerHandle, [SpawnedActor, &InSpawnData]()
+                    {
+                        TArray<AActor*> Overlaps;
+                        SpawnedActor->GetOverlappingActors(Overlaps, AFarmObstacleActor::StaticClass());
+                        if (Overlaps.Num() > 0)
+                        {
+                            SpawnedActor->Destroy();
+                        }
+                        else
+                        {
+                            if (IFarmSpawnMangerInterface* Interface = Cast<IFarmSpawnMangerInterface>(SpawnedActor))
+                            {
+                                Interface->FinishSpawn();
+                            }
+                            InSpawnData.IncrementSpawnCount();
+                        }
+                    }, 0.05f, false);
                 }
             }
             SpawnIndex++;
@@ -165,6 +192,13 @@ void AFarmSpawnManager::SpawnAssets(FSpawnData& InSpawnData)
 
 void AFarmSpawnManager::RecheckSpawnCompletion()
 {
+    if (RespawnCount > 5)
+    {
+        RespawnCount = 0;
+        OnSpawnCompleted();
+        return;
+    }
+
     for (FSpawnData& Data : SpawnTypes)
     {
         if (Data.bSpawnCompleted)
@@ -178,10 +212,11 @@ void AFarmSpawnManager::RecheckSpawnCompletion()
         if (UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(GetWorld()))
         {
             FNavLocation RandomLocation;
-            NavigationData->RebuildAll();
+           // NavigationData->RebuildAll();
             if (NavSystem->GetRandomPointInNavigableRadius(NavOrigin, NavRadius, RandomLocation, NavigationData))
             {
                 StartNavCheckTimer();
+                RespawnCount++;
                 return;
             }
         }

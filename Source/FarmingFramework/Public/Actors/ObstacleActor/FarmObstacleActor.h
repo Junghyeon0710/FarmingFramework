@@ -7,6 +7,7 @@
 #include "..\FarmTaggedActor.h"
 #include "GameFramework/Actor.h"
 #include "Interface/FarmInteractableInterface.h"
+#include "Interface/FarmSpawnMangerInterface.h"
 #include "FarmObstacleActor.generated.h"
 
 class UBoxComponent;
@@ -14,7 +15,7 @@ class UFarm_HighlightableStaticMesh;
 class USphereComponent;
 
 UCLASS()
-class FARMINGFRAMEWORK_API AFarmObstacleActor : public AFarmTaggedActor,public IFarmInteractableInterface
+class FARMINGFRAMEWORK_API AFarmObstacleActor : public AFarmTaggedActor, public IFarmInteractableInterface, public IFarmSpawnMangerInterface
 {
 	GENERATED_BODY()
 
@@ -28,7 +29,7 @@ public:
 protected:
 
     virtual void OnConstruction(const FTransform& Transform) override;
-
+    virtual void BeginPlay() override;
 
     // UFUNCTION()
 	// virtual void OnBeginOverlap( UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,UPrimitiveComponent* OtherComp,int32 OtherBodyIndex,bool bFromSweep, const FHitResult& SweepResult);
@@ -39,6 +40,10 @@ public:
     /** IFarmInteractableInterface */
     virtual void Interact(AActor* Interactor) override;
     /** ~IFarmInteractableInterface */
+
+    /** IFarmSpawnMangerInterface */
+    virtual void FinishSpawn() override;
+    /** ~IFarmSpawnMangerInterface */
 
     virtual void OnInteract(AActor* Interactor);
 protected:

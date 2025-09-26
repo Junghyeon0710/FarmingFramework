@@ -110,6 +110,8 @@ private:
 public:
     virtual void ReSpawn();
     virtual void OnSpawnCompleted();
+
+    int32 RespawnCount = 0;
 protected:
     virtual bool CanSpawn(const FSpawnData& InSpawnData) const { return true; }
 
