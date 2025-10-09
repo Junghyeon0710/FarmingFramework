@@ -144,7 +144,7 @@ void AFarmSpawnManager::SpawnAssets(FSpawnData& InSpawnData)
     while (SpawnIndex < InSpawnData.TotalSpawnCount)
     {
         FNavLocation RandomLocation;
-        if (NavSystem->GetRandomPointInNavigableRadius(NavOrigin, NavRadius, RandomLocation, NavigationData))
+        if (NavSystem->GetRandomPointInNavigableRadius(NavOrigin, NavRadius, RandomLocation, NavigationData.Get()))
         {
             if (InSpawnData.ClassRef.IsValid())
             {
@@ -216,7 +216,7 @@ void AFarmSpawnManager::RecheckSpawnCompletion()
         {
             FNavLocation RandomLocation;
            // NavigationData->RebuildAll();
-            if (NavSystem->GetRandomPointInNavigableRadius(NavOrigin, NavRadius, RandomLocation, NavigationData))
+            if (NavSystem->GetRandomPointInNavigableRadius(NavOrigin, NavRadius, RandomLocation, NavigationData.Get()))
             {
                 StartNavCheckTimer();
                 RespawnCount++;
