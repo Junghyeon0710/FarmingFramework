@@ -18,7 +18,9 @@ void AFarmSpawnManager::BeginPlay()
 {
     Super::BeginPlay();
 
+
     AsyncLoadClasses();
+
 }
 
 FVector AFarmSpawnManager::GetNavVolumeSize() const
@@ -113,7 +115,7 @@ void AFarmSpawnManager::SpawnAssets(FSpawnData& InSpawnData)
         return;
     }
 
-    checkf(NavigationData,TEXT("NavigationData is NULL"));
+   // checkf(NavigationData,TEXT("NavigationData is NULL"));
     checkf(NavMeshBoundsVolume,TEXT("NavMeshBoundsVolume is NULL"));
     bSpawnCompleted = false;
 
@@ -137,11 +139,10 @@ void AFarmSpawnManager::SpawnAssets(FSpawnData& InSpawnData)
     {
         return;
     }
-
     while (SpawnIndex < InSpawnData.TotalSpawnCount)
     {
         FNavLocation RandomLocation;
-        if (NavSystem->GetRandomPointInNavigableRadius(NavOrigin, NavRadius, RandomLocation, NavigationData))
+        if (NavSystem->GetRandomPointInNavigableRadius(NavOrigin, NavRadius, RandomLocation, NavSystem->GetDefaultNavDataInstance(FNavigationSystem::ECreateIfEmpty::DontCreate)))
         {
             if (InSpawnData.ClassRef.IsValid())
             {
@@ -213,7 +214,7 @@ void AFarmSpawnManager::RecheckSpawnCompletion()
         {
             FNavLocation RandomLocation;
            // NavigationData->RebuildAll();
-            if (NavSystem->GetRandomPointInNavigableRadius(NavOrigin, NavRadius, RandomLocation, NavigationData))
+            if (NavSystem->GetRandomPointInNavigableRadius(NavOrigin, NavRadius, RandomLocation, NavSystem->GetDefaultNavDataInstance(FNavigationSystem::ECreateIfEmpty::DontCreate)))
             {
                 StartNavCheckTimer();
                 RespawnCount++;

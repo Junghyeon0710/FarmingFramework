@@ -28,10 +28,22 @@ void AFarmPlotActor::OnConstruction(const FTransform& Transform)
 {
     Super::OnConstruction(Transform);
 
-    if (!NavMeshBoundsVolume)
+    if (!NavMeshBoundsVolume || !NavMeshBoundsVolume.ToSoftObjectPath().IsValid())
     {
         return;
     }
+
+    if (!NavMeshBoundsVolume.IsValid())
+    {
+        ANavMeshBoundsVolume* LoadedVolume = NavMeshBoundsVolume.LoadSynchronous();
+        if (!LoadedVolume)
+        {
+            UE_LOG(LogTemp, Error, TEXT("Failed to load NavMeshBoundsVolume in %s"), *GetName());
+            return;
+        }
+        UE_LOG(LogTemp, Log, TEXT("Successfully loaded NavMeshBoundsVolume: %s"), *LoadedVolume->GetName());
+    }
+
     NavMeshBoundsVolume->SetActorTransform(GetActorTransform());
 
     if (!NavBoxBoundVolume->GetScaledBoxExtent().Equals(NavMeshBoundsVolume->GetBounds().BoxExtent,0.001f))
@@ -70,7 +82,7 @@ void AFarmPlotActor::UpdateNavMeshBoundsVolume()
     UNavigationSystemV1* NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld());
     if (GIsEditor && NavSys)
     {
-        NavSys->OnNavigationBoundsUpdated(NavMeshBoundsVolume);
+        NavSys->OnNavigationBoundsUpdated(NavMeshBoundsVolume.Get());
     }
 #endif
 }

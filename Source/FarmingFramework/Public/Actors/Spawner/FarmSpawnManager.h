@@ -52,8 +52,8 @@ protected:
     virtual void BeginPlay() override;
 
 private:
-    UPROPERTY(EditAnywhere, Category = "Navigation")
-    TObjectPtr<ANavigationData> NavigationData;
+    // UPROPERTY(EditAnywhere, Category = "Navigation")
+    // TSoftObjectPtr<ANavigationData> NavigationData;
 
     UPROPERTY(EditAnywhere, Category = "Navigation")
     TObjectPtr<ANavMeshBoundsVolume> NavMeshBoundsVolume;
