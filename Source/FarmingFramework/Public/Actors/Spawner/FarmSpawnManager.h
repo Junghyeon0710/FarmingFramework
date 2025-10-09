@@ -53,7 +53,7 @@ protected:
 
 private:
     UPROPERTY(EditAnywhere, Category = "Navigation")
-    TObjectPtr<ANavigationData> NavigationData;
+    TSoftObjectPtr<ANavigationData> NavigationData;
 
     UPROPERTY(EditAnywhere, Category = "Navigation")
     TObjectPtr<ANavMeshBoundsVolume> NavMeshBoundsVolume;

@@ -18,7 +18,10 @@ void AFarmSpawnManager::BeginPlay()
 {
     Super::BeginPlay();
 
-    AsyncLoadClasses();
+    if (NavigationData.LoadSynchronous())
+    {
+        AsyncLoadClasses();
+    }
 }
 
 FVector AFarmSpawnManager::GetNavVolumeSize() const
