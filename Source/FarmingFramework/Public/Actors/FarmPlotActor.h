@@ -28,7 +28,7 @@ protected:
 private:
 
     UPROPERTY(EditAnywhere, Category = "Navigation")
-    TObjectPtr<ANavMeshBoundsVolume> NavMeshBoundsVolume;
+    TSoftObjectPtr<ANavMeshBoundsVolume> NavMeshBoundsVolume;
 
     UPROPERTY(VisibleAnywhere, Category = "Navigation")
     TObjectPtr<UBoxComponent> NavBoxBoundVolume;
