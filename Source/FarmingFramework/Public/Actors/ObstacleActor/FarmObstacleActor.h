@@ -60,6 +60,9 @@ protected:
     UPROPERTY(EditAnywhere, Category = "RandomeMesh")
     TArray<TSoftObjectPtr<UStaticMesh>> RandomMeshList;
 
+    UPROPERTY(EditAnywhere, Category = "RandomeMesh")
+    TObjectPtr<USoundBase> DestroySound;
+
 protected:
 
     UPROPERTY(EditAnywhere, Category = "Remove")
