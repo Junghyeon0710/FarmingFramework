@@ -6,6 +6,8 @@
 #include "Components/BoxComponent.h"
 #include "Components/Interaction/Farm_HighlightableStaticMesh.h"
 #include "Engine/AssetManager.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 
 AFarmObstacleActor::AFarmObstacleActor()
@@ -160,6 +162,7 @@ void AFarmObstacleActor::OnInteract(AActor* Interactor)
     if (CurrentInteractionCount >= RequiredInteractions)
     {
         CurrentInteractionCount = 0;
+        UGameplayStatics::PlaySoundAtLocation(GetWorld(), DestroySound, GetActorLocation());
         Destroy();
         return;
     }
