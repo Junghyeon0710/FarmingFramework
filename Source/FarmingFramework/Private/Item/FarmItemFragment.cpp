@@ -57,7 +57,7 @@ bool UFarmItemFragment::DetectFrontActor(float InTileDistance, AActor*& Detected
 		Params
 	);
 
-#if 0
+#if 1
 	DrawDebugLine(GetWorld(),Start,End,FColor::Red);
 #endif
 
