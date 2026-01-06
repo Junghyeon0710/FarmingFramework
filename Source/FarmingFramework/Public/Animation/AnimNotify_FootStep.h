@@ -9,7 +9,7 @@
 /**
  *
  */
-UCLASS()
+UCLASS(meta=(DisplayName="Foot Step"))
 class FARMINGFRAMEWORK_API UAnimNotify_FootStep : public UAnimNotify
 {
     GENERATED_BODY()
@@ -17,15 +17,21 @@ class FARMINGFRAMEWORK_API UAnimNotify_FootStep : public UAnimNotify
 private:
 
     /** UAnimNotify */
-    virtual void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference) final;
+    virtual void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference) override final;
     /** ~End UAnimNotify */
 
 private:
 
-    UPROPERTY(EditDefaultsOnly, Category = "FootStep")
+    /** 발소리 봄륨 배율 */
+    UPROPERTY(EditAnywhere, Category="AnimNotify")
     float VolumeScale = 1.f;
 
-    UPROPERTY(EditDefaultsOnly, Category = "FootStep")
-    FName SockentName;
+    /** 발소리 Vfx 배율 */
+    UPROPERTY(EditAnywhere, Category="AnimNotify")
+    float VfxScale = 1.f;
+
+    /** 발소리가 적용 될 소켓 이름 */
+    UPROPERTY(EditAnywhere, Category="AnimNotify")
+    FName SocketName;
 
 };
