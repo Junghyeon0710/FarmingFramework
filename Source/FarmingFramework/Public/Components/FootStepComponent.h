@@ -20,11 +20,11 @@ struct FFootStepInfo
 
     /* 발자국 소리 */
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "FootStepInfo")
-    TSoftObjectPtr<USoundBase> FootStepSound;
+    TObjectPtr<USoundBase> FootStepSound;
 
     /* 발자국 이펙트 */
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "FootStepInfo")
-    TSoftObjectPtr<UNiagaraSystem> FootStepVfx;
+    TObjectPtr<UNiagaraSystem> FootStepVfx;
 
 };
 
@@ -38,7 +38,10 @@ public:
     UFootStepComponent();
 
     /* 발 닿을시 기능을 수행합니다. */
-    void FootStep(ACharacter* InCharacter, const FName& InSocketName, float InVolumeScale = 1.f, float InVfxScale = 1.f);
+    void FootStep(const ACharacter* InCharacter, const FName& InSocketName, float InVolumeScale = 1.f, float InVfxScale = 1.f);
+
+    /* 피직스 머티리얼 이름으로 Map에 있는 FFootStepInfo정보를 가져옵니다.*/
+    FFootStepInfo* GetFootStepInfo(const FName& InPhysicsMaterialName);
 
     virtual void BeginPlay() override;
 
@@ -47,4 +50,7 @@ protected:
     /* 풋스텝 정보 */
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "FootStepInfo")
     TMap<FName, FFootStepInfo> FootStepInfos;
+
+    UPROPERTY()
+    TWeakObjectPtr<ACharacter> OwnerCharacter;
 };
