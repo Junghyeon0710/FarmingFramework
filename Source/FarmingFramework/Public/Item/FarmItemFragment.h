@@ -79,7 +79,7 @@ public:
 	bool CheckFrontActorTagMatch(float InTileDistance , AActor*& DetectedActor, FGameplayTag InFunctionTag = FGameplayTag(), const TArray<AActor*>& InIgnoreActors = TArray<AActor*>());
 
     /**
-     * 상호작요한 액터가 있는지 알려줍니다.
+     * 상호작용 가능한 액터가 있는지 알려줍니다.
      * @return 상요작용이 가능한 액터
      */
     virtual AActor* GetInteractableActor();

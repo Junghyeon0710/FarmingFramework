@@ -32,33 +32,36 @@ ACharacter* UFarmItemFragment::GetOwnerCharacter() const
 
 bool UFarmItemFragment::DetectFrontActor(float InTileDistance, AActor*& DetectedActor, const FGameplayTag& Tag, const TArray<AActor*>& InIgnoreActors)
 {
-	AActor* OwnerCharacter = GetOwnerCharacter();
+    AActor* OwnerCharacter = GetOwnerCharacter();
 
-	if (!OwnerCharacter)
-	{
-		UE_LOG(LogTemp, Error , TEXT("No OwenrActor"));
-		return false;
-	}
+    if (!OwnerCharacter)
+    {
+        UE_LOG(LogTemp, Error , TEXT("No OwnerActor"));
+        return false;
+    }
 
-	FVector Start = OwnerCharacter->GetActorLocation();
-	FVector Forward = OwnerCharacter->GetActorForwardVector();
-	FVector End = Start + Forward * InTileDistance;
+    FVector Start = OwnerCharacter->GetActorLocation();
+    FVector Forward = OwnerCharacter->GetActorForwardVector();
+    FVector End = Start + Forward * InTileDistance;
 
-	FHitResult HitResult;
-	FCollisionQueryParams Params;
-	Params.AddIgnoredActor(OwnerCharacter);
-	Params.AddIgnoredActors(InIgnoreActors);
+    FHitResult HitResult;
+    FCollisionQueryParams Params;
+    Params.AddIgnoredActor(OwnerCharacter);
+    Params.AddIgnoredActors(InIgnoreActors);
+    FCollisionShape SphereShape = FCollisionShape::MakeSphere(30.0f);
 
-	bool bHit = GetWorld()->LineTraceSingleByChannel(
-		HitResult,
-		Start,
-		End,
-		ECC_Visibility,
-		Params
-	);
+    bool bHit = GetWorld()->SweepSingleByChannel(
+        HitResult,
+        Start,
+        End,
+        FQuat::Identity,
+        ECC_Visibility,
+        SphereShape,
+        Params
+    );
 
 #if 0
-	DrawDebugLine(GetWorld(),Start,End,FColor::Red);
+    DrawDebugLine(GetWorld(),Start,End,FColor::Red);
 #endif
 
     if (DoesActorHaveTag(HitResult.GetActor(), Tag))
@@ -69,7 +72,7 @@ bool UFarmItemFragment::DetectFrontActor(float InTileDistance, AActor*& Detected
 
     DetectedActor = nullptr;
 
-	return false;
+    return false;
 }
 
 bool UFarmItemFragment::DetectDownActor(float InTileDistance, AActor*& DetectedActor, const FGameplayTag& Tag, const TArray<AActor*>& InIgnoreActors)
@@ -78,7 +81,7 @@ bool UFarmItemFragment::DetectDownActor(float InTileDistance, AActor*& DetectedA
 
     if (!OwnerCharacter)
     {
-        UE_LOG(LogTemp, Error , TEXT("No OwenrActor"));
+        UE_LOG(LogTemp, Error , TEXT("No OwnrActor"));
         return false;
     }
 
@@ -154,7 +157,7 @@ bool UFarmItemFragment::CheckFrontActorTagMatch(float InTileDistance, AActor*& D
 AActor* UFarmItemFragment::GetInteractableActor()
 {
     AActor* InteractableActor;
-    if (DetectFrontActor(TileDistance,InteractableActor , GetFunctionTag()))
+    if (DetectFrontActor(TileDistance,InteractableActor, GetFunctionTag()))
     {
         return InteractableActor;
     }
@@ -164,7 +167,7 @@ AActor* UFarmItemFragment::GetInteractableActor()
 
 bool UFarmItemFragment::DoesActorHaveTag(AActor* InActor, const FGameplayTag& InTag)
 {
-    if(IGameplayTagAssetInterface* TagInterface = Cast<IGameplayTagAssetInterface>(InActor))
+    if (IGameplayTagAssetInterface* TagInterface = Cast<IGameplayTagAssetInterface>(InActor))
     {
         FGameplayTagContainer ActorTag;
         TagInterface->GetOwnedGameplayTags(ActorTag);
