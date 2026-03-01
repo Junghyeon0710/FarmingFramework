@@ -8,12 +8,14 @@
 void UFarm_HighlightableStaticMesh::Highlight_Implementation()
 {
     check(HighlightMaterial);
-    SetOverlayMaterial(HighlightMaterial);
+    SetRenderCustomDepth(true);
+    //SetOverlayMaterial(HighlightMaterial);
 }
 
 void UFarm_HighlightableStaticMesh::Unhighlight_Implementation()
 {
-    SetOverlayMaterial(nullptr);
+    SetRenderCustomDepth(false);
+    //SetOverlayMaterial(nullptr);
 }
 
 const FGameplayTagContainer UFarm_HighlightableStaticMesh::GetHighlightableTags_Implementation() const

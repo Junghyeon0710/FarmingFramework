@@ -43,18 +43,20 @@ void UFarm_TraceComponent::TraceForwardForActor()
     }
 
     ItemComponent = nullptr;
-    TArray<AActor*> AttachedActors;
-    GetOwner()->GetAttachedActors(AttachedActors);
 
-    for (AActor* Attached : AttachedActors)
-    {
-        ItemComponent = Attached->FindComponentByClass<UFarm_ItemComponent>();
-    }
+    //TArray<AActor*> AttachedActors;
+    //GetOwner()->GetAttachedActors(AttachedActors);
 
-    // if (UFarm_ItemComponent* FoundComponent = Owner->FindComponentByClass<UFarm_ItemComponent>())
+    // for (AActor* Attached : AttachedActors)
     // {
-    //     ItemComponent = FoundComponent;
+    //     ItemComponent = Attached->FindComponentByClass<UFarm_ItemComponent>();
     // }
+
+    //아이템에 컴포넌트 있는지
+    if (UFarm_ItemComponent* FoundComponent = Owner->FindComponentByClass<UFarm_ItemComponent>())
+    {
+        ItemComponent = FoundComponent;
+    }
 
     if (!ItemComponent.Get())
     {
@@ -63,8 +65,9 @@ void UFarm_TraceComponent::TraceForwardForActor()
 
 
     FHitResult HitResult;
-    FVector StartLocation = Owner->GetActorLocation();
-    FVector EndLocation = StartLocation + Owner->GetActorForwardVector() * 100;
+    FVector StartLocation = Owner->GetOwner()->GetActorLocation();
+    StartLocation.Z -= 45;
+    FVector EndLocation = StartLocation + Owner->GetOwner()->GetActorForwardVector() * 100;
     GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, TraceChannel);
 
 
@@ -78,7 +81,6 @@ void UFarm_TraceComponent::TraceForwardForActor()
 
     if (ThisActor.IsValid())
     {
-
         if (UActorComponent* Highlightable = ThisActor->FindComponentByInterface(UFarm_HighlightableInterface::StaticClass()); IsValid(Highlightable))
         {
             for (const auto& Fragment : ItemComponent->GetFragments())
@@ -86,6 +88,7 @@ void UFarm_TraceComponent::TraceForwardForActor()
                 if (IFarm_HighlightableInterface::Execute_GetHighlightableTags(Highlightable).HasTagExact(Fragment->GetFunctionTag()))
                 {
                     IFarm_HighlightableInterface::Execute_Highlight(Highlightable);
+                    break;
                 }
             }
         }

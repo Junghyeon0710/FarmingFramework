@@ -25,6 +25,8 @@ AFarmObstacleActor::AFarmObstacleActor()
 	    Collision->SetCollisionResponseToChannel(ECC_WorldStatic,ECR_Overlap);
 	    Collision->SetCollisionResponseToChannel(ECC_Vehicle, ECR_Block);
 	    Collision->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+	    Collision->SetCollisionResponseToChannel(ECC_GameTraceChannel2, ECR_Block);
+
 		// Collision->OnComponentBeginOverlap.AddDynamic(this,&ThisClass::OnBeginOverlap);
 		// Collision->OnComponentEndOverlap.AddDynamic(this,&ThisClass::OnEndOverlap);
 	}
