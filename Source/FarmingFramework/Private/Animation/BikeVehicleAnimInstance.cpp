@@ -8,16 +8,16 @@ void UBikeVehicleAnimInstance::NativeInitializeAnimation()
     MaxLeanAngle = 25.f;
 }
 
-void UBikeVehicleAnimInstance::UpdateWheels(float DeltaSeconds)
-{
-    /** 앞바퀴 반지름 기준으로 회전각 계산 */
-    FrontWheelRotation = CalculateWheelRotation(FrontWheelRotation, FrontWheelRadius, DeltaSeconds);
-
-    /** 뒷바퀴 반지름 기준으로 회전각 계산 */
-    RearWheelRotation = CalculateWheelRotation(RearWheelRotation, RearWheelRadius, DeltaSeconds);
-
-    UpdateHandleSteer(DeltaSeconds);
-}
+// void UBikeVehicleAnimInstance::UpdateWheels(float DeltaSeconds)
+// {
+//     /** 앞바퀴 반지름 기준으로 회전각 계산 */
+//     FrontWheelRotation = CalculateWheelRotation(FrontWheelRotation, FrontWheelRadius, DeltaSeconds);
+//
+//     /** 뒷바퀴 반지름 기준으로 회전각 계산 */
+//     RearWheelRotation = CalculateWheelRotation(RearWheelRotation, RearWheelRadius, DeltaSeconds);
+//
+//     UpdateHandleSteer(DeltaSeconds);
+// }
 
 void UBikeVehicleAnimInstance::UpdateHandleSteer(float DeltaSeconds)
 {

@@ -8,21 +8,21 @@ void UCarVehicleAnimInstance::NativeInitializeAnimation()
     MaxLeanAngle = 5.f;
 }
 
-void UCarVehicleAnimInstance::UpdateWheels(float DeltaSeconds)
-{
-    ElapsedTime += DeltaSeconds;
-
-    /** 앞바퀴 좌우 회전각 계산 */
-    FrontLeftWheelRotation  = CalculateWheelRotation(FrontLeftWheelRotation,  FrontWheelRadius, DeltaSeconds);
-    FrontRightWheelRotation = CalculateWheelRotation(FrontRightWheelRotation, FrontWheelRadius, DeltaSeconds);
-
-    /** 뒷바퀴 좌우 회전각 계산 */
-    RearLeftWheelRotation   = CalculateWheelRotation(RearLeftWheelRotation,  RearWheelRadius, DeltaSeconds);
-    RearRightWheelRotation  = CalculateWheelRotation(RearRightWheelRotation, RearWheelRadius, DeltaSeconds);
-
-    UpdateFrontWheelSteer(DeltaSeconds);
-    UpdateBodyBounce(DeltaSeconds);
-}
+// void UCarVehicleAnimInstance::UpdateWheels(float DeltaSeconds)
+// {
+//     ElapsedTime += DeltaSeconds;
+//
+//     /** 앞바퀴 좌우 회전각 계산 */
+//     //FrontLeftWheelRotation  = CalculateWheelRotation(FrontLeftWheelRotation,  FrontWheelRadius, DeltaSeconds);
+//     //FrontRightWheelRotation = CalculateWheelRotation(FrontRightWheelRotation, FrontWheelRadius, DeltaSeconds);
+//
+//     /** 뒷바퀴 좌우 회전각 계산 */
+// //    RearLeftWheelRotation   = CalculateWheelRotation(RearLeftWheelRotation,  RearWheelRadius, DeltaSeconds);
+//   //  RearRightWheelRotation  = CalculateWheelRotation(RearRightWheelRotation, RearWheelRadius, DeltaSeconds);
+//
+//     UpdateFrontWheelSteer(DeltaSeconds);
+//     UpdateBodyBounce(DeltaSeconds);
+// }
 
 void UCarVehicleAnimInstance::UpdateFrontWheelSteer(float DeltaSeconds)
 {

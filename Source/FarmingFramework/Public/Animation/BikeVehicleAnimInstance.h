@@ -41,7 +41,7 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Bike|Handle")
     float HandleInterpSpeed = 6.f;
 
-    virtual void UpdateWheels(float DeltaSeconds) override;
+//    virtual void UpdateWheels(float DeltaSeconds) override;
 
 private:
     void UpdateHandleSteer(float DeltaSeconds);

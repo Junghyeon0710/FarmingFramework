@@ -61,7 +61,7 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Car|Body")
     float BounceFrequency = 8.f;
 
-    virtual void UpdateWheels(float DeltaSeconds) override;
+//    virtual void UpdateWheels(float DeltaSeconds) override;
 
 private:
     void UpdateFrontWheelSteer(float DeltaSeconds);
