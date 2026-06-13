@@ -28,6 +28,15 @@ private:
     UFUNCTION()
     void HandleDayChanged(int32 Year, int32 Day,const FString& Season, EWeatherType Weather);
 
+    UPROPERTY(EditAnywhere, Category = "Spawn|Harvest")
+    bool bSpawnWildTomatoBush = true;
+
+    UPROPERTY(EditAnywhere, Category = "Spawn|Harvest", meta = (EditCondition = "bSpawnWildTomatoBush", ClampMin = "0.0"))
+    float WildTomatoBushSpawnRatePerFarmSize = 0.01f;
+
+    UPROPERTY(EditAnywhere, Category = "Spawn|Harvest", meta = (EditCondition = "bSpawnWildTomatoBush"))
+    TSoftClassPtr<AActor> WildTomatoBushClass;
+
     TSet<EWeatherType> WeatherTypes;
 
 public:

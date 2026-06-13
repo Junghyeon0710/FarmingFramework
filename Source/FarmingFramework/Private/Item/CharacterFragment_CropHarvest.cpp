@@ -4,6 +4,7 @@
 #include "..\..\Public\Item\CharacterFragment_CropHarvest.h"
 #include "NativeGameplayTags.h"
 #include "Actors/InteractableActors/Tiles/Farm_TileActor.h"
+#include "Interface/FarmInteractableInterface.h"
 
 UCharacterFragment_CropHarvest::UCharacterFragment_CropHarvest()
 {
@@ -23,6 +24,13 @@ void UCharacterFragment_CropHarvest::OnInteractSuccess(AActor* DetectedActor)
         PlayMontage();
         TileActor->RemoveStaticGameplayTag(GetFunctionTag());
         TileActor->TryCropHarvest(MontageLength);
+        return;
+    }
+
+    if (IFarmInteractableInterface* Interactable = Cast<IFarmInteractableInterface>(DetectedActor))
+    {
+        PlayMontage();
+        Interactable->Interact(GetOwnerCharacter());
     }
 
 }

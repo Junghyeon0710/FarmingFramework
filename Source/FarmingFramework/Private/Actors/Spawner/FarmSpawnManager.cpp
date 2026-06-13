@@ -52,6 +52,13 @@ void AFarmSpawnManager::AsyncLoadClasses()
 
 void AFarmSpawnManager::AsyncLoadClass()
 {
+    if (SpawnTypes.IsEmpty())
+    {
+        bAsyncCompleted = true;
+        WaitForNavMeshAndAssets();
+        return;
+    }
+
     FSoftObjectPath SoftObjectPath(SpawnTypes[ClassRefIndex].ClassRef.ToSoftObjectPath());
     UAssetManager::GetStreamableManager().RequestAsyncLoad(SoftObjectPath, FStreamableDelegate::CreateLambda([this, SoftObjectPath]()
     {
@@ -229,6 +236,28 @@ void AFarmSpawnManager::ReSpawn()
 {
     bIsReSpawn = true;
     WaitForNavMeshAndAssets();
+}
+
+void AFarmSpawnManager::AddSpawnTypeIfMissing(const TSoftClassPtr<AActor>& ClassRef, float SpawnRatePerFarmSize)
+{
+    if (ClassRef.IsNull())
+    {
+        return;
+    }
+
+    const FSoftObjectPath NewClassPath = ClassRef.ToSoftObjectPath();
+    for (const FSpawnData& SpawnData : SpawnTypes)
+    {
+        if (SpawnData.ClassRef.ToSoftObjectPath() == NewClassPath)
+        {
+            return;
+        }
+    }
+
+    FSpawnData NewSpawnData;
+    NewSpawnData.ClassRef = ClassRef;
+    NewSpawnData.SpawnRatePerFarmSize = SpawnRatePerFarmSize;
+    SpawnTypes.Add(NewSpawnData);
 }
 
 void AFarmSpawnManager::OnSpawnCompleted()

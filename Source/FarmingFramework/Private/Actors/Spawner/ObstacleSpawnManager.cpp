@@ -9,10 +9,16 @@
 AObstacleSpawnManager::AObstacleSpawnManager()
 {
     PrimaryActorTick.bCanEverTick = false;
+    WildTomatoBushClass = TSoftClassPtr<AActor>(FSoftObjectPath(TEXT("/Script/Araland.ALWildTomatoBushActor")));
 }
 
 void AObstacleSpawnManager::BeginPlay()
 {
+    if (bSpawnWildTomatoBush)
+    {
+        AddSpawnTypeIfMissing(WildTomatoBushClass, WildTomatoBushSpawnRatePerFarmSize);
+    }
+
     Super::BeginPlay();
 
     if (UDynamicWeatherSubsystem* DynamicSubsystem = UDynamicWeatherSubsystem::Get(GetWorld()))

@@ -115,6 +115,8 @@ public:
 protected:
     virtual bool CanSpawn(const FSpawnData& InSpawnData) const { return true; }
 
+    void AddSpawnTypeIfMissing(const TSoftClassPtr<AActor>& ClassRef, float SpawnRatePerFarmSize);
+
     bool bIsReSpawn = false;
 private:
 
